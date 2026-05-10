@@ -1,0 +1,70 @@
+[
+  {
+    "query": "how does rag retrieve sources",
+    "hits": [
+      {
+        "id": "rag:0",
+        "docId": "rag",
+        "text": "RAG chunks documents, embeds chunks, retrieves top matches, and cites sources.",
+        "score": 0.6467616667635546
+      },
+      {
+        "id": "agent:0",
+        "docId": "agent",
+        "text": "Agent uses tools, memory, workflow, and evaluation to complete tasks.",
+        "score": 0.1781741612749496
+      }
+    ],
+    "answer": {
+      "answer": "RAG chunks documents, embeds chunks, retrieves top matches, and cites sources. Agent uses tools, memory, workflow, and evaluation to complete tasks.\nSources: rag:0, agent:0",
+      "sources": [
+        {
+          "id": "rag:0",
+          "docId": "rag",
+          "text": "RAG chunks documents, embeds chunks, retrieves top matches, and cites sources.",
+          "score": 0.6467616667635546
+        },
+        {
+          "id": "agent:0",
+          "docId": "agent",
+          "text": "Agent uses tools, memory, workflow, and evaluation to complete tasks.",
+          "score": 0.1781741612749496
+        }
+      ]
+    }
+  },
+  {
+    "query": "mcp tools resources",
+    "hits": [
+      {
+        "id": "mcp:0",
+        "docId": "mcp",
+        "text": "MCP exposes tools resources and prompts to connect agents with systems.",
+        "score": 0.840168050416806
+      },
+      {
+        "id": "agent:0",
+        "docId": "agent",
+        "text": "Agent uses tools, memory, workflow, and evaluation to complete tasks.",
+        "score": 0.3086066999241839
+      }
+    ],
+    "answer": {
+      "answer": "MCP exposes tools resources and prompts to connect agents with systems. Agent uses tools, memory, workflow, and evaluation to complete tasks.\nSources: mcp:0, agent:0",
+      "sources": [
+        {
+          "id": "mcp:0",
+          "docId": "mcp",
+          "text": "MCP exposes tools resources and prompts to connect agents with systems.",
+          "score": 0.840168050416806
+        },
+        {
+          "id": "agent:0",
+          "docId": "agent",
+          "text": "Agent uses tools, memory, workflow, and evaluation to complete tasks.",
+          "score": 0.3086066999241839
+        }
+      ]
+    }
+  }
+]

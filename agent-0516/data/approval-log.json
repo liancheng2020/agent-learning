@@ -1,0 +1,35 @@
+[
+  {
+    "status": "needs_approval",
+    "risk": "high",
+    "action": {
+      "name": "deleteFile",
+      "args": {
+        "path": "demo.txt"
+      }
+    },
+    "message": "需要人工确认才能执行 deleteFile"
+  },
+  {
+    "status": "executed",
+    "risk": "high",
+    "action": {
+      "name": "deleteFile",
+      "args": {
+        "path": "demo.txt"
+      }
+    },
+    "result": "mock executed deleteFile"
+  },
+  {
+    "status": "executed",
+    "risk": "low",
+    "action": {
+      "name": "readFile",
+      "args": {
+        "path": "demo.txt"
+      }
+    },
+    "result": "mock executed readFile"
+  }
+]

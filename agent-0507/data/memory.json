@@ -1,0 +1,12 @@
+{
+  "facts": [
+    {
+      "key": "hello",
+      "value": "world",
+      "tags": [
+        "user"
+      ],
+      "updatedAt": "2026-05-05T14:47:28.839Z"
+    }
+  ]
+}

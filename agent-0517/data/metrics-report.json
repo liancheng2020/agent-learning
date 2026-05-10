@@ -1,0 +1,37 @@
+{
+  "records": [
+    {
+      "input": "tool calling",
+      "output": "answer for tool calling",
+      "latencyMs": 0,
+      "inputTokens": 3,
+      "outputTokens": 6,
+      "costUsd": 0.000027,
+      "ok": true
+    },
+    {
+      "input": "rag eval",
+      "output": "answer for rag eval",
+      "latencyMs": 0,
+      "inputTokens": 2,
+      "outputTokens": 5,
+      "costUsd": 0.000022,
+      "ok": true
+    },
+    {
+      "input": "mcp",
+      "output": "answer for mcp",
+      "latencyMs": 0,
+      "inputTokens": 1,
+      "outputTokens": 4,
+      "costUsd": 0.000017,
+      "ok": true
+    }
+  ],
+  "summary": {
+    "runs": 3,
+    "okRate": 1,
+    "totalCostUsd": 0.000066,
+    "avgLatencyMs": 0
+  }
+}

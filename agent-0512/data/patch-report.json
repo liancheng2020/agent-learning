@@ -1,0 +1,23 @@
+{
+  "plan": {
+    "file": "src/LoginButton.jsx",
+    "risk": "requires-review",
+    "steps": [
+      {
+        "category": "error-handling",
+        "action": "wrap async operation with try/catch",
+        "reason": "新增 async 调用缺少错误处理。"
+      },
+      {
+        "category": "accessibility",
+        "action": "add accessible text",
+        "reason": "图片缺少 alt 属性。"
+      }
+    ]
+  },
+  "patch": "--- a/src/LoginButton.jsx\n+++ b/src/LoginButton.jsx\n@@\n-export function LoginButton({ api }) {\n-  const handleClick = async () => {\n-    const result = await api.login();\n-    localStorage.setItem(\"token\", result.token);\n-  };\n-  return (\n-    <button onClick={handleClick}>\n-      <img src=\"/login.svg\" />\n-    </button>\n-  );\n-}\n+export function LoginButton({ api }) {\n+  const handleClick = async () => {\n+    try {\n+      const result = await api.login();\n+      localStorage.setItem(\"token\", result.token);\n+    } catch (error) {\n+      console.error(\"Login failed\", error);\n+    }\n+  };\n+  return (\n+    <button onClick={handleClick}>\n+      <img src=\"/login.svg\" alt=\"Login\" />\n+    </button>\n+  );\n+}",
+  "valid": {
+    "ok": true,
+    "errors": []
+  }
+}

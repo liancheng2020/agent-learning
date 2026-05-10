@@ -1,0 +1,4 @@
+{
+  "project://readme": "# Demo Project\nThis project exposes resources, tools, and prompts to an Agent.",
+  "docs://agent": "Agent = LLM + tools + memory + workflow + eval."
+}

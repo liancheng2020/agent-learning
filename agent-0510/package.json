@@ -1,0 +1,1 @@
+{"name":"agent-0510-dashboard","version":"1.0.0","private":true,"type":"module","scripts":{"demo":"node src/buildSampleTrace.js","start":"node src/server.js","test":"node src/index.test.js"}}

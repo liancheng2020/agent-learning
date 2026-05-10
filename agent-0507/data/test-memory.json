@@ -1,0 +1,12 @@
+{
+  "facts": [
+    {
+      "key": "role",
+      "value": "frontend developer",
+      "tags": [
+        "user"
+      ],
+      "updatedAt": "2026-05-05T14:46:48.156Z"
+    }
+  ]
+}

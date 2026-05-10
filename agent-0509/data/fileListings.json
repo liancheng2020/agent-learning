@@ -1,0 +1,4 @@
+{
+  ".": ["README.md", "src/index.js", "package.json"],
+  "src": ["index.js", "miniMcpServer.js"]
+}

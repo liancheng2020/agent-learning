@@ -1,0 +1,22 @@
+[
+  {
+    "id": "doc-tool",
+    "title": "Tool Calling",
+    "text": "Tool calling lets an Agent call external tools with structured arguments and use returned data."
+  },
+  {
+    "id": "doc-rag",
+    "title": "RAG",
+    "text": "RAG retrieves relevant context before generation. It reduces hallucination and should cite sources."
+  },
+  {
+    "id": "doc-eval",
+    "title": "Eval",
+    "text": "Eval checks whether an Agent chooses the right action, uses sources, and gives acceptable answers."
+  },
+  {
+    "id": "doc-memory",
+    "title": "Memory",
+    "text": "Agent memory stores useful facts across turns, but should be scoped and editable."
+  }
+]

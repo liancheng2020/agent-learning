@@ -1,0 +1,5 @@
+{"ts":"2026-05-05T14:52:20.710Z","type":"run.started","runId":"run_demo_0510","input":"帮我检查这个 diff"}
+{"ts":"2026-05-05T14:52:20.711Z","type":"tool.selected","runId":"run_demo_0510","toolCall":{"name":"readDiff","arguments":{"file":"demo.diff"}}}
+{"ts":"2026-05-05T14:52:20.711Z","type":"tool.completed","runId":"run_demo_0510","toolName":"readDiff","durationMs":18,"result":{"lines":42}}
+{"ts":"2026-05-05T14:52:20.711Z","type":"answer.completed","runId":"run_demo_0510","answer":"发现 2 个风险：缺少错误处理、缺少测试。"}
+{"ts":"2026-05-05T14:52:20.711Z","type":"run.completed","runId":"run_demo_0510","ok":true}

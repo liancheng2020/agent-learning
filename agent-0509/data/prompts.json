@@ -1,0 +1,4 @@
+{
+  "review": "Review the following code for bugs, risks, and missing tests.",
+  "plan": "Break the user goal into concrete executable steps."
+}

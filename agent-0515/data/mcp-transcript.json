@@ -1,0 +1,55 @@
+[
+  {
+    "request": {
+      "id": 1,
+      "method": "tools/list"
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": [
+        {
+          "name": "echo"
+        },
+        {
+          "name": "getPackageInfo"
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "id": 2,
+      "method": "tools/call",
+      "params": {
+        "name": "getPackageInfo"
+      }
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "result": {
+        "name": "agent-0515-real-mcp-server",
+        "runtime": "node"
+      }
+    }
+  },
+  {
+    "request": {
+      "id": 3,
+      "method": "resources/list"
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "result": [
+        {
+          "uri": "project://package"
+        },
+        {
+          "uri": "docs://rules"
+        }
+      ]
+    }
+  }
+]

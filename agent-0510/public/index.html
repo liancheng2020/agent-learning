@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agent Trace Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="header">
+        <div>
+          <h1>Agent Trace Dashboard</h1>
+          <p>Inspect runs, tool calls, results, and final answers.</p>
+        </div>
+        <button id="refresh">Refresh</button>
+      </header>
+      <section id="summary" class="summary"></section>
+      <section id="timeline" class="timeline"></section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

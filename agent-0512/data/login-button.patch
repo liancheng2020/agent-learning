@@ -1,0 +1,29 @@
+--- a/src/LoginButton.jsx
++++ b/src/LoginButton.jsx
+@@
+-export function LoginButton({ api }) {
+-  const handleClick = async () => {
+-    const result = await api.login();
+-    localStorage.setItem("token", result.token);
+-  };
+-  return (
+-    <button onClick={handleClick}>
+-      <img src="/login.svg" />
+-    </button>
+-  );
+-}
++export function LoginButton({ api }) {
++  const handleClick = async () => {
++    try {
++      const result = await api.login();
++      localStorage.setItem("token", result.token);
++    } catch (error) {
++      console.error("Login failed", error);
++    }
++  };
++  return (
++    <button onClick={handleClick}>
++      <img src="/login.svg" alt="Login" />
++    </button>
++  );
++}

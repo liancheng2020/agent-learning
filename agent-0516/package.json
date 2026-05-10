@@ -1,0 +1,1 @@
+{"name":"agent-0516-human-approval","version":"1.0.0","private":true,"type":"module","scripts":{"demo":"node src/index.js --demo","test":"node src/index.js --test","start":"node src/index.js"}}

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "understand",
+    "taskTemplate": "理解目标：{goal}"
+  },
+  {
+    "id": "design",
+    "task": "设计输入、输出和验收标准"
+  },
+  {
+    "id": "implement",
+    "task": "实现最小可运行版本"
+  },
+  {
+    "id": "verify",
+    "task": "运行测试并记录结果"
+  }
+]

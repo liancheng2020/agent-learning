@@ -1,0 +1,11 @@
+{
+  "name": "agent-0504-structured-planner",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "node src/index.js --demo",
+    "test": "node src/index.js --test"
+  }
+}

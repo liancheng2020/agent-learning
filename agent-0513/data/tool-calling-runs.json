@@ -1,0 +1,35 @@
+[
+  {
+    "input": "帮我算 23 * 17 + 8",
+    "toolCall": {
+      "name": "calculator",
+      "arguments": {
+        "expression": "23 * 17 + 8"
+      }
+    },
+    "toolResult": {
+      "expression": "23 * 17 + 8",
+      "result": 399
+    },
+    "answer": "23 * 17 + 8 = 399"
+  },
+  {
+    "input": "RAG",
+    "toolCall": {
+      "name": "getLearningPlan",
+      "arguments": {
+        "topic": "RAG"
+      }
+    },
+    "toolResult": {
+      "topic": "RAG",
+      "steps": [
+        "read docs",
+        "build minimal demo",
+        "write eval",
+        "review trace"
+      ]
+    },
+    "answer": "RAG learning plan: read docs -> build minimal demo -> write eval -> review trace"
+  }
+]
