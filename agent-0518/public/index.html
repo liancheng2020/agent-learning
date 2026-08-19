@@ -10,18 +10,29 @@
     <main class="shell">
       <header>
         <div>
+          <p class="eyebrow">OFFLINE AGENT WORKFLOW</p>
           <h1>Frontend Review Agent Pro</h1>
-          <p>Structured findings, patch plan, trace, and eval-ready output.</p>
+          <p>审查、检索、补丁建议、审批、评估与可观测性。</p>
         </div>
-        <button id="rerun">Run Review</button>
+        <button class="secondary" id="load-sample">载入样例</button>
       </header>
+
+      <section class="panel composer">
+        <div class="panel-heading"><h2>提交审查</h2><label>审查策略 <select id="profile"><option value="minimal">minimal</option><option value="balanced" selected>balanced</option><option value="strict">strict</option></select></label></div>
+        <label>Git diff<textarea id="diff" spellcheck="false"></textarea></label>
+        <label>当前组件代码<textarea id="code" spellcheck="false"></textarea></label>
+        <div class="actions"><button id="run">运行审查</button><span id="status" role="status"></span></div>
+      </section>
+
       <section id="metrics" class="metrics"></section>
+      <section id="approval" class="approval"></section>
       <section class="grid">
         <div class="panel"><h2>Findings</h2><div id="findings"></div></div>
-        <div class="panel"><h2>Patch Plan</h2><div id="plan"></div></div>
+        <div class="panel"><h2>Patch Plan</h2><div id="plan"></div><h2 class="subheading">检索到的规范</h2><div id="sources"></div></div>
       </section>
-      <section class="panel"><h2>Patch</h2><pre id="patch"></pre></section>
+      <section class="panel"><h2>Reviewable Patch</h2><pre id="patch"></pre></section>
       <section class="panel"><h2>Trace</h2><div id="trace"></div></section>
+      <section class="panel"><h2>能力与运行指标</h2><div id="capabilities"></div></section>
     </main>
     <script src="/app.js"></script>
   </body>
