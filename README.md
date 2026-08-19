@@ -92,7 +92,7 @@
 每个项目基本都支持：
 
 ```bash
-cd /Users/lianchengwuyou/Downloads/codex-project/agent-xxxx
+cd ./agent-xxxx
 npm run demo
 npm test
 npm start
@@ -111,7 +111,7 @@ npm start
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0503
+./agent-0503
 ```
 
 学习主题：Agent 工具调用。
@@ -145,7 +145,7 @@ npm start
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0504
+./agent-0504
 ```
 
 学习主题：结构化输出。
@@ -180,7 +180,7 @@ npm start
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0505
+./agent-0505
 ```
 
 学习主题：可观测性和最小评估。
@@ -220,7 +220,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0506
+./agent-0506
 ```
 
 学习主题：RAG 基础。
@@ -258,7 +258,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0507
+./agent-0507
 ```
 
 学习主题：Agent 记忆。
@@ -298,7 +298,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0508
+./agent-0508
 ```
 
 学习主题：可控工作流。
@@ -336,7 +336,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0509
+./agent-0509
 ```
 
 学习主题：MCP 思维模型。
@@ -375,7 +375,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0510
+./agent-0510
 ```
 
 学习主题：Agent 运行链路可视化。
@@ -416,7 +416,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0511
+./agent-0511
 ```
 
 学习主题：结构化代码审查。
@@ -457,7 +457,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0512
+./agent-0512
 ```
 
 学习主题：从 finding 到 patch。
@@ -497,7 +497,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0513
+./agent-0513
 ```
 
 学习主题：真实 LLM API 接入骨架。
@@ -537,7 +537,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0514
+./agent-0514
 ```
 
 学习主题：更接近真实 RAG 的向量检索。
@@ -577,7 +577,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0515
+./agent-0515
 ```
 
 学习主题：接近 MCP 的 JSON-RPC server shape。
@@ -617,7 +617,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0516
+./agent-0516
 ```
 
 学习主题：高风险工具调用审批。
@@ -656,7 +656,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0517
+./agent-0517
 ```
 
 学习主题：成本、耗时和运行指标。
@@ -696,7 +696,7 @@ data 产物：
 路径：
 
 ```text
-/Users/lianchengwuyou/Downloads/codex-project/agent-0518
+./agent-0518
 ```
 
 学习主题：完整 Agent 作品。
@@ -736,7 +736,7 @@ data 产物：
 运行：
 
 ```bash
-cd /Users/lianchengwuyou/Downloads/codex-project/agent-0518
+cd ./agent-0518
 npm run demo
 npm test
 npm start
