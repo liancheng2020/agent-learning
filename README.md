@@ -1,6 +1,6 @@
 # Agent Engineering Learning Roadmap
 
-本文档整理 `agent-0503` 到 `agent-0518` 的学习路径、项目说明、运行方式和面试讲法。
+本文档整理 `agent-0503` 到 `agent-0822` 的学习路径、项目说明、运行方式和面试讲法。
 
 当前定位：前端开发工程师转 Agent 工程师。路线不是单纯学概念，而是用一组可运行项目逐步覆盖 Agent 应用落地能力。
 
@@ -87,6 +87,30 @@
 - metrics
 - web dashboard
 
+### 第六阶段：从前端 Demo 到 Agent 服务
+
+目标：把 `agent-0518` 升级为可测试、可观测、可接真实模型的 FastAPI Agent 服务。
+
+- `agent-0809`: 架构与数据流梳理
+- `agent-0810`: FastAPI API 与测试
+- `agent-0811`: Mock / DeepSeek Provider 与稳定 JSON
+- `agent-0812`: Tool Calling
+- `agent-0813`: Tool 容错与 Trace
+- `agent-0814`: SSE 流式前端
+- `agent-0815`: Frontend Review Agent 服务化作品
+
+### 第七阶段：RAG 与自动评测
+
+目标：让 Review Agent 使用真实知识库，并通过数据集和指标持续验证效果。
+
+- `agent-0816`: 前端规范知识库
+- `agent-0817`: Chunk、Embedding 与 SQLite 向量检索
+- `agent-0818`: 检索重排与引用
+- `agent-0819`: Review Agent 自动检索知识库
+- `agent-0820`: Eval Dataset
+- `agent-0821`: RAG 自动评测
+- `agent-0822`: Frontend Review RAG Agent 完整作品
+
 ## 统一运行方式
 
 每个项目基本都支持：
@@ -103,6 +127,18 @@ npm start
 - `npm run demo`: 运行样例
 - `npm test`: 跑验收测试或 eval
 - `npm start`: 交互模式或本地服务
+
+`agent-0809` 到 `agent-0822` 使用 Python，基本运行方式为：
+
+```bash
+cd ./agent-xxxx
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest
+```
+
+完整服务项目可使用 `uvicorn app.main:app --reload --port 端口号` 启动。
 
 ## 项目详细说明
 
@@ -760,6 +796,27 @@ http://localhost:5118
 
 > 我最终把前面的能力整合成 Frontend Review Agent Pro。它能读取前端 diff，输出结构化代码审查 findings，生成 patch plan 和 unified diff，记录 trace，跑 eval，并提供 Web dashboard 展示运行链路。这是一个面向真实前端工程场景的 Agent 应用。
 
+## agent-0809 到 agent-0822 项目一览
+
+| 项目 | 学习重点 | 完成结果 |
+| --- | --- | --- |
+| `agent-0809` | 架构梳理 | 画清 Browser、API、Agent、Tool、Trace 数据流 |
+| `agent-0810` | FastAPI | 实现 `/health`、`/review` 和 pytest |
+| `agent-0811` | Provider 与稳定 JSON | 隔离 Mock/DeepSeek，并用 Pydantic 校验输出 |
+| `agent-0812` | Tool Calling | 将审查、知识检索和修复计划注册为工具 |
+| `agent-0813` | Tool 容错 | 实现校验、超时、重试、降级、错误码和 trace |
+| `agent-0814` | SSE 流式输出 | 前端实时展示阶段、工具状态和最终结果 |
+| `agent-0815` | 第 1 周作品 | 完成可运行、可测试、可观测的 Review Agent 服务 |
+| `agent-0816` | 知识库 | 建立 React、Vue、TypeScript、性能、安全规范库 |
+| `agent-0817` | RAG 索引 | 实现解析、Chunk、Metadata、Embedding 和 SQLite 检索 |
+| `agent-0818` | 重排与引用 | 返回命中的规范原文和可核验来源 |
+| `agent-0819` | Agent + RAG | 审查 Diff 时自动调用知识库 |
+| `agent-0820` | Eval Dataset | 建立 12 条真实前端问题与期望检查点 |
+| `agent-0821` | 自动评测 | 统计命中率、引用正确率、JSON、工具和延迟指标 |
+| `agent-0822` | 第 2 周作品 | 整合 FastAPI、RAG、Dashboard 和 Baseline/Tuned 评测 |
+
+推荐先运行 `agent-0815` 理解服务化 Agent，再运行 `agent-0822` 理解 RAG 与评测闭环。
+
 ## 当前能力地图
 
 完成这些项目后，你已经覆盖初级 Agent 工程师的主要基础能力：
@@ -777,43 +834,28 @@ http://localhost:5118
 - Agent Dashboard
 - 代码审查 Agent
 - Patch Suggestion Agent
+- FastAPI Agent Service
+- Mock / Real Provider 抽象
+- Tool 容错与错误码
+- SSE 流式交互
+- SQLite 向量检索与重排
+- Citation 自动校验
+- Eval Dataset 与量化指标
 
 还需要继续加强：
 
-- 接入真实 LLM API
-- 接入真实 embedding 服务或向量数据库
+- 接入生产级 embedding 服务或 pgvector
 - 使用标准 MCP SDK
 - 支持真实 Git diff 和项目文件读取
-- 更完整的 eval dataset
+- 持续扩充来自真实项目的 eval dataset
 - 更严格的权限和安全模型
 - 部署到可访问环境
 
-## 后续 2 周建议
+## 已完成的两周升级
 
-### 第 1 周：把 0518 升级到真实输入
-
-目标：让 `agent-0518` 可以审查真实项目 diff。
-
-任务：
-
-- 支持从文件读取 diff
-- 支持从 git 生成 diff
-- findings 增加 rule id
-- patch plan 增加 approval status
-- eval dataset 增加 10 条 cases
-- dashboard 增加 severity filter
-
-### 第 2 周：接入真实模型和 MCP
-
-目标：把规则型 Agent 升级成 LLM + tools 混合 Agent。
-
-任务：
-
-- 给 `agent-0513` 接真实 LLM API
-- 给 `agent-0515` 替换成标准 MCP SDK
-- 让 `agent-0518` 调用 MCP 读取文件
-- 让 LLM 综合规则 findings，生成更自然的 review explanation
-- 记录真实 token、cost、latency
+- 第 1 周 `agent-0809` 到 `agent-0815`：完成 FastAPI、Provider、Tool Calling、容错、Trace、SSE 和端到端测试。
+- 第 2 周 `agent-0816` 到 `agent-0822`：完成知识库、向量检索、重排、引用、Eval Dataset 和自动评测。
+- 当前主作品为 `agent-0822`，`agent-0518` 用于展示最初的规则型 Demo，`agent-0815` 用于展示服务化过程。
 
 ## 面试准备重点问题
 
@@ -832,20 +874,20 @@ http://localhost:5118
 
 ## 作品集推荐主线
 
-对外展示时，不建议把 16 个小项目都当作品介绍。更好的说法是：
+对外展示时，不建议逐个介绍所有练习项目。更好的说法是：
 
 ```text
-我用 0503-0517 做了 Agent 工程能力拆解训练；
-最后把核心能力整合到了 0518 Frontend Review Agent Pro。
+我先用 0503-0518 完成 Agent 基础能力拆解；
+再用 0809-0821 完成服务化、RAG 和评测升级；
+最后整合成 0822 Frontend Review RAG Agent。
 ```
 
 重点展示：
 
-- `agent-0518` 作为主作品
-- `agent-0514` 展示 RAG 理解
-- `agent-0515` 展示 MCP 理解
-- `agent-0516` 展示安全意识
-- `agent-0517` 展示生产化意识
+- `agent-0822`：主作品，展示完整 RAG 与评测闭环
+- `agent-0815`：展示 Agent 服务化、Tool 容错和 SSE
+- `agent-0518`：展示从规则型 Demo 到工程化作品的演进起点
+- `agent-0515`、`agent-0516`：补充展示 MCP 和人工审批理解
 
 ## 每天复盘模板
 
@@ -865,12 +907,13 @@ http://localhost:5118
 
 ## 最终目标
 
-到 5 月底，你的目标不是“看完 Agent 教程”，而是能拿着 `agent-0518` 讲清楚：
+当前目标不是“看完 Agent 教程”，而是能拿着 `agent-0822` 讲清楚：
 
 - 为什么它是 Agent，不是 Chatbot
-- 它用了哪些工具和结构化输出
-- 它如何做 eval 和 trace
-- 它如何处理 patch 风险
-- 它如何结合你的前端经验
+- Diff 如何触发规则和知识库工具
+- 文档如何经过 Chunk、Embedding、检索和重排
+- 引用如何保证来自真实规范片段
+- Eval Dataset 如何量化命中率、引用和工具成功率
+- FastAPI、Pydantic、Trace 和前端 Dashboard 如何形成完整产品
 
-能讲清楚这些，你就具备投递初级或转型型 Agent 工程岗位的基础。
+能独立运行、修改并讲清楚这些，你就具备投递初级或转型型 Agent 工程岗位的项目基础。
