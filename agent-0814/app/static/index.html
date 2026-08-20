@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frontend Review Agent</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <div><p class="eyebrow">AGENT SERVICE / SSE</p><h1>Frontend Review Agent</h1><p>实时查看公开执行阶段、工具状态和结构化审查结果。</p></div>
+        <span id="connection" class="badge">Ready</span>
+      </header>
+      <section class="workspace">
+        <div class="editor">
+          <div class="toolbar"><strong>Git diff</strong><button id="sample" class="secondary">载入样例</button></div>
+          <textarea id="diff" spellcheck="false"></textarea>
+          <button id="run">运行 Agent</button>
+        </div>
+        <aside>
+          <h2>运行进度</h2>
+          <div id="timeline" class="timeline"><p class="muted">等待运行</p></div>
+        </aside>
+      </section>
+      <section class="results">
+        <div><h2>Findings</h2><div id="findings" class="empty">暂无结果</div></div>
+        <div><h2>Patch Plan</h2><div id="plan" class="empty">暂无结果</div></div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+

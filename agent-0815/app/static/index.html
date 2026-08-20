@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frontend Review Agent</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <div><p class="eyebrow">FRONTEND REVIEW / AGENT SERVICE</p><h1>Frontend Review Agent</h1><p>用可控工具链审查前端 Git diff，并实时展示执行轨迹。</p></div>
+        <div class="status"><span id="dot"></span><span id="connection">Ready</span></div>
+      </header>
+      <section class="workspace">
+        <div class="input-panel">
+          <div class="toolbar"><div><strong>审查输入</strong><span>Git unified diff</span></div><button id="sample" class="secondary">载入样例</button></div>
+          <textarea id="diff" aria-label="Git diff" spellcheck="false"></textarea>
+          <div class="actions"><button id="run">运行 Agent</button><span id="trace-id"></span></div>
+        </div>
+        <aside>
+          <div class="aside-title"><h2>实时轨迹</h2><span id="step-count">0 events</span></div>
+          <div id="timeline" class="timeline"><p class="muted">提交审查后，这里会显示 Agent 阶段和工具状态。</p></div>
+        </aside>
+      </section>
+      <section class="metrics" id="metrics">
+        <div><strong>0</strong><span>Findings</span></div><div><strong>-</strong><span>Risk</span></div><div><strong>0</strong><span>Tools</span></div><div><strong>-</strong><span>Provider</span></div>
+      </section>
+      <section class="results">
+        <div class="result-panel"><h2>审查发现</h2><div id="findings" class="empty">暂无结果</div></div>
+        <div class="result-panel"><h2>修复计划</h2><div id="plan" class="empty">暂无结果</div></div>
+      </section>
+      <section class="result-panel sources-panel"><h2>检索来源</h2><div id="sources" class="source-grid empty">暂无结果</div></section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+
