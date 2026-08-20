@@ -1,0 +1,12 @@
+# Agent 0818：检索重排与可核验引用
+
+第 2 周 Day 10。在向量召回后使用词法覆盖率和 topic 过滤重排，并返回命中的规范原文。
+
+```bash
+python -m src.cli "localStorage token XSS" --topic security
+pytest
+```
+
+每条引用包含 `document_id`、`chunk_id`、标题、主题、源文件、分数和 `quote`。quote 必须来自真实 chunk，不能让模型自行编造。
+
+掌握标准：能区分召回和重排，能证明回答中的引用来自哪份文档的哪个 chunk。

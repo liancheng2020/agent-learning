@@ -1,0 +1,193 @@
+{
+  "summary": {
+    "cases": 12,
+    "hit_rate": 0.4545,
+    "citation_accuracy": 0.2727,
+    "json_valid_rate": 1.0,
+    "tool_success_rate": 1.0,
+    "avg_latency_ms": 0.194,
+    "case_pass_rate": 0.3333
+  },
+  "cases": [
+    {
+      "id": "react-effect-empty-deps",
+      "passed": true,
+      "expected": [
+        "react-effect-dependencies"
+      ],
+      "actual": [
+        "react-effect-dependencies"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.463
+    },
+    {
+      "id": "react-index-key",
+      "passed": false,
+      "expected": [
+        "react-unstable-key"
+      ],
+      "actual": [],
+      "missing": [
+        "react-unstable-key"
+      ],
+      "unexpected": [],
+      "citation_failures": [
+        "react-unstable-key"
+      ],
+      "latency_ms": 0.014
+    },
+    {
+      "id": "vue-vfor-key",
+      "passed": false,
+      "expected": [
+        "vue-missing-key"
+      ],
+      "actual": [],
+      "missing": [
+        "vue-missing-key"
+      ],
+      "unexpected": [],
+      "citation_failures": [
+        "vue-missing-key"
+      ],
+      "latency_ms": 0.01
+    },
+    {
+      "id": "vue-reactive-destructure",
+      "passed": false,
+      "expected": [
+        "vue-reactivity"
+      ],
+      "actual": [],
+      "missing": [
+        "vue-reactivity"
+      ],
+      "unexpected": [],
+      "citation_failures": [
+        "vue-reactivity"
+      ],
+      "latency_ms": 0.012
+    },
+    {
+      "id": "typescript-any-response",
+      "passed": true,
+      "expected": [
+        "typescript-any"
+      ],
+      "actual": [
+        "typescript-any"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.45
+    },
+    {
+      "id": "typescript-non-null",
+      "passed": false,
+      "expected": [
+        "typescript-null-assertion"
+      ],
+      "actual": [],
+      "missing": [
+        "typescript-null-assertion"
+      ],
+      "unexpected": [],
+      "citation_failures": [
+        "typescript-null-assertion"
+      ],
+      "latency_ms": 0.011
+    },
+    {
+      "id": "performance-heavy-import",
+      "passed": false,
+      "expected": [
+        "performance-heavy-import"
+      ],
+      "actual": [],
+      "missing": [
+        "performance-heavy-import"
+      ],
+      "unexpected": [],
+      "citation_failures": [
+        "performance-heavy-import"
+      ],
+      "latency_ms": 0.008
+    },
+    {
+      "id": "performance-image",
+      "passed": false,
+      "expected": [
+        "performance-image"
+      ],
+      "actual": [
+        "performance-image"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [
+        "performance-image"
+      ],
+      "latency_ms": 0.463
+    },
+    {
+      "id": "security-localstorage-token",
+      "passed": true,
+      "expected": [
+        "security-token-storage"
+      ],
+      "actual": [
+        "security-token-storage"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.442
+    },
+    {
+      "id": "security-dangerous-html",
+      "passed": false,
+      "expected": [
+        "security-xss"
+      ],
+      "actual": [
+        "security-xss"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [
+        "security-xss"
+      ],
+      "latency_ms": 0.438
+    },
+    {
+      "id": "security-hardcoded-key",
+      "passed": false,
+      "expected": [
+        "security-hardcoded-secret"
+      ],
+      "actual": [],
+      "missing": [
+        "security-hardcoded-secret"
+      ],
+      "unexpected": [],
+      "citation_failures": [
+        "security-hardcoded-secret"
+      ],
+      "latency_ms": 0.01
+    },
+    {
+      "id": "clean-stable-list",
+      "passed": true,
+      "expected": [],
+      "actual": [],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.009
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "summary": {
+    "cases": 12,
+    "hit_rate": 1.0,
+    "citation_accuracy": 1.0,
+    "json_valid_rate": 1.0,
+    "tool_success_rate": 1.0,
+    "avg_latency_ms": 0.675,
+    "case_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "react-effect-empty-deps",
+      "passed": true,
+      "expected": [
+        "react-effect-dependencies"
+      ],
+      "actual": [
+        "react-effect-dependencies"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 2.192
+    },
+    {
+      "id": "react-index-key",
+      "passed": true,
+      "expected": [
+        "react-unstable-key"
+      ],
+      "actual": [
+        "react-unstable-key"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.637
+    },
+    {
+      "id": "vue-vfor-key",
+      "passed": true,
+      "expected": [
+        "vue-missing-key"
+      ],
+      "actual": [
+        "vue-missing-key"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.599
+    },
+    {
+      "id": "vue-reactive-destructure",
+      "passed": true,
+      "expected": [
+        "vue-reactivity"
+      ],
+      "actual": [
+        "vue-reactivity"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.683
+    },
+    {
+      "id": "typescript-any-response",
+      "passed": true,
+      "expected": [
+        "typescript-any"
+      ],
+      "actual": [
+        "typescript-any"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.584
+    },
+    {
+      "id": "typescript-non-null",
+      "passed": true,
+      "expected": [
+        "typescript-null-assertion"
+      ],
+      "actual": [
+        "typescript-null-assertion"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.564
+    },
+    {
+      "id": "performance-heavy-import",
+      "passed": true,
+      "expected": [
+        "performance-heavy-import"
+      ],
+      "actual": [
+        "performance-heavy-import"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.558
+    },
+    {
+      "id": "performance-image",
+      "passed": true,
+      "expected": [
+        "performance-image"
+      ],
+      "actual": [
+        "performance-image"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.546
+    },
+    {
+      "id": "security-localstorage-token",
+      "passed": true,
+      "expected": [
+        "security-token-storage"
+      ],
+      "actual": [
+        "security-token-storage"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.543
+    },
+    {
+      "id": "security-dangerous-html",
+      "passed": true,
+      "expected": [
+        "security-xss"
+      ],
+      "actual": [
+        "security-xss"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.535
+    },
+    {
+      "id": "security-hardcoded-key",
+      "passed": true,
+      "expected": [
+        "security-hardcoded-secret"
+      ],
+      "actual": [
+        "security-hardcoded-secret"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.543
+    },
+    {
+      "id": "clean-stable-list",
+      "passed": true,
+      "expected": [],
+      "actual": [],
+      "missing": [],
+      "unexpected": [],
+      "citation_failures": [],
+      "latency_ms": 0.116
+    }
+  ]
+}
