@@ -1,6 +1,6 @@
 # Agent Engineering Learning Roadmap
 
-本文档整理 `agent-0503` 到 `agent-0822` 的学习路径、项目说明、运行方式和面试讲法。
+本文档整理 `agent-0503` 到 `agent-0825` 的学习路径、项目说明、运行方式和面试讲法。
 
 当前定位：前端开发工程师转 Agent 工程师。路线不是单纯学概念，而是用一组可运行项目逐步覆盖 Agent 应用落地能力。
 
@@ -111,6 +111,14 @@
 - `agent-0821`: RAG 自动评测
 - `agent-0822`: Frontend Review RAG Agent 完整作品
 
+### 第八阶段：工程化与安全执行
+
+目标：补齐审批、可观测性和缓存，让 Agent 的高风险动作可控、运行过程可解释、重复请求成本可控。
+
+- `agent-0823`: 人工审批状态机
+- `agent-0824`: 完整结构化 Trace
+- `agent-0825`: Redis 审查缓存与内存降级
+
 ## 统一运行方式
 
 每个项目基本都支持：
@@ -128,7 +136,7 @@ npm start
 - `npm test`: 跑验收测试或 eval
 - `npm start`: 交互模式或本地服务
 
-`agent-0809` 到 `agent-0822` 使用 Python，基本运行方式为：
+`agent-0809` 到 `agent-0825` 使用 Python，基本运行方式为：
 
 ```bash
 cd ./agent-xxxx
@@ -796,7 +804,7 @@ http://localhost:5118
 
 > 我最终把前面的能力整合成 Frontend Review Agent Pro。它能读取前端 diff，输出结构化代码审查 findings，生成 patch plan 和 unified diff，记录 trace，跑 eval，并提供 Web dashboard 展示运行链路。这是一个面向真实前端工程场景的 Agent 应用。
 
-## agent-0809 到 agent-0822 项目一览
+## agent-0809 到 agent-0825 项目一览
 
 | 项目 | 学习重点 | 完成结果 |
 | --- | --- | --- |
@@ -814,8 +822,11 @@ http://localhost:5118
 | `agent-0820` | Eval Dataset | 建立 12 条真实前端问题与期望检查点 |
 | `agent-0821` | 自动评测 | 统计命中率、引用正确率、JSON、工具和延迟指标 |
 | `agent-0822` | 第 2 周作品 | 整合 FastAPI、RAG、Dashboard 和 Baseline/Tuned 评测 |
+| `agent-0823` | 人工审批 | Patch 和高风险操作必须经过 pending 到 approved/rejected |
+| `agent-0824` | 完整 Trace | 记录模型、Prompt、工具、耗时、token/cost 和错误栈 |
+| `agent-0825` | Redis 缓存与面试材料 | 缓存重复审查，Redis 故障降级，并提供演示讲稿 |
 
-推荐先运行 `agent-0815` 理解服务化 Agent，再运行 `agent-0822` 理解 RAG 与评测闭环。
+推荐先运行 `agent-0815` 理解服务化 Agent，再运行 `agent-0822` 理解 RAG 与评测闭环，最后运行 `agent-0825` 理解工程化控制。
 
 ## 当前能力地图
 
@@ -841,6 +852,9 @@ http://localhost:5118
 - SQLite 向量检索与重排
 - Citation 自动校验
 - Eval Dataset 与量化指标
+- 持久化人工审批状态机
+- 模型、Prompt、工具和错误栈 Trace
+- Redis 缓存与故障降级
 
 还需要继续加强：
 
@@ -851,11 +865,12 @@ http://localhost:5118
 - 更严格的权限和安全模型
 - 部署到可访问环境
 
-## 已完成的两周升级
+## 已完成的三周升级
 
 - 第 1 周 `agent-0809` 到 `agent-0815`：完成 FastAPI、Provider、Tool Calling、容错、Trace、SSE 和端到端测试。
 - 第 2 周 `agent-0816` 到 `agent-0822`：完成知识库、向量检索、重排、引用、Eval Dataset 和自动评测。
-- 当前主作品为 `agent-0822`，`agent-0518` 用于展示最初的规则型 Demo，`agent-0815` 用于展示服务化过程。
+- 第 3 周 `agent-0823` 到 `agent-0825`：完成人工审批、完整 Trace 和 Redis 缓存降级。
+- 当前主作品为 `agent-0825`，`agent-0822` 用于展示 RAG 评测闭环，`agent-0815` 用于展示服务化过程。
 
 ## 面试准备重点问题
 
@@ -878,13 +893,14 @@ http://localhost:5118
 
 ```text
 我先用 0503-0518 完成 Agent 基础能力拆解；
-再用 0809-0821 完成服务化、RAG 和评测升级；
-最后整合成 0822 Frontend Review RAG Agent。
+再用 0809-0822 完成服务化、RAG 和评测升级；
+最后用 0823-0825 补齐审批、Trace 和 Redis 缓存。
 ```
 
 重点展示：
 
-- `agent-0822`：主作品，展示完整 RAG 与评测闭环
+- `agent-0825`：主作品，展示 RAG、审批、Trace 与 Redis 工程化闭环
+- `agent-0822`：展示完整 RAG 与评测闭环
 - `agent-0815`：展示 Agent 服务化、Tool 容错和 SSE
 - `agent-0518`：展示从规则型 Demo 到工程化作品的演进起点
 - `agent-0515`、`agent-0516`：补充展示 MCP 和人工审批理解
@@ -907,7 +923,7 @@ http://localhost:5118
 
 ## 最终目标
 
-当前目标不是“看完 Agent 教程”，而是能拿着 `agent-0822` 讲清楚：
+当前目标不是“看完 Agent 教程”，而是能拿着 `agent-0825` 讲清楚：
 
 - 为什么它是 Agent，不是 Chatbot
 - Diff 如何触发规则和知识库工具
@@ -915,5 +931,7 @@ http://localhost:5118
 - 引用如何保证来自真实规范片段
 - Eval Dataset 如何量化命中率、引用和工具成功率
 - FastAPI、Pydantic、Trace 和前端 Dashboard 如何形成完整产品
+- Patch 和高风险操作为什么必须经过人工审批
+- Redis 缓存为何只用于重复审查，以及断连时如何降级
 
 能独立运行、修改并讲清楚这些，你就具备投递初级或转型型 Agent 工程岗位的项目基础。

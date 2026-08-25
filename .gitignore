@@ -8,5 +8,7 @@ __pycache__/
 **/.venv*/
 *.py[cod]
 **/data/trace.jsonl
+**/data/*.db
+**/.env
 **/demo-video/
 **/test-results/
