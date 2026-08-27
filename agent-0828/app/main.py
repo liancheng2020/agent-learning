@@ -1,0 +1,190 @@
+from __future__ import annotations
+
+import os
+from dataclasses import asdict
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
+
+from app.approval import ApprovalNotFound, InvalidApprovalTransition, create_approval_store
+from app.cache import CacheBackend, create_cache
+from app.evaluate import build_agent, compare
+from app.faults import FaultDrillError, FaultDrillService
+from app.patches import generate_patch
+from app.retrieval import KnowledgeRetriever
+from app.review_service import ReviewService
+from app.schemas import (
+    ApprovalDecision,
+    ApprovalRecord,
+    DrillRequest,
+    DrillResult,
+    OperationRequest,
+    PatchArtifact,
+    PatchRequest,
+    ReviewResult,
+)
+from app.trace import TraceStore
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class ReviewRequest(BaseModel):
+    diff_text: str = Field(min_length=1, max_length=200_000)
+
+
+class SearchRequest(BaseModel):
+    query: str = Field(min_length=1, max_length=2_000)
+    topic: str | None = None
+    top_k: int = Field(default=3, ge=1, le=10)
+
+
+def create_app(
+    root: Path = ROOT,
+    approval_database: Path | None = None,
+    trace_path: Path | None = None,
+    cache_backend: CacheBackend | None = None,
+) -> FastAPI:
+    traces = TraceStore(trace_path or Path(os.getenv("TRACE_PATH", root / "data" / "trace.jsonl")))
+    review_agent = build_agent(root, "tuned", traces)
+    cache = cache_backend or create_cache()
+    review_service = ReviewService(review_agent, traces, cache)
+    retriever: KnowledgeRetriever = review_agent.retriever
+    if approval_database is not None:
+        approvals = create_approval_store(approval_database)
+    elif os.getenv("APP_DATABASE_BACKEND", "sqlite").lower() == "postgres":
+        approvals = create_approval_store()
+    else:
+        approvals = create_approval_store(root / "data" / "approvals.db")
+    drills = FaultDrillService(approvals, traces)
+    application = FastAPI(title="Frontend Review Resilience Agent", version="3.4.0")
+    application.state.review_agent = review_agent
+    application.state.traces = traces
+    application.state.cache = cache
+    application.mount("/static", StaticFiles(directory=root / "app" / "static"), name="static")
+
+    @application.exception_handler(FaultDrillError)
+    async def fault_drill_error(_request: Request, error: FaultDrillError) -> JSONResponse:
+        return JSONResponse(
+            status_code=error.status_code,
+            content={
+                "code": error.code,
+                "message": error.message,
+                "suggestion": error.suggestion,
+                "trace_id": error.trace_id,
+                "retryable": error.retryable,
+            },
+        )
+
+    @application.get("/", include_in_schema=False)
+    def index() -> FileResponse:
+        return FileResponse(root / "app" / "static" / "index.html")
+
+    @application.get("/health")
+    def health() -> dict[str, object]:
+        return {
+            "status": "ok",
+            "service": "frontend-review-engineering-agent",
+            "approval_store": approvals.backend,
+            "vector_store": os.getenv("VECTOR_STORE_BACKEND", "sqlite"),
+            "trace_store": "jsonl",
+            "cache": cache.status(),
+        }
+
+    @application.get("/traces/{trace_id}")
+    def get_trace(trace_id: str) -> dict[str, object]:
+        events = traces.get(trace_id)
+        if not events:
+            raise HTTPException(status_code=404, detail="trace not found")
+        return {"trace_id": trace_id, "events": events}
+
+    @application.post("/review", response_model=ReviewResult)
+    def review(request: ReviewRequest) -> ReviewResult:
+        return review_service.review(request.diff_text)
+
+    @application.post("/knowledge/search")
+    def search(request: SearchRequest) -> dict[str, object]:
+        citations = retriever.search_with_citations(request.query, request.top_k, request.topic)
+        return {"query": request.query, "citations": [asdict(item) for item in citations]}
+
+    @application.post("/eval")
+    def run_evaluation() -> dict[str, object]:
+        return compare(root)
+
+    @application.post("/drills/run", response_model=DrillResult)
+    def run_fault_drill(request: DrillRequest) -> DrillResult:
+        return drills.run(request.scenario)
+
+    @application.post("/patches/requests", response_model=ApprovalRecord, status_code=202)
+    def request_patch(request: PatchRequest) -> ApprovalRecord:
+        return approvals.create(
+            "generate_patch",
+            request.model_dump(exclude={"requested_by", "reason"}),
+            request.requested_by,
+            request.reason,
+        )
+
+    @application.post("/operations/requests", response_model=ApprovalRecord, status_code=202)
+    def request_operation(request: OperationRequest) -> ApprovalRecord:
+        return approvals.create(
+            request.action,
+            {"target": request.target},
+            request.requested_by,
+            request.reason,
+        )
+
+    @application.get("/approvals/{approval_id}", response_model=ApprovalRecord)
+    def get_approval(approval_id: str) -> ApprovalRecord:
+        try:
+            return approvals.get(approval_id)
+        except ApprovalNotFound as error:
+            raise HTTPException(status_code=404, detail="approval not found") from error
+
+    @application.post("/approvals/{approval_id}/decision", response_model=ApprovalRecord)
+    def decide_approval(approval_id: str, request: ApprovalDecision) -> ApprovalRecord:
+        try:
+            return approvals.decide(approval_id, request.decision, request.decided_by, request.reason)
+        except ApprovalNotFound as error:
+            raise HTTPException(status_code=404, detail="approval not found") from error
+        except InvalidApprovalTransition as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    @application.post("/patches/{approval_id}/generate", response_model=PatchArtifact)
+    def generate_approved_patch(approval_id: str) -> PatchArtifact:
+        try:
+            approvals.require_approved(approval_id, "generate_patch")
+            payload = approvals.get_payload(approval_id)
+            artifact = generate_patch(approval_id=approval_id, **payload)
+            approvals.save_result(approval_id, artifact.model_dump())
+            return artifact
+        except ApprovalNotFound as error:
+            raise HTTPException(status_code=404, detail="approval not found") from error
+        except InvalidApprovalTransition as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    @application.post("/operations/{approval_id}/execute")
+    def execute_approved_operation(approval_id: str) -> dict[str, object]:
+        try:
+            approval = approvals.get(approval_id)
+            approvals.require_approved(approval_id, approval.action)
+            if approval.action == "generate_patch":
+                raise InvalidApprovalTransition("generate_patch 必须使用 Patch 生成接口")
+            result = {
+                "approval_id": approval_id,
+                "action": approval.action,
+                "executed": True,
+                "target": approval.payload_summary["target"],
+            }
+            approvals.save_result(approval_id, result)
+            return result
+        except ApprovalNotFound as error:
+            raise HTTPException(status_code=404, detail="approval not found") from error
+        except InvalidApprovalTransition as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    return application
+
+
+app = create_app()

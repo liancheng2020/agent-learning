@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN" data-api-prefix="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frontend Review RAG Agent</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <div>
+          <p class="eyebrow">FRONTEND REVIEW / RAG EVAL</p>
+          <h1>Frontend Review RAG Agent</h1>
+          <p>审查 Git Diff，并为每条结论返回可核验的前端规范原文。</p>
+        </div>
+        <span class="status"><i></i> Knowledge ready</span>
+      </header>
+
+      <section class="workspace">
+        <div class="editor">
+          <div class="toolbar"><strong>Git Diff</strong><button id="sample" class="quiet">载入样例</button></div>
+          <textarea id="diff" spellcheck="false" aria-label="Git Diff"></textarea>
+          <button id="review">运行审查</button>
+        </div>
+        <aside>
+          <div class="toolbar"><strong>运行信息</strong><span id="version">tuned v2</span></div>
+          <dl>
+            <div><dt>Findings</dt><dd id="finding-count">0</dd></div>
+            <div><dt>Tools</dt><dd id="tool-count">0</dd></div>
+            <div><dt>Citations</dt><dd id="citation-count">0</dd></div>
+          </dl>
+          <button id="evaluate" class="outline">运行 Baseline / Tuned 评测</button>
+          <pre id="metrics">尚未运行评测</pre>
+        </aside>
+      </section>
+
+      <section class="drills">
+        <div class="section-title"><h2>故障演练</h2><span>可观测、可恢复、可解释</span></div>
+        <div class="drill-controls">
+          <label for="scenario">场景</label>
+          <select id="scenario">
+            <option value="model_timeout">模型超时</option>
+            <option value="tool_exception">工具异常</option>
+            <option value="empty_retrieval">检索为空</option>
+            <option value="invalid_json">JSON 解析失败</option>
+            <option value="approval_rejected">审批拒绝</option>
+          </select>
+          <button id="run-drill">运行演练</button>
+        </div>
+        <div id="drill-feedback" class="feedback neutral">选择场景并运行，页面会展示错误码、traceId 和下一步处理建议。</div>
+      </section>
+
+      <section class="results">
+        <div class="section-title"><h2>审查发现</h2><span id="summary">等待提交</span></div>
+        <div id="findings" class="empty">提交 Diff 后在这里查看问题与规范引用。</div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
