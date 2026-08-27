@@ -1,0 +1,52 @@
+:root { color: #17212b; background: #edf1f3; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.shell { max-width: 1180px; margin: 0 auto; padding: 28px 22px 60px; }
+header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 20px; }
+h1 { margin: 5px 0 7px; font-size: 32px; letter-spacing: 0; }
+h2 { margin: 0; font-size: 17px; }
+p { color: #586776; line-height: 1.55; }
+.eyebrow { margin: 0; color: #08766b; font-size: 11px; font-weight: 800; }
+.status { display: flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid #ced8dd; border-radius: 6px; background: white; font-size: 12px; }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: #168a72; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(290px, .55fr); gap: 14px; }
+.editor, aside, .results, .drills { padding: 16px; border: 1px solid #d3dde2; border-radius: 8px; background: white; }
+.toolbar, .section-title, .finding-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.toolbar span, .section-title span, footer { color: #778591; font-size: 12px; }
+textarea { width: 100%; height: 300px; margin: 12px 0 10px; padding: 12px; resize: vertical; border: 1px solid #c5d0d6; border-radius: 5px; background: #fafcfd; color: #24313c; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+button { min-height: 38px; padding: 8px 13px; border: 1px solid #0d7569; border-radius: 5px; background: #0d7569; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .55; cursor: wait; }
+button.quiet { min-height: 30px; padding: 5px 9px; background: #eef7f5; color: #0d7569; }
+button.outline { width: 100%; margin-top: 14px; background: white; color: #0d7569; }
+dl { display: grid; grid-template-columns: repeat(3, 1fr); margin: 14px 0 0; border: 1px solid #e1e7ea; border-radius: 6px; overflow: hidden; }
+dl div { padding: 11px; border-right: 1px solid #e1e7ea; }
+dl div:last-child { border: 0; }
+dt { color: #74818d; font-size: 11px; }
+dd { margin: 4px 0 0; font-size: 20px; font-weight: 800; }
+pre { min-height: 116px; padding: 11px; overflow: auto; border-radius: 5px; background: #17232b; color: #d9eee9; font: 12px/1.7 ui-monospace, monospace; }
+.results { margin-top: 14px; }
+.drills { margin-top: 14px; }
+.drill-controls { display: grid; grid-template-columns: auto minmax(180px, 1fr) auto; align-items: center; gap: 10px; margin-top: 14px; }
+select { min-height: 38px; padding: 7px 10px; border: 1px solid #c5d0d6; border-radius: 5px; background: white; color: #24313c; font: inherit; }
+.feedback { margin-top: 12px; padding: 13px; border-left: 4px solid #7c8b95; background: #f3f6f7; }
+.feedback p { margin: 5px 0; }
+.feedback code { font-size: 12px; overflow-wrap: anywhere; }
+.feedback.failed { border-color: #b4443e; background: #fff2f0; }
+.feedback.degraded { border-color: #b87a14; background: #fff8e9; }
+.feedback.blocked { border-color: #704f8f; background: #f8f2fc; }
+.section-title { padding-bottom: 13px; border-bottom: 1px solid #e6ebee; }
+.finding { padding: 15px 0; border-bottom: 1px solid #e6ebee; }
+.finding:last-child { border: 0; }
+.finding-head > div { display: flex; align-items: center; gap: 8px; }
+.finding-head > span { color: #71808d; font-size: 12px; }
+.severity { padding: 3px 6px; border-radius: 4px; background: #e5ecef; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.severity.high { background: #f7dfdc; color: #a63832; }
+.severity.medium { background: #f8ead1; color: #8b5b0b; }
+.severity.low { background: #dff0eb; color: #176b5d; }
+.suggestion { color: #08766b; }
+.citations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+blockquote { margin: 0; padding: 11px; border-left: 3px solid #5d9e94; background: #f6f9fa; }
+blockquote p { margin: 6px 0; font-size: 13px; }
+.empty { padding: 28px 0; color: #788692; }
+.error { color: #ad3933; }
+@media (max-width: 800px) { header { flex-direction: column; } .workspace, .citations { grid-template-columns: 1fr; } .drill-controls { grid-template-columns: 1fr; } }
