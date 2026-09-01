@@ -48,6 +48,17 @@ flowchart LR
 
 ### Docker Compose
 
+Windows PowerShell：
+
+```powershell
+Copy-Item .env.example .env
+# 修改 .env 中的 POSTGRES_PASSWORD
+docker compose up --build -d
+docker compose ps
+```
+
+macOS / Linux：
+
 ```bash
 cp .env.example .env
 # 修改 .env 中的 POSTGRES_PASSWORD
@@ -59,6 +70,8 @@ docker compose ps
 - API 文档：`http://127.0.0.1:8000/docs`
 - 健康检查：`http://127.0.0.1:8000/health`
 
+Windows PowerShell 和 macOS / Linux 通用：
+
 ```bash
 docker compose down
 ```
@@ -67,12 +80,24 @@ docker compose down
 
 本地测试默认使用 SQLite 向量/审批库和内存缓存，不依赖外部服务。
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest -q
+python -m uvicorn app.main:app --reload
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest -q
-uvicorn app.main:app --reload
+python -m pip install -r requirements.txt
+python -m pytest -q
+python -m uvicorn app.main:app --reload
 ```
 
 访问 `http://127.0.0.1:8000`。完整配置及默认值见 [`.env.example`](./.env.example)。
@@ -92,6 +117,8 @@ uvicorn app.main:app --reload
 
 复现评测：
 
+Windows PowerShell 和 macOS / Linux 通用：
+
 ```bash
 python -m app.cli compare
 ```
@@ -110,6 +137,15 @@ python -m app.cli compare
 | Redis 故障 | API 继续可用 | 标记缓存降级 | 自动使用进程内 TTL 缓存 |
 
 运行单个演练：
+
+Windows PowerShell：
+
+```powershell
+$body = @{ scenario = 'model_timeout' } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/drills/run -ContentType 'application/json' -Body $body
+```
+
+macOS / Linux：
 
 ```bash
 curl -X POST http://127.0.0.1:8000/drills/run \

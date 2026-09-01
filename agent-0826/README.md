@@ -4,6 +4,17 @@
 
 ## 启动
 
+Windows PowerShell：
+
+```powershell
+Copy-Item .env.example .env
+# 修改 .env 中的 POSTGRES_PASSWORD
+docker compose up --build -d
+docker compose ps
+```
+
+macOS / Linux：
+
 ```bash
 cp .env.example .env
 # 修改 .env 中的 POSTGRES_PASSWORD
@@ -19,11 +30,15 @@ docker compose ps
 
 停止并保留数据：
 
+Windows PowerShell 和 macOS / Linux 通用：
+
 ```bash
 docker compose down
 ```
 
 连同 PostgreSQL、Redis 数据一起清理：
+
+Windows PowerShell 和 macOS / Linux 通用：
 
 ```bash
 docker compose down -v
@@ -33,11 +48,22 @@ docker compose down -v
 
 不使用 Docker 时默认回退到 SQLite 向量库、SQLite 审批库和 Redis/内存缓存；原有 pytest 不依赖外部服务。
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
+python -m pip install -r requirements.txt
+python -m pytest
 ```
 
 环境变量说明见 [`.env.example`](./.env.example)，容器数据流见 [`ARCHITECTURE.md`](./ARCHITECTURE.md)。

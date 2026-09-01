@@ -4,12 +4,24 @@
 
 ## 运行
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8113
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8113
+python -m pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8113
 ```
 
 ## 稳定错误码
@@ -25,4 +37,3 @@ uvicorn app.main:app --reload --port 8113
 - 只有幂等或明确可重试的操作才适合自动重试。
 - 降级结果必须标记 `degraded`，不能伪装成正常成功。
 - 用户拿到 `trace_id` 后，可以查询一次运行的完整事件链。
-

@@ -4,12 +4,24 @@
 
 ## 运行
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8112
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8112
+python -m pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8112
 ```
 
 ## 三个工具
@@ -24,4 +36,3 @@ uvicorn app.main:app --reload --port 8112
 - Agent 负责调用顺序和上下文，Tool 只负责单一能力。
 - 模型或外部输入给出的工具参数必须先通过 Pydantic 校验。
 - Tool Calling 不意味着允许模型执行任意函数，只能调用注册表白名单。
-

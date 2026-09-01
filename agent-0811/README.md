@@ -4,15 +4,41 @@
 
 ## 运行
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8111
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8111
+python -m pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8111
 ```
 
 真实模型运行时，在终端环境中设置 `PROVIDER=deepseek` 和 `DEEPSEEK_API_KEY`。不要把密钥写进源码或提交到 Git。
+
+Windows PowerShell：
+
+```powershell
+$env:PROVIDER = 'deepseek'
+$env:DEEPSEEK_API_KEY = '你的密钥'
+```
+
+macOS / Linux：
+
+```bash
+export PROVIDER=deepseek
+export DEEPSEEK_API_KEY='你的密钥'
+```
 
 ## 必须掌握
 
@@ -20,4 +46,3 @@ uvicorn app.main:app --reload --port 8111
 - Mock 用于单测、离线演示和控制成本；真实 Provider 用于集成验证。
 - JSON Mode 只约束输出格式，Pydantic 才负责字段、枚举和类型校验。
 - 即使模型返回合法 JSON，也可能不符合业务 Schema，必须拒绝或重试。
-

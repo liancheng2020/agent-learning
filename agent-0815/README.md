@@ -4,12 +4,24 @@
 
 ## 快速开始
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8115
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8115
+python -m pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8115
 ```
 
 打开：
@@ -24,11 +36,22 @@ uvicorn app.main:app --reload --port 8115
 
 服务已经按照 DeepSeek 的 OpenAI 兼容 Chat Completions、JSON Output 和 Tool Calls 接口接入。把环境变量设置在本机，不要写进源码：
 
+Windows PowerShell：
+
+```powershell
+$env:PROVIDER = 'deepseek'
+$env:DEEPSEEK_API_KEY = '你的新密钥'
+$env:DEEPSEEK_MODEL = 'deepseek-chat'
+python -m uvicorn app.main:app --reload --port 8115
+```
+
+macOS / Linux：
+
 ```bash
 export PROVIDER=deepseek
 export DEEPSEEK_API_KEY="你的新密钥"
 export DEEPSEEK_MODEL=deepseek-chat
-uvicorn app.main:app --reload --port 8115
+python -m uvicorn app.main:app --reload --port 8115
 ```
 
 你之前发在聊天中的密钥应当轮换后再使用。
@@ -58,4 +81,3 @@ uvicorn app.main:app --reload --port 8115
 - [DeepSeek Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion)
 - [DeepSeek JSON Output](https://api-docs.deepseek.com/guides/json_mode)
 - [DeepSeek Tool Calls](https://api-docs.deepseek.com/guides/tool_calls)
-

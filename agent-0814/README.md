@@ -4,12 +4,24 @@
 
 ## 运行
 
+Windows PowerShell：
+
+```powershell
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8114
+```
+
+macOS / Linux：
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8114
+python -m pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8114
 ```
 
 打开 `http://127.0.0.1:8114`。
@@ -20,4 +32,3 @@ uvicorn app.main:app --reload --port 8114
 - 原生 `EventSource` 只方便 GET；本项目用流式 `fetch` 支持 POST JSON。
 - 前端需要处理粘包和半包，所以保留未完成的 `buffer`。
 - 页面展示阶段和工具状态，不展示模型私有推理过程。
-

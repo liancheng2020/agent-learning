@@ -16,14 +16,28 @@
 
 ## 运行
 
+Windows PowerShell：
+
+```powershell
+Copy-Item .env.example .env
+docker compose up -d redis
+uv venv .venv
+.\.venv\Scripts\Activate.ps1
+uv pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8125
+```
+
+macOS / Linux：
+
 ```bash
 cp .env.example .env
 docker compose up -d redis
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pytest
-uvicorn app.main:app --reload --port 8125
+python -m pip install -r requirements.txt
+python -m pytest
+python -m uvicorn app.main:app --reload --port 8125
 ```
 
 不启动 Redis 也可以运行，`GET /health` 会显示 `degraded: true`，服务使用内存缓存继续工作。
