@@ -69,6 +69,17 @@
     .study-box { margin-top: 26px; border: 1px solid #cbdad3; background: #fff; padding: 19px 21px; border-radius: 4px; }
     .study-box h3 { color: #006c5e; }
     .study-box p { font-size: 14px; }
+    .walkthrough { border-top: 1px solid #cbdad3; margin-top: 17px; }
+    .walkthrough-row { display: grid; grid-template-columns: 36px minmax(155px, 1fr) minmax(0, 2fr); gap: 12px; padding: 13px 0; border-bottom: 1px solid #d9e2dd; align-items: start; }
+    .walkthrough-row .step { font: 700 11px ui-monospace, SFMono-Regular, monospace; color: #007969; padding-top: 4px; }
+    .walkthrough-row strong { font-size: 14px; }
+    .walkthrough-row p { font-size: 13px; margin: 0; }
+    .mini-code { background: #13272a; color: #e1f1ea; padding: 14px 17px; font: 12px/1.75 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .practice-steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; border: 1px solid #cad9d2; background: #fff; }
+    .practice-steps > div { padding: 17px; border-right: 1px solid #cad9d2; }
+    .practice-steps > div:last-child { border-right: 0; }
+    .practice-steps b { display: block; color: #006c5e; font-size: 13px; margin-bottom: 7px; }
+    .practice-steps p { font-size: 13px; margin: 0; }
     .reveal { border: 1px solid #b4c9c0; background: #f7faf8; color: #17413d; padding: 7px 11px; border-radius: 3px; font-size: 12px; }
     .answer { margin-top: 12px; padding: 12px; background: #eaf7ef; font-size: 14px; line-height: 1.7; display: none; }
     .answer.show { display: block; }
@@ -81,8 +92,8 @@
     .callout { margin-top: 18px; background: #192d2d; color: #ddf4e8; padding: 18px 20px; line-height: 1.75; border-left: 4px solid #d9925b; }
     .path { overflow-wrap: anywhere; font: 12px ui-monospace, SFMono-Regular, monospace; }
     .footer { color: #6b7d7b; font-size: 12px; margin-top: 28px; }
-    @media (max-width: 900px) { .shell { grid-template-columns: 1fr; } aside { position: static; height: auto; padding: 15px; } .brand { padding-bottom: 12px; } .rail-title, .rail-foot { display: none; } .nav { display: flex; overflow-x: auto; gap: 4px; margin-top: 12px; } .nav button { flex: 0 0 auto; min-width: unset; width: auto; display: block; white-space: nowrap; padding: 9px; } .nav button .num { margin-right: 5px; } .nav .done { display: none; } .topbar { padding: 13px 20px; } .content { padding: 28px 20px 60px; } }
-    @media (max-width: 650px) { .stages, .term-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .stage:nth-child(2) { border-right: 0; } .stage:nth-child(-n+2) { border-bottom: 1px solid #cad9d2; } .term:nth-child(3n) { border-right: 1px solid #cad9d2; } .term:nth-child(2n) { border-right: 0; } .term:nth-last-child(-n+3) { border-bottom: 1px solid #cad9d2; } .term:nth-last-child(-n+2) { border-bottom: 0; } .detail-grid { grid-template-columns: 1fr; gap: 16px; } .topic-header { display: block; } .complete { margin-top: 10px; } .progress .bar { width: 70px; } }
+    @media (max-width: 900px) { .shell { grid-template-columns: minmax(0,1fr); } aside { position: static; min-width: 0; height: auto; padding: 15px; } .brand { padding-bottom: 12px; } .rail-title, .rail-foot { display: none; } .nav { display: flex; max-width: 100%; overflow-x: auto; gap: 4px; margin-top: 12px; } .nav button { flex: 0 0 auto; min-width: unset; width: auto; display: block; white-space: nowrap; padding: 9px; } .nav button .num { margin-right: 5px; } .nav .done { display: none; } .topbar { padding: 13px 20px; flex-wrap: wrap; } .content { padding: 28px 20px 60px; overflow-wrap: anywhere; } }
+    @media (max-width: 650px) { .stages, .term-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .stage:nth-child(2) { border-right: 0; } .stage:nth-child(-n+2) { border-bottom: 1px solid #cad9d2; } .term:nth-child(3n) { border-right: 1px solid #cad9d2; } .term:nth-child(2n) { border-right: 0; } .term:nth-last-child(-n+3) { border-bottom: 1px solid #cad9d2; } .term:nth-last-child(-n+2) { border-bottom: 0; } .detail-grid { grid-template-columns: 1fr; gap: 16px; } .topic-header { display: block; } .complete { margin-top: 10px; } .progress .bar { width: 70px; } .walkthrough-row { grid-template-columns: 30px minmax(0,1fr); } .walkthrough-row p { grid-column: 2; } .practice-steps { grid-template-columns: 1fr; } .practice-steps > div { border-right: 0; border-bottom: 1px solid #cad9d2; } .practice-steps > div:last-child { border-bottom: 0; } }
   </style>
 </head>
 <body>
@@ -154,9 +165,260 @@
     <section class="section"><h2>每个项目用同一套五问复盘</h2><ol class="practice-list"><li>输入是什么？来自用户、文件还是上一工具？</li><li>谁做决策？规则、模型，还是人？</li><li>动作由谁执行？参数如何校验，失败如何返回？</li><li>结果写到哪里？能否追踪、重放、评测？</li><li>如果把教学 mock 换成真实线上能力，还缺什么？</li></ol><p style="margin-top:16px">建议每次 35 分钟：10 分钟看本页并口述，15 分钟只读两处关键代码，10 分钟做动手题。不要以“记住函数名”为目标，而要能空白纸画出数据流。</p></section>
     <section class="section"><h2>最终串联题</h2><p>假设你要把一段前端 Diff 审查成可执行补丁：0503 的工具闭环负责调用审查/检索工具；0504 保证 Finding 和 Patch Plan 结构稳定；0505/0510 记录并展示过程；0506/0514 查询规范；0508 控制审查→计划→验证流程；0509/0515 暴露外部能力；0511/0512 生成 Finding 和补丁；0513 接真实模型；0516 高风险审批；0517 观测成本与延迟。</p><p class="muted">能独立讲清这条链路，并指出每一环的失败模式，就已经不是“只会跟着敲代码”。</p></section>`;
   }
+  function toolCallingDeepDive() {
+    return `<section class="section"><span class="eyebrow">先用人话理解 / 0503</span><h2>它像一个会分工的前台</h2><p>用户说“帮我算一下 23 * 17 + 8”。前台自己不心算，而是判断这属于计算任务，填好计算器需要的参数，交给计算器执行。计算器只返回数据，前台再把数据整理成一句能读懂的话。这个“判断 → 交给工具 → 读取结果 → 回答”就是最小工具调用闭环。</p><p>在这份代码里，“前台”不是大模型，而是 <span class="path">planToolCall</span> 中的正则规则；“计算器”才是实际被执行的 JavaScript 函数。先掌握各角色的职责，再考虑把规则选择器换成真实模型。</p></section>
+    <section class="section"><h2>跟着一次计算走到底</h2><p class="muted">输入：<strong>帮我算一下 23 * 17 + 8</strong>。运行 <span class="path">npm run demo</span> 时，可从下面五步对照源码和终端输出。</p><div class="walkthrough">
+      <div class="walkthrough-row"><span class="step">01</span><strong>收下问题</strong><p><span class="path">runAgent</span> 建立 <span class="path">messages</span>，先放入一条 <span class="path">role: "user"</span> 消息。它是本次运行记录，不是工具执行本身。</p></div>
+      <div class="walkthrough-row"><span class="step">02</span><strong>选工具并填参数</strong><p><span class="path">planToolCall</span> 从问题中提取算式，生成 <span class="path">name: "calculator"</span>、<span class="path">arguments: { expression: "23 * 17 + 8" }</span> 和调用 ID。这里是规则匹配，不是模型思考。</p></div>
+      <div class="walkthrough-row"><span class="step">03</span><strong>真正执行</strong><p><span class="path">executeToolCall</span> 从 <span class="path">toolRegistry</span> 找到 <span class="path">calculator</span>，调用它的 <span class="path">execute(arguments)</span>。工具校验表达式，算出 <strong>399</strong>，返回数据。</p></div>
+      <div class="walkthrough-row"><span class="step">04</span><strong>把结果记下来</strong><p>执行器把结果包装成 <span class="path">{ ok: true, data: ... }</span>，再加一条 <span class="path">role: "tool"</span> 的消息。工具失败时则返回 <span class="path">{ ok: false, error: ... }</span>。</p></div>
+      <div class="walkthrough-row"><span class="step">05</span><strong>整理回答</strong><p><span class="path">synthesizeAnswer</span> 根据工具名和结果生成“23 * 17 + 8 的计算结果是 399。”；<span class="path">runAgent</span> 最后返回 <span class="path">answer</span>、<span class="path">messages</span> 和 <span class="path">toolCalls</span>。</p></div>
+    </div><p class="muted" style="margin-top:15px">如果输入“现在几点？”，第二步会选 <span class="path">getCurrentTime</span>；如果问“Agent 是什么？”，会选 <span class="path">searchNotes</span>。后面三步基本不变，这就是工具注册表的价值。</p></section>
+    <section class="section"><div class="detail-grid"><div><h2>四种消息分别表示什么</h2><div class="mini-code">user: "帮我算一下 23 * 17 + 8"
+assistant.toolCall: calculator({ expression: "23 * 17 + 8" })
+tool: { ok: true, data: { result: 399 } }
+assistant.content: "...计算结果是 399。"</div><p class="muted" style="margin-top:10px">这是便于理解的简写；实际对象字段以 <span class="path">src/agent.js</span> 为准。注意 <span class="path">toolCall</span> 是请求，<span class="path">tool</span> 消息才是执行后的结果。</p></div><div><h2>三个文件各负责什么</h2><ul class="practice-list"><li><strong>src/index.js：</strong>CLI 入口，接收输入、运行 demo / test、打印结果。</li><li><strong>src/agent.js：</strong>控制整个流程；选择工具、执行、处理失败、合成回答。</li><li><strong>src/tools/index.js 与各工具文件：</strong>注册工具及其实现。<span class="path">parameters</span> 描述接口；各工具的 <span class="path">execute</span> 自己验证实际参数。</li></ul><p class="muted" style="margin-top:10px">顺着 <span class="path">index.js → runAgent → planToolCall → executeToolCall → tool.execute → synthesizeAnswer</span> 读，比从文件第一行硬背更容易。</p></div></div></section>
+    <section class="section"><h2>容易混淆的地方</h2><div class="detail-grid"><div><h3>“有 schema 就会自动调用/校验？”</h3><p>不会。<span class="path">listToolSchemas</span> 只是列出工具描述；这份代码由 <span class="path">planToolCall</span> 决定选哪个。运行时也没有统一的 schema 校验器，参数检查主要写在各工具的 <span class="path">execute</span> 中。</p><h3 style="margin-top:18px">“工具失败就抛到页面？”</h3><p>这里的 <span class="path">executeToolCall</span> 用 <span class="path">try/catch</span> 将工具异常变成 <span class="path">ok: false</span>；最终回答会说明哪个工具失败。但它还没有超时、重试和错误码分类。</p></div><div><h3>“选了工具就一定执行？”</h3><p>不一定。没匹配到工具时，<span class="path">runAgent</span> 直接返回提示和空 <span class="path">toolCalls</span>。若请求了未注册的工具，执行器也会返回 <span class="path">Unknown tool</span>。</p><h3 style="margin-top:18px">“这已经是通用 Agent？”</h3><p>还不是。一次输入最多调用一个工具，规则顺序也会影响选择：时间关键词先于算式判断。这是练习执行边界的最小样本，不是多轮 ReAct 或生产级 Tool Calling。计算器虽然限制了字符，仍用 <span class="path">Function</span> 求值；生产环境处理不可信算式应使用专门的表达式解析器。</p></div></div></section>
+    <section class="section"><h2>照着做，确认自己真的会了</h2><div class="practice-steps"><div><b>第 1 步 · 预测</b><p>先不运行，写下三个问题分别会走哪条工具路径：“现在几点？”、“帮我算一下 23 * 17 + 8”、“Agent 是什么？”。再用 <span class="path">npm run demo</span> 核对。</p></div><div><b>第 2 步 · 追踪</b><p>在 <span class="path">runAgent</span> 和 <span class="path">executeToolCall</span> 打断点，观察 <span class="path">toolCall.name</span>、<span class="path">arguments</span>、<span class="path">toolResult</span> 和 <span class="path">messages</span> 如何变化。</p></div><div><b>第 3 步 · 制造失败</b><p>输入“帮我算一下 1 / 0”，预测为什么计算器会报错，再运行验证。最后尝试添加一个 mock 工具，并给成功、失败各写一条测试。</p></div></div><p class="muted" style="margin-top:16px">本课算掌握：不看代码能画出五步链路，解释“谁提出调用、谁真的执行”，并能指出一次失败发生在哪一步。</p></section>`;
+  }
+  const guidedLessons = {
+    '0504': {
+      analogy: '把计划发给人看，一段话就够；要让页面生成打卡清单、让程序检查是否完成，就需要约定字段。结构化输出像一张有固定列名的表：先确定列，再填内容，最后检查有没有漏列或填错类型。',
+      example: 'createLearningPlan({ availableHours: 1 })：生成一个短时学习计划。',
+      steps: [
+        ['输入条件', '调用 createLearningPlan，传入可用时长；不传时使用默认日期、目标和 2 小时。'],
+        ['组装对象', 'plannerAgent.js 生成 date、theme、goal、schedule、checklist、acceptanceCriteria、nextStep。availableHours 不超过 1.5 时，安排 3 段任务；否则安排 4 段。'],
+        ['检查契约', 'validateLearningPlan 检查必填字段、非空字符串、非空数组，以及 schedule 每项的 time/task/output。错误放进 errors 数组。'],
+        ['给程序消费', '返回 { ok, plan, errors }。只有通过校验的 plan 才适合继续交给页面或下一步程序。'],
+        ['给人阅读', 'renderPlanMarkdown 把同一份 plan 渲染为 Markdown；数据对象与展示文本分开。']
+      ],
+      snapshot: '输入：{ availableHours: 1 }\n输出：{ ok: true, plan: { schedule: [3 项], checklist: [...], ... }, errors: [] }\n同一 plan → JSON 给程序；Markdown 给人看',
+      files: [['src/index.js','选择 demo / test / CLI，打印计划。'],['src/plannerAgent.js','按条件生成对象，并把对象渲染成 Markdown。'],['src/schema.js','手写 validateLearningPlan，返回错误列表。']],
+      pitfalls: [['合法 JSON 不等于正确计划','JSON.parse 只证明语法没坏；字段类型、业务要求和内容质量还得分开检查。'],['有 schema 对象不等于自动校验','本例 learningPlanSchema 记录顶层字段，真正执行检查的是手写 validateLearningPlan；它也没有覆盖所有业务语义。']],
+      practice: [['先预测','把 availableHours 分别设为 1 和 2，先猜 schedule 长度，再跑 demo 或直接调用函数。'],['故意破坏','从 plan.schedule[0] 删除 output，再执行 validateLearningPlan，看错误能否定位到 schedule[0].output。'],['做一次扩展','新增 durationMinutes，修改生成、校验和测试；确认 JSON 与 Markdown 都能表达它。']],
+      done: '能说明“生成对象 → 校验对象 → 渲染展示”三个职责，知道结构合法不等于内容可靠。'
+    },
+    '0505': {
+      analogy: 'Agent 运行像一次快递配送。只知道“最终没送到”不够，你需要每个站点的扫描记录；Trace 是扫描记录，Eval 则拿预期路线和实际结果对照，判断是否合格。',
+      example: '输入“帮我算一下 23 * 17 + 8”，追踪一次计算并判断它是否通过测试。',
+      steps: [
+        ['创建 runId', 'runAgent 为本次运行生成 runId，写入 run.started；同一运行的事件用它串起来。'],
+        ['记录选择', '规则型 planToolCall 选 calculator，写入 tool.selected，包括工具名和参数。'],
+        ['记录执行', '执行成功写 tool.completed 和 durationMs；抛错写 tool.failed 与 error。'],
+        ['记录结论', '成功时记录 answer.completed，最后无论成功还是失败都写 run.completed，包含 ok。'],
+        ['固定样本判分', 'runEval 依次跑 3 条 evalCases，检查 result.ok、工具名和回答中是否包含预期文本，再统计通过数。']
+      ],
+      snapshot: 'run.started → tool.selected → tool.completed → answer.completed → run.completed\n每行一条 JSON，带同一个 runId；失败则出现 tool.failed 和 ok:false',
+      files: [['src/agent.js','决定工具、执行并发出事件。'],['src/traceLogger.js','把事件追加到 JSONL；构造时会清空目标文件。'],['src/evalRunner.js','保存 3 条期望与实际对照，计算通过数。']],
+      pitfalls: [['Trace 和 Eval 不是一回事','Trace 回答“这次发生了什么”；Eval 回答“按固定标准，这些运行是否达标”。'],['3/3 通过不代表普遍可靠','本例只检查工具名和回答包含某段文字；没有覆盖其他表述、边界输入或真实模型漂移。']],
+      practice: [['看一次完整轨迹','运行 npm test，打开 data/eval-trace.jsonl，按 runId 找出一个运行的事件顺序。'],['制造失败','让一个工具抛错，检查 tool.failed 与 run.completed.ok=false 是否出现。'],['新增评测','加一条预期走 createChecklist 的输入，同时说明这个样本会漏掉哪类语义错误。']],
+      done: '能根据 runId 指出一次运行失败在哪一步，并能说明现有 Eval 判分的覆盖范围。'
+    },
+    '0506': {
+      analogy: 'RAG 像开卷答题：先去资料柜找相关页，再根据找到的内容回答，并告诉读者依据是哪一页。这里的“找”不是理解语义，而是检查关键词有没有出现在标题或正文中。',
+      example: '查询“RAG cite sources”：资料库中的 doc-rag 命中，回答附上 Sources: doc-rag。',
+      steps: [
+        ['读取资料', 'ragAgent.js 启动时从 data/docs.json 读入 4 篇本地短文，每篇有 id、title、text。'],
+        ['切词', 'tokenize 将问题转小写，取出英文数字词或连续中文片段。'],
+        ['打分排序', 'score 对每个词做子串匹配，命中标题或正文就加 1 分；过滤 0 分，按分数排序取前 2 篇。'],
+        ['组织回答', 'answerWithRag 拼接命中文档的标题和原文，再附来源 id；没有命中则返回 ok:false 和拒答提示。'],
+        ['验证边界', '测试用 RAG cite sources 期待 doc-rag；quantum compiler 没命中时期待拒答。']
+      ],
+      snapshot: 'query → tokenize → score(doc) → Top 2 → 拼接原文 + Sources\n无匹配 → { ok: false, sources: [] }',
+      files: [['data/docs.json','本地知识库；id 是来源标识。'],['src/ragAgent.js','实现 retrieve、answerWithRag、tokenize 与 score。'],['src/index.js','demo、CLI 和 2 条测试入口。']],
+      pitfalls: [['命中不等于答对','包含同一个词的文档可能结论相反；来源 id 也只说明取了哪篇，不证明这篇支持结论。'],['这不是向量检索','英文同义词、中文问英文文档都可能漏召回；返回文本是拼接原文，不是大模型基于证据推理。']],
+      practice: [['跑两种输入','分别查询 RAG cite sources 与 quantum compiler，比较 sources 和 ok。'],['制造误检','在 docs.json 添加一篇也包含 RAG、但结论不适用的文档，观察 Top 2 排名。'],['补一条评测','写明期待 docId 与可接受答案片段；把“检索命中”与“答案正确”分开记录。']],
+      done: '能分清召回、排序、引用和回答四步；能解释为什么有来源仍可能答错。'
+    },
+    '0507': {
+      analogy: '会话上下文像当前桌面上的便签，关掉程序可能就没了；长期记忆像写进档案。写档案与查档案是两件事，还要考虑是谁的档案、旧值是否覆盖、能否删除。',
+      example: '交互模式先输入“记住: 学习偏好 = 项目制学习”，再只输入“学习偏好”检索。',
+      steps: [
+        ['识别写入指令', 'memoryAgent.js 用正则匹配“记住: key = value”，得到 key=学习偏好、value=项目制学习。'],
+        ['写到文件', 'MemoryStore.remember 读取现有 facts，去掉同 key 的旧记录，再写入新值、tags 和 updatedAt。'],
+        ['查找记忆', '其他输入交给 MemoryStore.search；它把 key、value、tags 拼起来做不区分大小写的子串匹配。'],
+        ['生成回应', '找到时返回 action:recall 与匹配的事实；找不到返回 action:answer 和提示。'],
+        ['区分运行文件', 'npm run demo 用 data/demo-memory.json；测试用 data/test-memory.json；CLI 默认 data/memory.json。']
+      ],
+      snapshot: '记住: 学习偏好 = 项目制学习 → facts 写入 JSON\n学习偏好 → search 命中 → recall\n学习偏好 是什么？ → 整句子串通常不命中',
+      files: [['src/memoryAgent.js','把输入分成 remember、recall 或普通 answer。'],['src/memoryStore.js','提供 all、remember、search，负责 JSON 持久化。'],['src/index.js','分别给 demo、test 和 CLI 指定存储路径。']],
+      pitfalls: [['记住了不等于随便怎么问都能召回','search 用的是整句子串匹配；README 风格的自然提问可能查不到刚写入的 key。'],['同 key 新值会覆盖旧值','当前只保留最新值，没有来源、历史、冲突确认、用户隔离和删除审计；不要存敏感信息。']],
+      practice: [['先查 key','交互模式写入一条事实，直接输入 key，再输入完整问句，比较两次结果。'],['观察覆盖','给同一个 key 写两次不同值，查看 data/memory.json 还有几条记录。'],['设计升级','为 fact 增加 userId、来源和历史版本；想清楚遇到矛盾信息时何时询问用户。']],
+      done: '能说清写入、持久化、检索与注入回答的区别，并指出当前整句检索和覆盖更新的局限。'
+    },
+    '0508': {
+      analogy: 'Workflow 像一张固定工单：理解需求、设计、实现、验收按顺序列好。工单上的“已完成”标签不代表事情真的做好；必须检查每步产物和最终目标。',
+      example: 'runWorkflow("构建一个代码审查 Agent")：返回 4 个计划步骤、4 个执行记录和一个 review。',
+      steps: [
+        ['读取模板', 'workflow.js 从 data/workflowSteps.json 读取 understand、design、implement、verify 四步。'],
+        ['生成计划', 'planSteps 把 {goal} 替换成目标文字，得到 plan；其余步骤沿用固定 task。'],
+        ['模拟执行', 'plan.map(executeStep) 为每步直接生成 status:done 与“completed”文本，没有调用真实业务动作。'],
+        ['检查结果', 'reviewResult 只检查每步 status 都是 done 且步骤至少 4 个，然后返回 passed。'],
+        ['汇总输出', 'runWorkflow 返回 goal、plan、executions、review 和 ok。']
+      ],
+      snapshot: 'goal → planSteps(4 步) → executeStep(全写 done) → reviewResult → ok:true\n注意：ok:true 只代表当前简化检查通过，不代表代码审查 Agent 已经建成',
+      files: [['data/workflowSteps.json','四步模板；决定流程骨架。'],['src/workflow.js','规划、模拟执行和简化验收。'],['src/index.js','demo / test / CLI 的调用入口。']],
+      pitfalls: [['Planner 不一定是模型','这里 planSteps 是模板替换，不是 LLM 规划。'],['状态不是业务证据','Reviewer 只看 done 和数量；如果 executeStep 做错事但仍标 done，review 也会通过。']],
+      practice: [['画输出结构','运行 demo，找出 plan、executions、review 的字段并说明来源。'],['制造坏结果','让 implement 返回 failed，预测 review 的 passed；再实际运行。'],['改成真实验收','选一步真正执行可失败的函数，用输出内容或测试断言判断成功，而不只看 status。']],
+      done: '能区分规划、执行、审核三个职责，知道什么时候应由代码固定流程、什么时候才考虑模型决策。'
+    },
+    '0509': {
+      analogy: '把 Agent 当成一个访客：Resource 是能读的资料，Prompt 是可复用的任务模板，Tool 是可以让系统执行的动作。三类能力都要先被发现，客户端才知道能用什么。',
+      example: 'demo 先列出能力，再读取 docs://agent、取 review 模板、调用 listFiles({ path: "src" })。',
+      steps: [
+        ['加载预置数据', 'miniMcpServer.js 从 resources.json、prompts.json、fileListings.json 读取本地 JSON。'],
+        ['发现能力', 'listCapabilities 返回 resources、prompts、tools 三组名字；只是本地函数返回值。'],
+        ['读取静态内容', 'readResource("docs://agent") 返回文档文本；getPrompt("review") 返回模板。'],
+        ['调用动作', 'callTool("listFiles", { path:"src" }) 查 fileListings.json；summarize 只截取文本前 80 个字符。'],
+        ['处理未知能力', '未知资源、模板或工具名会抛错；本例还没有正式协议传输或完备参数校验。']
+      ],
+      snapshot: 'listCapabilities() → { resources, prompts, tools }\nreadResource("docs://agent") → 资料\ngetPrompt("review") → 模板\ncallTool("listFiles", {path:"src"}) → 预置文件名',
+      files: [['src/miniMcpServer.js','实现本地能力发现、读取与调用函数。'],['data/resources.json / prompts.json','静态资料与提示模板。'],['data/fileListings.json','listFiles 的模拟数据，不是真实磁盘目录。']],
+      pitfalls: [['名字像 MCP 不等于标准 MCP Server','这里没有标准 MCP SDK、初始化协商或真实客户端连接；更接近接口形状练习。'],['Tool 不一定真的做了复杂事','listFiles 查预置 JSON；summarize 是截断字符串，不是模型摘要。']],
+      practice: [['区分三类能力','给“读项目规范”“套用审查提示”“列目录”分别选 Resource、Prompt、Tool 并解释。'],['跑一次发现与调用','执行 demo，记录 listCapabilities 与三个调用返回的形状。'],['试未知能力','调用一个不存在的 URI 或工具名，观察抛错；设计客户端应该怎样展示。']],
+      done: '能准确描述 Tool、Resource、Prompt 的用途，并说明此项目与真正 MCP 服务的差距。'
+    },
+    '0510': {
+      analogy: 'Trace 页面像航班动态屏：它把已经发生的站点事件排成时间线，让你知道哪里开始、哪里调用了工具、哪里结束。屏幕负责展示，不能凭空制造真实运行记录。',
+      example: 'npm run demo 写入 run_demo_0510 的 5 条样例事件；npm start 后浏览器请求 /api/trace 并显示它们。',
+      steps: [
+        ['生成样例', 'buildSampleTrace.js 向 data/trace.jsonl 写 5 条固定事件，包括 readDiff 工具选择与结果。'],
+        ['开放接口', 'server.js 启动 Node HTTP 服务；GET /api/trace 读取 JSONL、逐行解析并返回 JSON。'],
+        ['前端获取', 'public/app.js 在加载与点击刷新时 fetch("/api/trace")。'],
+        ['统计概览', '前端按不同 runId 统计 Runs，按 tool.selected 统计 Tool Calls，按成功的 run.completed 统计 Completed。'],
+        ['展示时间线', '每条事件显示 type、时间和完整 JSON；内容先经过 escapeHtml 避免作为 HTML 执行。']
+      ],
+      snapshot: 'data/trace.jsonl → GET /api/trace → public/app.js\nRecords=5、Runs=1、Tool Calls=1、Completed=1（样例数据）',
+      files: [['src/buildSampleTrace.js','写入演示 JSONL；每次运行会覆盖样例文件。'],['src/server.js','提供静态页面和 /api/trace。'],['public/app.js','读取事件、算指标、画时间线与刷新。']],
+      pitfalls: [['漂亮的时间线不等于真实可观测','本例是预设样例数据；要用于真实 Agent，还需从运行链路持续写入 Trace。'],['计数不是质量指标','Completed 只是成功结束的次数，不代表回答正确；前端也尚未处理 fetch 失败或筛选大量 run。']],
+      practice: [['观察数据流','先运行 npm run demo，再启动服务，在浏览器 Network 面板查看 /api/trace 的响应。'],['改一条事件','在生成脚本中加入 tool.failed，重新生成样例，确认页面时间线能看到失败。'],['补易用性','为 fetch 失败加提示，并设计按 runId 筛选及区分成功/失败的显示。']],
+      done: '能从页面上的一条事件反向追到 JSONL 文件，且不把展示样例误说成真实模型 Trace。'
+    },
+    '0511': {
+      analogy: '代码审查像检查一张改动清单：先只看本次新增的内容，再把每个可疑点写成“位置、严重程度、原因、建议”。这样后续才能筛选、复核和生成修复计划，而不是只收到一句“这里可能有问题”。',
+      example: 'sampleDiff 给 LoginButton 新增 await api.login()、localStorage.setItem 和缺少 alt 的 img；reviewDiff 生成结构化 findings。',
+      steps: [
+        ['找到目标文件', 'reviewDiff 将 Diff 按行切开，优先从 +++ b/ 提取文件路径；没有时尝试 diff --git 头。'],
+        ['只看新增行', '遍历以 + 开头但不是 +++ 的行，去掉前缀得到代码；记录的 line 是 Diff 文本中的行序号。'],
+        ['匹配审查规则', '新增 await 附近 4 行内没有 try/catch、img 没有 alt、出现 localStorage.setItem 时，各生成一条 Finding。'],
+        ['检查测试线索', '如果已有 Finding 且整个 Diff 文本没有 .test. 或 .spec.，再加一条低严重度的测试提醒。'],
+        ['输出报告', '返回 summary 和 findings；demo 写入 data/review-report.json 与 data/sample.diff。']
+      ],
+      snapshot: 'Diff 新增行 → 规则命中 → Finding { severity, category, file, line, message, suggestion }\n样例中通常包含错误处理、可访问性、存储提示和测试提醒',
+      files: [['src/sampleDiff.js','固定的 LoginButton 改动样例。'],['src/reviewAgent.js','文件定位、逐行规则匹配和结构化 Finding。'],['src/index.js','demo、测试和读取自定义 Diff 的 CLI。']],
+      pitfalls: [['行号与误报','line 是 Diff 文本行号，不是源文件真实行号；出现 localStorage.setItem 就报警，代码并没有确认写入的是敏感 token。'],['看不到测试不等于没有测试','这里只检查本次 Diff 是否包含测试文件名；try/catch 邻近窗口也可能误报或漏报，不能替代 AST 或真正的补丁解析。']],
+      practice: [['先预测报告','看 sampleDiff，自己列出会命中的规则，再调用 reviewDiff 核对 Finding 的 category 和 file。'],['制造误报','把普通主题配置写入 localStorage，观察 security Finding 是否仍出现；说明它为什么只是提示。'],['改进定位','挑一个带两个 hunk 的真实 Diff，说明要得到源文件行号需要解析哪些 @@ 行信息。']],
+      done: '能解释 Finding 每个字段的用途，知道规则扫描能快速提示风险，却不能把它当作完整语义审查。'
+    },
+    '0512': {
+      analogy: '审查发现像医生的诊断，Patch Plan 是治疗方案，Diff 是拟开的处方。知道“该怎么改”和真正把改动写进代码是两件事；必须留出检查与批准的机会。',
+      example: '把 LoginButton 的 error-handling 和 accessibility 两条 Finding 交给 generatePatch，得到 plan 与候选 patch。',
+      steps: [
+        ['形成计划', 'createPatchPlan 把每条 Finding 的 category 映射成动作；只要有 high 严重度，就把 risk 标为 requires-review。'],
+        ['修改样例代码', 'generatePatch 针对固定字符串做 replace：给 async 处理加 try/catch，给 img 加 alt。'],
+        ['生成差异', 'toUnifiedDiff 输出旧文件头、新文件头和以 - / + 开头的整段代码。'],
+        ['做浅层检查', 'validatePatch 仅检查头部、@@ 标记和至少一行新增内容，返回 { ok, errors }。'],
+        ['保存产物', 'demo 把计划与校验结果写到 data/patch-report.json，把文本写到 data/login-button.patch。']
+      ],
+      snapshot: 'Finding[] → Patch Plan { file, risk, steps } → 候选 Diff → valid.ok\nrequires-review 是风险标记；本项目没有真正的审批和自动应用',
+      files: [['src/sampleCode.js','固定代码和两条示例 Finding。'],['src/patchAgent.js','分类动作、字符串替换、Diff 文本和浅层校验。'],['src/index.js','生成并保存演示报告与补丁。']],
+      pitfalls: [['valid.ok 不等于能应用','这里的 hunk 只有 @@，没有规范的行号范围；校验也不运行 git apply --check、编译或回归测试。'],['补了 try/catch 不等于修好业务','当前 catch 只 console.error，没有向用户展示失败；security 和 testing 类别会进入计划，但 generatePatch 并未为它们生成对应代码。']],
+      practice: [['看产物','读 data/patch-report.json，指出 plan、patch、valid 分别回答什么问题。'],['试固定替换','把 sampleCode 中的按钮代码改一点空格或变量名，观察 replace 是否失效而 valid 可能仍被误判。'],['设计安全门','写出真正应用前的步骤：文件范围检查、人工审批、git apply --check、构建和行为测试。']],
+      done: '能区分 Finding、Patch Plan、候选 Diff 和真正可应用的修复，不把浅层格式校验当成安全保证。'
+    },
+    '0513': {
+      analogy: 'Provider 像可替换的接线盒：Agent 只要求“帮我选工具”和“根据结果给最终回答”，至于背后是 Mock 规则还是远程模型，由 Provider 决定。但换一个名字并不意味着远程调用已经接通。',
+      example: '不设置 OPENAI_API_KEY 时，输入“23 * 17 + 8”，Mock Provider 选择 calculator，Agent 执行后再请求最终回答。',
+      steps: [
+        ['准备工具描述', 'runAgent 从 tools 数组抽取 name、description、parameters，交给 provider.selectTool。'],
+        ['Provider 提议调用', 'Mock Provider 用正则识别算式，否则选 getLearningPlan；返回 name 和 arguments。'],
+        ['本地执行工具', 'Agent 用 getTool 查工具名，找不到就抛错；找到后调用 execute(arguments)。'],
+        ['Provider 组织回答', 'Agent 把原输入、toolCall 和 toolResult 交给 provider.finalAnswer，得到 answer。'],
+        ['写出演示结果', 'demo 把两条调用结果写入 data/tool-calling-runs.json；测试明确使用 Mock Provider。']
+      ],
+      snapshot: 'input → provider.selectTool(schemas) → getTool(name).execute(args) → provider.finalAnswer(...)\n无 key：Mock；有 OPENAI_API_KEY：当前实现抛出“集成练习”错误',
+      files: [['src/providers.js','Mock Provider 可运行；createOpenAIProvider 仍是占位实现。'],['src/agent.js','编排工具描述、工具查找、执行和最终回答。'],['src/tools.js','calculator 与 getLearningPlan 的描述和实现。']],
+      pitfalls: [['有 key 不等于接入真实模型','当前 createOpenAIProvider 有 key 时直接抛错；没有 key 时才退回 Mock。不要把本项目写成已完成真实 API 集成。'],['schema 不等于受控执行','工具名虽通过 getTool 查找，参数尚无统一 schema 校验、超时、重试或权限检查；calculator 仍用 Function 求值。']],
+      practice: [['先跑 Mock','不设置 key 运行 npm run demo，核对 toolCall、toolResult 与 answer。'],['制造未知工具','写一个 Provider 返回不存在的工具名，观察 runAgent 如何失败。'],['画真实接入图','标出真实模型响应映射、参数校验、工具 allowlist、工具结果回传和密钥只留服务端的位置。']],
+      done: '能清楚区分 Provider 决策、Agent 编排和工具执行，并如实说明真实 LLM Provider 尚未接通。'
+    },
+    '0514': {
+      analogy: '0506 是按字面关键词查资料；0514 先把文本变成数字向量，再比较夹角找相似片段。它展示向量检索的流程，但这里的数字是本地哈希计数，不是模型学到的语义。',
+      example: '查询“rag chunks embeds”：切出文档片段、得到 16 维向量、计算余弦相似度，并检查 rag 文档是否进入 Top 3。',
+      steps: [
+        ['切分文档', 'chunkDocs 默认按 80 个字符切 3 篇内置短文，给每片段加 id 和 docId；没有智能句子边界。'],
+        ['转成向量', 'embed 把词 hash 到 16 个槽位并累加计数；查询和文档使用同一算法。'],
+        ['计算相似度', 'search 对每个片段计算余弦相似度，降序排列，默认取 Top 2。'],
+        ['生成带来源的回答', 'answer 过滤 score 为 0 的命中，拼接片段文本并附 chunk id；无正分则提示没有可靠来源。'],
+        ['评估检索', 'evaluateRetrieval 用 Top 3 判断 expectedDocId 是否出现，返回 hit 和 top。']
+      ],
+      snapshot: 'doc → chunk(80 字符) → hash 向量(16 维)\nquery → hash 向量 → cosine → Top K → 片段文本 + Sources',
+      files: [['src/rag.js','内置文档、切片、哈希向量、余弦排序、回答与检索评估。'],['src/index.js','两条 demo 查询、测试与 JSON 报告输出。'],['data/rag-report.json','demo 保存的命中和回答样例。']],
+      pitfalls: [['向量相似不等于语义相似','16 维 hash 容易碰撞；同义词不一定接近，切片还可能截断上下文。没有外部 Embedding 模型或向量数据库。'],['这里的命中测试几乎测不到排序','当前只有 3 篇短文，每篇默认只有 1 个片段，却检查期待文档是否进入 Top 3；即使排在最后也算命中。它更不能证明引用或答案正确。']],
+      practice: [['画向量链路','以 rag chunks embeds 为例，标出 chunk、embed、cosine、Top K 分别在哪个函数。'],['做一个反例','换成意思相近但字面不同的词，比较 Top 2；解释 hash 方法为什么可能漏召回。'],['补评测维度','为一条结果同时检查 docId、片段是否支持结论，以及无命中时是否拒答。']],
+      done: '能解释 Chunk、Embedding、相似度、Top K、引用各自做什么，并指出本例与真实语义 RAG 的差距。'
+    },
+    '0515': {
+      analogy: '把外部能力接给 Agent，需要先约定“怎么发请求、怎么回结果”。JSON-RPC 像统一的信封格式：写 id、method、params；服务端按 method 分派并把 result 或 error 放回同一 id。',
+      example: '发送 { id:2, method:"tools/call", params:{ name:"echo", arguments:{ a:1 } } }，得到 result:{ a:1 }。',
+      steps: [
+        ['接收请求', 'handleRpc 从对象中取 id、method、params；没有 params 时默认空对象。'],
+        ['发现工具', 'tools/list 返回 echo 和 getPackageInfo 的名字。'],
+        ['调用工具', 'tools/call 根据 params.name 找函数，再传入 params.arguments；未知工具进入 error 分支。'],
+        ['读取资源', 'resources/list 列 URI；resources/read 根据 URI 返回本地字符串。'],
+        ['包装响应', '成功为 { jsonrpc:"2.0", id, result }，异常为 { jsonrpc:"2.0", id, error:{ message } }。']
+      ],
+      snapshot: 'request { id, method, params } → handleRpc → result / error\n例如 method=tools/call, name=echo, arguments={a:1} → result={a:1}',
+      files: [['src/serverCore.js','手写 method 分派、echo/getPackageInfo、资源表和响应格式。'],['src/index.js','demo、测试；CLI 按行解析 JSON 并打印响应。'],['data/mcp-transcript.json','demo 记录三组请求与响应。']],
+      pitfalls: [['JSON-RPC 形状不等于完整 MCP','没有官方 SDK、初始化/能力协商、规范的传输与完整 schema，不能宣称已被标准 MCP 客户端验证。'],['错误边界还很浅','未知 method 会返回 error，但未知资源可能得到 text:undefined；CLI 中坏 JSON 也可能直接抛出。']],
+      practice: [['跟踪同一个 id','运行 demo，在 transcript 中配对 id 相同的 request 和 response。'],['试错误路径','给 tools/call 一个不存在的 name，再请求未知 method，观察 error 结构。'],['比较标准实现','列出要让真实 MCP 客户端连接还需要补的协议初始化、工具 schema 和传输。']],
+      done: '能说清能力发现、调用分派、响应关联和错误返回，同时知道“像 MCP”不等于“符合 MCP”。'
+    },
+    '0516': {
+      analogy: '高风险操作像银行转账：Agent 可以提出“要转”，但不能仅凭自己提出就执行。审批必须核对“谁申请、对哪个对象、执行什么、多久有效”，而不是只给某个动作一张永久通行证。',
+      example: '输入“删除文件”时 planAction 选 deleteFile；不传批准返回 needs_approval，传 { deleteFile:true } 才返回 executed。',
+      steps: [
+        ['规划动作', 'planAction 根据“删除/写入”等关键词选择 deleteFile、writeFile 或 readFile；目标路径固定为 demo.txt。'],
+        ['判断风险', 'classify 按动作名正则：delete/write/send/pay/deploy 为 high，read/list/search 为 low，其余为 medium。'],
+        ['拦截高风险', 'runWithApproval 遇到 high 且 approvals[action.name] 不为真，就返回 needs_approval 和待执行动作。'],
+        ['模拟批准后执行', '传入对应布尔值后返回 status:executed，但 result 只是 mock executed ... 文本，没有碰真实文件。'],
+        ['保存演示记录', 'demo 把未批准删除、批准删除和读取三种结果写入 data/approval-log.json。']
+      ],
+      snapshot: '删除文件 → deleteFile(high) → 无批准: needs_approval\n删除文件 + {deleteFile:true} → status:executed（仅 mock）\n读取文件 → readFile(low) → status:executed（仅 mock）',
+      files: [['src/approvalAgent.js','关键词规划、名称正则分级、布尔批准检查。'],['src/index.js','演示、测试和 CLI。'],['data/approval-log.json','三种审批路径的样例结果。']],
+      pitfalls: [['这不是完整审批队列','当前没有 pending→approved/rejected 的持久状态、用户身份或审批人；approvals 只是函数参数对象。'],['批准没有绑定具体参数','只凭 deleteFile:true 就能通过检查，未绑定 path、requestId、过期时间；result 也不代表真的删了文件。']],
+      practice: [['走三条路径','直接调用 runWithApproval，对比无批准删除、批准删除、读取的 status 与 risk。'],['推演越权','当前路径固定为 demo.txt；假设未来允许用户传 path，思考只按 deleteFile 动作名批准会带来什么问题。'],['设计更安全的票据','写出至少 action、args 摘要、申请者、审批者、requestId、有效期和一次性消费规则。']],
+      done: '能解释审批应是执行前的控制点，并准确指出本例只有“审批门”的模拟，没有真实安全执行。'
+    },
+    '0517': {
+      analogy: '成本监控像记账本：每次运行先记输入输出、耗时、用量与估算费用，再汇总平均值。但如果用量来自“字符数除以 4”，那就是估算账，不是模型供应商的实际账单。',
+      example: '对 tool calling、rag eval、mcp 三个字符串调用 recordRun，再由 summarize 计算 runs、okRate、totalCostUsd、avgLatencyMs。',
+      steps: [
+        ['模拟一次运行', 'recordRun 记录开始时间，把输入拼成 answer for ...，没有调用 LLM 或工具。'],
+        ['估算 token', 'roughTokens 用字符串长度 / 4 向上取整，分别作为输入和输出 token 数。'],
+        ['估算费用', 'estimateCost 以预设输入/输出单价相乘后求和，放到 costUsd。'],
+        ['记录耗时', 'latencyMs 是 recordRun 内部两次 Date.now 的差值；它不是外部模型或检索服务的延迟。'],
+        ['汇总报告', 'summarize 计算运行数、成功占比、总费用和平均耗时；demo 写入 data/metrics-report.json。']
+      ],
+      snapshot: 'input → roughTokens → 模拟 output → roughTokens → estimateCost\nrecords[] → summarize → { runs, okRate, totalCostUsd, avgLatencyMs }',
+      files: [['src/monitor.js','估算费用、生成单次记录、汇总指标。'],['src/index.js','三条 demo 输入、测试和 CLI。'],['data/metrics-report.json','demo 持久化的运行记录与汇总。']],
+      pitfalls: [['这不是真实 token / cost','没有 Provider usage、真实价格版本或模型响应；记录的 costUsd 只是教学常量估算。'],['指标还有空白','latencyMs 几乎只反映本地同步代码；ok 固定为 true，没有工具错误计数；summarize([]) 还会出现非正常比率/均值。']],
+      practice: [['核算一次费用','给 estimateCost 传 inputTokens=100、outputTokens=100，按默认单价手算再与函数结果比对。'],['试空样本','调用 summarize([])，看看 okRate 和 avgLatencyMs；设计空集合的返回约定。'],['接真实用量','画出从 Provider usage 获取 token、按模型价格表计算费用、记录各阶段耗时的链路。']],
+      done: '能说清单次指标与聚合指标，区分模拟估算和真实账单，并知道空样本及错误运行如何处理。'
+    }
+  };
+  function guidedLesson(x) {
+    const d = guidedLessons[x.id];
+    return `<section class="section"><span class="eyebrow">先用人话理解 / ${x.id}</span><h2>这节课到底解决什么</h2><p>${esc(d.analogy)}</p><p><strong>跟读例子：</strong>${esc(d.example)}</p></section>
+    <section class="section"><h2>沿着一次输入走五步</h2><div class="walkthrough">${d.steps.map((step, i) => `<div class="walkthrough-row"><span class="step">0${i + 1}</span><strong>${esc(step[0])}</strong><p>${esc(step[1])}</p></div>`).join('')}</div><div class="mini-code" style="margin-top:18px">${esc(d.snapshot)}</div></section>
+    <section class="section"><h2>回到代码：各文件做什么</h2><div class="walkthrough">${d.files.map((item, i) => `<div class="walkthrough-row"><span class="step">0${i + 1}</span><strong class="path">${esc(item[0])}</strong><p>${esc(item[1])}</p></div>`).join('')}</div></section>
+    <section class="section"><h2>最容易理解错的两件事</h2><div class="detail-grid">${d.pitfalls.map(item => `<div><h3>${esc(item[0])}</h3><p>${esc(item[1])}</p></div>`).join('')}</div></section>
+    <section class="section"><h2>照着做，才算学会</h2><div class="practice-steps">${d.practice.map((item, i) => `<div><b>第 ${i + 1} 步 · ${esc(item[0])}</b><p>${esc(item[1])}</p></div>`).join('')}</div><p class="muted" style="margin-top:16px"><strong>本课达标：</strong>${esc(d.done)}</p></section>`;
+  }
   function lessonView(x) {
     return `<section class="section"><div class="topic-header"><div><span class="number">AGENT-${x.id} · ${esc(x.stage)}</span><h2>${esc(x.title)}</h2><p class="topic-summary">${esc(x.one)}</p><div class="topic-meta"><span class="chip">npm run demo</span><span class="chip">npm test</span><span class="chip">npm start</span></div></div><button class="complete ${completed.has(x.id)?'is-done':''}" id="completeBtn" aria-pressed="${completed.has(x.id)}">${completed.has(x.id)?'✓ 已掌握':'标记已掌握'}</button></div><div class="flow">${x.flow.map((step,i)=>`${i?'<i>→</i>':''}<span>${esc(step)}</span>`).join('')}</div></section>
     <section class="section"><div class="detail-grid"><div><h3>代码实际在做什么</h3><p>${esc(x.logic)}</p><h3 style="margin-top:19px">关键调用路径</h3><div class="codepath">${esc(x.path)}</div><p class="muted" style="margin-top:9px">项目目录：<span class="path">${esc(root + '/agent-' + x.id)}</span></p></div><div><h3>理解边界</h3><div class="note">${esc(x.boundary)}</div><h3 style="margin-top:19px">动手验证</h3><p>${esc(x.task)}</p><p class="muted">先预测结果，再运行 demo / test，最后用实际输出修正自己的解释。</p></div></div></section>
+    ${x.id === '0503' ? toolCallingDeepDive() : guidedLessons[x.id] ? guidedLesson(x) : ''}
     <section class="section"><h2>不看代码，先回答</h2><div class="study-box"><h3>${esc(x.question)}</h3><p class="muted">尝试用自己的话解释 30 秒，再揭晓参考答案。</p><button class="reveal" id="revealBtn">查看参考答案</button><div class="answer" id="answer">${esc(x.answer)}</div></div></section>
     <section class="section"><h2>阅读入口</h2><p>从 <span class="path">${esc(x.files.join(' → '))}</span> 读起。先找导出函数及其返回值，再看 index.js 如何调用，最后看测试与 data/ 产物。不要从第一行读到最后一行。</p><button class="reveal" id="nextBtn">进入下一项目 →</button></section>`;
   }

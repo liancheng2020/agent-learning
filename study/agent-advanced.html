@@ -67,18 +67,29 @@
     .quiz button { padding: 7px 10px; border: 1px solid #abc8ba; border-radius: 3px; color: #16453b; background: #f5faf7; font-size: 12px; }
     .quiz .answer { display: none; margin: 12px 0 0; padding: 11px 13px; background: #ebf6ed; }
     .quiz .answer.visible { display: block; }
+    .walkthrough { border-top: 1px solid #ccdbd4; }
+    .walkthrough-row { display: grid; grid-template-columns: 36px minmax(150px,1fr) minmax(0,2fr); align-items: start; gap: 12px; padding: 13px 0; border-bottom: 1px solid #d7e2dc; }
+    .walkthrough-row small { color: #007c6d; font: 700 11px ui-monospace, monospace; padding-top: 4px; }
+    .walkthrough-row strong { font-size: 14px; overflow-wrap: anywhere; }
+    .walkthrough-row p { font-size: 13px; margin: 0; }
+    .lesson-example { padding: 14px 17px; margin-top: 15px; background: #e9f4ec; border-left: 3px solid #158775; font-size: 14px; line-height: 1.75; }
+    .learning-points { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); border: 1px solid #ccdbd4; background: #fff; }
+    .learning-points > div { padding: 17px; }
+    .learning-points > div:first-child { border-right: 1px solid #ccdbd4; }
+    .learning-points h3 { color: #006f64; }
+    .learning-points p { font-size: 13px; margin: 0; }
     .next { display: flex; justify-content: space-between; gap: 12px; padding-top: 24px; }
     .next button { border: 1px solid #b9ccc3; border-radius: 3px; background: #fff; color: #0c6758; padding: 9px 12px; font-size: 13px; }
     @media (max-width: 900px) {
-      .shell { grid-template-columns: 1fr; }
-      aside { position: static; height: auto; padding: 14px 16px; }
+      .shell { grid-template-columns: minmax(0,1fr); }
+      aside { position: static; min-width: 0; height: auto; padding: 14px 16px; }
       .brand { padding: 0 2px 10px; border-bottom: 0; }
       .back { display: inline-block; margin: 3px 2px 9px; }
       .rail-label { display: none; }
-      .nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 3px; }
+      .nav { display: flex; max-width: 100%; overflow-x: auto; gap: 4px; padding-bottom: 3px; }
       .nav button { flex: 0 0 auto; width: auto; white-space: nowrap; }
       .nav .check { display: none; }
-      .content { padding: 27px 20px 65px; }
+      .content { padding: 27px 20px 65px; overflow-wrap: anywhere; }
       .stage-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
       .stage:nth-child(2) { border-right: 0; }
       .stage:nth-child(-n+2) { border-bottom: 1px solid #ccdbd4; }
@@ -86,10 +97,14 @@
     @media (max-width: 620px) {
       .cols { grid-template-columns: 1fr; gap: 22px; }
       .topic-head { flex-direction: column; }
-      .topbar { padding: 11px 20px; }
+      .topbar { padding: 11px 20px; flex-wrap: wrap; }
       .track { width: 65px; }
       .stage { padding: 12px; min-height: 145px; }
       .stage b { font-size: 13px; }
+      .walkthrough-row { grid-template-columns: 28px minmax(0,1fr); }
+      .walkthrough-row p { grid-column: 2; }
+      .learning-points { grid-template-columns: 1fr; }
+      .learning-points > div:first-child { border-right: 0; border-bottom: 1px solid #ccdbd4; }
     }
   </style>
 </head>
@@ -136,6 +151,206 @@
       ['0828','交付文档','engineering','收束架构图、运行步骤、评测结果、失败处理与 Demo 材料。','agent-0828/README.md','按 README 从零启动，记下每个未写明的前提并补成可复现步骤。','README 为什么要写失败处理？','作品不只展示成功路径，维护者需要知道依赖故障和边界如何诊断。'],
       ['0829','面试表达','engineering','把工程选择、限制、证据与改进方向整理成可演示故事。','agent-0829/README.md；agent-0829/ARCHITECTURE.md','用 2 分钟讲：问题 → 架构 → 一次调用 → 失败/评测 → 边界；准备追问。','最容易被面试官追问的真实性问题是什么？','哪些是规则/Mock、哪些可接 DeepSeek、评测是否覆盖真实分布、Patch 是否自动执行。']
     ].map(([id,title,stage,summary,files,task,question,answer]) => ({id,title,stage,summary,files,task,question,answer}));
+    const guides = {
+      '0518': {
+        why: '把前面学到的审查、检索、补丁、审批和 Trace 串起来，才会遇到真实的“结果由谁负责、失败在哪里发生”的问题。可以把它看成一个只给修复建议、不擅自改仓库的代码审查台。',
+        example: '把 LoginButton 的 Git Diff 和当前组件代码交给页面，得到 findings、规范来源、候选 Patch、审批状态与运行轨迹。',
+        steps: [['接收输入','浏览器把 diff 与 code 发给 Node API；服务端创建一次 run。'],['审查与检索','runReviewAgent 固定顺序调用 reviewDiff，再按 Finding 类别调用 searchKnowledge。'],['生成候选','generatePatch 返回 plan 与 Diff；高风险时 ApprovalStore 创建与 Patch 哈希绑定的待审批记录。'],['记录与展示','Trace 追加 JSONL 事件，metrics 估算运行信息，Dashboard 展示结果。']],
+        code: [['src/server.js / public/app.js','HTTP 输入输出与页面交互。'],['src/agent.js / src/review.js / src/rag.js / src/patch.js','固定编排与三个核心能力。'],['src/approvals.js / src/trace.js','内存审批记录与持久 Trace。']],
+        traps: [['有 Tool 列表不代表模型在自主决策','这里 runReviewAgent 直接按固定顺序调用函数；没有 Provider 或模型 Tool Call 循环。'],['审批不等于自动修复','审批绑定候选 Patch 的哈希；项目仍不自动应用 Patch、不执行命令。']],
+        practice: ['对一个带 await 和 img 的 Diff，逐步写下每个函数的输入输出，再核对页面结果。','查看同一 runId 的 Trace，指出审查、检索、Patch 和审批各自留下什么证据。'],
+        mastery: '不看源码能画出前端→API→Agent→审查/检索/补丁→审批/Trace→页面的数据流，并说出哪些只是本地规则。'
+      },
+      '0809': {
+        why: '写服务前先画边界，避免把 HTTP、工具执行和审查逻辑混在一个文件。架构图不是装饰，而是定位问题和拆分测试的地图。',
+        example: '沿着一条“审查 Diff”的请求，标出浏览器、API、Agent、Tool、Trace 在 0518 中各做了什么，以及下一周要补什么。',
+        steps: [['看现状','阅读 0518 的 server.js、agent.js、tools.js、trace.js 和 public/app.js。'],['标数据流','输入是 diff_text 与 code；输出是 findings、来源、Patch 计划与 traceId。'],['找缺口','当前步骤写死，尚缺 Provider 抽象、统一 Tool 参数契约、容错和真正的流式事件。'],['画目标','ARCHITECTURE.md 将 FastAPI、Provider、ToolExecutor、Pydantic 和 SSE 放进新边界。']],
+        code: [['agent-0809/ARCHITECTURE.md','现状图、目标图和一条请求的数据流。'],['agent-0518/src/agent.js','用旧实现验证架构图没有凭空多画能力。']],
+        traps: [['架构图中的目标不等于当天已经实现','0809 主要是设计与现状梳理；不要把目标图当成运行证据。'],['Trace 不应存所有原文','traceId 用于关联阶段；敏感 Diff、密钥和完整工具结果需要控制记录范围。']],
+        practice: ['拿一条失败审查请求，从页面倒推到 API、Agent 和 Tool，写出每层应查看的证据。','给目标架构的每条箭头标输入、输出和可能的错误码。'],
+        mastery: '能解释每层做什么、不做什么，并区分 0518 的实际能力和第 1 周的目标能力。'
+      },
+      '0810': {
+        why: '前端 Demo 只能自己点；变成 API 后，其他页面和测试才能稳定调用它。API 契约要先规定输入、输出和坏请求如何回应。',
+        example: 'POST /review 提交一个含 await 的 Diff，FastAPI 用 ReviewRequest 校验，再返回 ReviewResponse；GET /health 检查服务。',
+        steps: [['定义请求','app/schemas.py 规定 diff_text 等字段和响应形状。'],['建立路由','app/main.py 暴露 /health 与 /review，并把请求交给 reviewer。'],['审查返回','app/reviewer.py 做本地规则审查，不依赖模型或知识库。'],['用 pytest 检查','测试客户端覆盖正常审查和请求边界；/docs 可查看 OpenAPI。']],
+        code: [['app/main.py / app/schemas.py','路由和 Pydantic 契约。'],['app/reviewer.py / tests/test_api.py','实际审查与 API 回归测试。']],
+        traps: [['有 FastAPI 不等于已有 Agent 循环','当天仍是固定规则函数；服务化解决调用边界，不自动带来模型决策。'],['前端成功不等于 API 契约可靠','要单测空输入、过长输入、字段错误与状态码。']],
+        practice: ['在 /docs 发送一条合法 Diff 和一条缺字段请求，对照响应与测试。','画出 Browser→FastAPI→review_diff→ReviewResponse，并写出每层可能失败的位置。'],
+        mastery: '能从请求体解释 Pydantic 校验到业务函数再到响应序列化的完整过程。'
+      },
+      '0811': {
+        why: '把“谁产生审查结果”藏在 Provider 接口后面，离线测试用 Mock，真实联调用 DeepSeek；两者返回同一个业务对象，前端不用分别适配。',
+        example: '相同 ReviewRequest：MockProvider 用固定规则产出 findings；DeepSeekProvider 请求 Chat Completions，拿到文本后校验为 ReviewPayload。',
+        steps: [['声明接口','ModelProvider.review 必须返回 ReviewPayload。'],['离线实现','MockProvider 从新增行匹配 await 和缺 alt 的 img，供测试稳定复现。'],['真实实现','DeepSeekProvider 从服务端环境变量拿 key，发 JSON Output 请求。'],['再次校验','ReviewPayload.model_validate_json 检查模型文本；坏 JSON 或缺字段不能直接当成功结果。']],
+        code: [['app/providers.py','抽象、Mock、DeepSeek 与配置选择。'],['app/schemas.py / tests/test_provider.py','返回对象契约和 Provider 测试。']],
+        traps: [['JSON 模式不保证内容正确','Pydantic 只限制结构；Finding 是否基于真实代码仍要靠证据和评测。'],['Mock 通过不等于真实模型稳定','线上还要验证网络、额度、超时、模型输出漂移和成本；密钥不能进浏览器。']],
+        practice: ['先用 Mock 跑测试，再让 Provider 返回缺失字段的 JSON，观察验证失败。','列出同一请求在 Mock 与 DeepSeek 两条路径中相同的契约和不同的风险。'],
+        mastery: '能说明为什么 Provider 隔离厂商，为什么模型结果即使是 JSON 仍需服务器端校验。'
+      },
+      '0812': {
+        why: '把大任务拆成可检查的小动作：先读 Diff，再查规范，最后形成 Patch 计划。每个 Tool 都有明确输入输出，Agent 负责把上一工具的结果交给下一工具。',
+        example: 'ReviewAgent.run 依次调用 read_diff、search_knowledge、generate_patch_plan，返回 findings、sources、patch_plan 和 tool_calls。',
+        steps: [['读改动','read_diff 接收 diff_text，返回文件与结构化 findings。'],['查知识','Agent 把 finding 类别拼成 query，用 search_knowledge 取规范来源。'],['出计划','把文件和 findings 传给 generate_patch_plan，生成候选动作。'],['组装响应','Pydantic 构造 ReviewResponse，保留 ToolCallRecord 供前端展示。']],
+        code: [['app/agent.py','三次调用的确定性顺序与结果组装。'],['app/tools.py / app/schemas.py','工具注册与输入输出形状。']],
+        traps: [['这是工具编排，不是模型自主 Tool Calling','0812 的 Agent 直接写死三次 registry.call；真正 Provider 提议调用和回填循环到后续里程碑才出现。'],['有 ToolCallRecord 不代表执行可靠','当日还未统一加入超时、重试、降级和错误码。']],
+        practice: ['逐行追一条 Diff，写下 read_diff 的文件名如何进入 generate_patch_plan。','临时让一个工具返回非法字段，观察构造 ReviewResponse 的哪一步失败。'],
+        mastery: '能区分注册、选择、执行、结果回填四个动作，并指出本项目中谁决定执行顺序。'
+      },
+      '0813': {
+        why: '工具会失败；不能把“可能报错”散落在每个业务函数里。统一执行器负责校验参数、限定运行时间、做有限重试，并给用户稳定的错误码与 traceId。',
+        example: 'search_knowledge 收到 top_k=99：Pydantic 在执行前拒绝；如果工具超时，则记录 retry，耗尽后可走 fallback。',
+        steps: [['先查名字和参数','ToolExecutor 查注册表并用 args_model.model_validate 拒绝未知 Tool 或非法参数。'],['限时运行','asyncio.wait_for 包裹 handler，记录 tool.started 和耗时。'],['有限重试','超时或执行异常时发 tool.retry；最多按 max_retries 再试。'],['降级或失败','有 fallback 则返回 degraded；否则抛带错误码和 traceId 的 ToolError。']],
+        code: [['app/tools.py','ReadDiffArgs 等参数模型与 ToolExecutor。'],['app/errors.py / app/trace.py / tests/test_resilience.py','错误类型、事件记录与故障测试。']],
+        traps: [['不是所有错误都能重试','参数校验失败立即返回；非幂等写操作不能不加判断地重试。'],['降级结果不等于原结果','调用方和页面应展示 degraded；不能把 fallback 伪装成正常完成。']],
+        practice: ['分别输入非法 top_k、制造超时与普通异常，对照错误码和 Trace 顺序。','写下每种失败是否值得重试，以及一条适用的降级路径。'],
+        mastery: '能按“参数→超时→重试→降级→错误码→Trace”排查工具故障。'
+      },
+      '0814': {
+        why: '审查要等几秒时，只给一个转圈让人不知道程序卡在哪。SSE 将可公开的阶段状态边执行边推给前端，用户能看到正在规划、运行哪个工具以及最终结果。',
+        example: 'POST /review/stream 发送 Diff；页面依次接收 phase、tool、final 事件，更新步骤时间线和 findings。',
+        steps: [['服务端发事件','review_events 逐步产出状态；FastAPI 把每条包装为 event/data 加空行的 SSE 帧。'],['浏览器读流','public/app.js 用 fetch POST、TextDecoderStream 和 reader 持续读取。'],['按帧拆分','缓冲区按双换行切开完整事件，残缺尾部留到下一次读取。'],['更新页面','phase/tool 画步骤，final 渲染 findings 和 Patch 计划；普通 /review 只取最终结果。']],
+        code: [['app/main.py / app/agent.py','StreamingResponse 与阶段事件来源。'],['app/static/app.js / tests/test_stream.py','流解析、状态显示与事件测试。']],
+        traps: [['阶段状态不是模型私有思考','只展示产品可公开的运行阶段，不应输出隐藏推理过程。'],['流结束也可能是失败','当前前端错误处理仍较薄；断线、半帧与服务端 error 事件都需显式收尾。']],
+        practice: ['在浏览器 Network 观察 event: phase/tool/final 的顺序和帧格式。','模拟网络中断，设计按钮、时间线和错误提示应如何结束而不永远停在 Streaming。'],
+        mastery: '能解释 SSE 是传输层，不改变 Agent 的业务结果；知道前端为何需要缓冲解析。'
+      },
+      '0815': {
+        why: '这是第 1 周的完整服务：Provider 可以提出工具调用，Agent 控制循环，ToolExecutor 负责受控执行，Pydantic 保证最终 JSON 结构，API 同时提供普通与流式结果。',
+        example: '提交 Login Diff；Mock Provider 依次请求 read_diff、search_knowledge、generate_patch_plan，工具结果被作为 tool 消息送回，最后输出 ReviewResult。',
+        steps: [['建立上下文','ReviewAgent.events 写 system/user 消息并创建 traceId。'],['Provider 走一步','Mock 或 DeepSeek 返回 tool_calls 或最终 ReviewSynthesis；最多循环 6 轮。'],['执行并回填','ToolExecutor 校验、运行、记录状态；Agent 把工具结果放进 messages，再问 Provider。'],['结束与展示','最终结果构造成 ReviewResult；/review 返回 JSON，/review/stream 发 phase/tool/final，Trace 可按 ID 查询。']],
+        code: [['app/agent.py / app/providers.py','调用循环与 Mock/DeepSeek 适配。'],['app/tools.py / app/main.py / app/trace.py','受控执行、HTTP/SSE 和事件查询。'],['tests/test_e2e.py','五条端到端路径。']],
+        traps: [['真实 Provider 可接入不等于本地测试覆盖真实模型','默认 Mock 不产生费用；DeepSeek 需要单独的密钥、网络与质量评估。'],['模型提议不等于可执行','工具名、参数、步数都由服务器端约束；最终 JSON 仍需 Pydantic 校验。']],
+        practice: ['运行五条 E2E；找一条成功和一条 Tool 失败请求，用 traceId 还原每一步。','用自己的话说明为什么 Provider 不直接执行工具，以及最多 6 轮的意义。'],
+        mastery: '能独立画出“Provider 提议→ToolExecutor 执行→tool 消息回填→Provider 结束”的循环，并演示正常/失败两条路径。'
+      },
+      '0816': {
+        why: '要让审查结论能引用规范，先得有可维护的资料。只堆几篇 Markdown 不够；每篇需要身份、主题、来源和明确的审查检查点，后面才能检索、引用与评测。',
+        example: 'React 的 stable-list-keys.md 写明列表为何不能随意用数组下标作 key，并用 YAML 元数据标记 id、topic、tags、source。',
+        steps: [['准备内容','按 React、Vue、TypeScript、性能、安全组织短文，写清适用场景与可检查代码。'],['标注元数据','每篇文档顶部放 YAML front matter，至少有 id、topic、title、tags、source。'],['验证语料','validate_corpus 检查重复 id、非法主题、缺字段、正文过短与缺少审查检查点。'],['交给索引','通过校验的文档才进入下一天的解析、切块和检索流程。']],
+        code: [['knowledge/*/*.md','实际前端规范与审查检查点。'],['src/validate_corpus.py / tests/test_corpus.py','语料质量门禁。']],
+        traps: [['知识库不是“越多越好”','冲突、过时或缺来源的规范会给后续检索制造错误证据。'],['有标签不等于能回答问题','metadata 帮筛选和定位；文档正文仍要足够具体，支持某条 Finding。']],
+        practice: ['找一篇规范，标出哪句话能作为审查引用、哪部分只是背景。','新增一篇缺少 source 的文档，观察校验错误并修复。'],
+        mastery: '能说明一篇知识文档为什么需要元数据、正文和检查点，能运行语料校验。'
+      },
+      '0817': {
+        why: '文档不能整本直接塞给 Agent。先按段落切成可引用的 Chunk，再把每个 Chunk 映射为向量，存到 SQLite，查询时才有机会找回相关的小片段。',
+        example: '把 React stable-list-keys.md 解析为 Document，切出 Chunk，使用 HashEmbeddingProvider 建索引，然后用 key={index} 查询。',
+        steps: [['解析 Markdown','corpus.py 读取 YAML 和正文，生成带 source_path 的 Document。'],['切片保留身份','chunk_document 按段落组合，保留 document_id 与 metadata，避免检索后找不到原文。'],['建向量索引','build_index 使用 HashEmbeddingProvider 与 SQLiteVectorStore.replace 写入片段。'],['查询排序','store.search 将查询编码，用向量相似度返回候选及分数。']],
+        code: [['src/corpus.py / src/models.py','Document、Chunk 与来源元数据。'],['src/embeddings.py / src/store.py / src/service.py','哈希向量、SQLite 存取和建索引。']],
+        traps: [['Hash Embedding 不是通用语义模型','默认实现偏向可复现、零外部费用，不保证同义改写能召回。'],['切片会改变证据边界','过小失去上下文，过大降低检索精度；保留稳定 chunk_id 和原文路径。']],
+        practice: ['选一篇文档，列出解析后的 metadata 和两个 Chunk 的来源路径。','故意改变切片长度，比较命中内容与引用可读性。'],
+        mastery: '能从一份 Markdown 追到 SQLite 中的 Chunk，再从检索结果回溯原文。'
+      },
+      '0818': {
+        why: '初次召回只是“可能相关”。重排像把候选简历再筛一遍：同时看向量分数、词面重合与主题，最后引用必须能在原文片段中逐字找到。',
+        example: '给检索器一个 React key 问题：先多取候选，再重排为 Top 3，Citation 带 chunk_id、document_id、source_path 与 quote。',
+        steps: [['扩大候选','KnowledgeRetriever 让向量库先取多于 top_k 的结果。'],['重排打分','按向量分数、词面重合与 topic bonus 计算新分数。'],['截取结果','排序后只保留需要的 Top K。'],['生成引用','citation_from_hit 从命中的 Chunk 内容截取 quote，并保留文档与片段 ID。']],
+        code: [['src/retrieval.py','候选重排与精确片段引用。'],['src/store.py / src/models.py','原始候选分数和 Citation 字段。']],
+        traps: [['相关度分数不是事实证明','高分片段也可能不支持具体结论；引用需要人工或评测核对。'],['不能让模型自造 quote','当前 quote 来自源 Chunk 的截取，才能按 chunk_id 回查。']],
+        practice: ['对一条查询比较 store.search 的候选顺序与 retriever.search 的顺序。','拿一条 Citation 的 quote 回查 source_path 与 chunk_id，确认文字确实存在。'],
+        mastery: '能区分召回和重排，能证明“引用来自哪个片段”，而不只展示一个来源标题。'
+      },
+      '0819': {
+        why: '审查 Diff 时，规则命中的问题要主动拿知识库证据，而不是只靠模型记忆或凭规则名字下结论。每条 Finding 应与自己的规范片段绑定。',
+        example: 'React key={index} 触发规则；ReviewAgent 用 rule.query 和 rule.topic 检索，找到引用才把 Finding 放进结果。',
+        steps: [['扫描 Diff','match_rules 产生 category、message、topic 与检索 query。'],['逐条查证','每条规则独立调用 search_with_citations，并记录 search_knowledge 的状态和耗时。'],['绑定引用','找到片段后将 Citation 放入 ReviewFinding；结果由 Pydantic 模型构造。'],['处理无证据','检索失败或为空时当前实现跳过该 Finding；tool_runs 仍可显示执行状态。']],
+        code: [['src/rules.py / src/agent.py','规则触发、自动检索和 Finding 组装。'],['src/retrieval.py / src/schemas.py','检索结果与稳定输出结构。']],
+        traps: [['没有 Finding 不等于没有问题','当前逻辑在 citations 为空时 continue，可能造成漏报；页面应区分“无问题”和“证据缺失”。'],['自动检索不是 LLM 自主搜索','这一步按规则类别调用检索器，仍是可复现的程序编排。']],
+        practice: ['给出一条能触发规则的 Diff，跟踪 query、topic、ToolRun 和最终 Citation。','模拟空检索，观察 Finding 怎样变化，并设计“待人工核查”的更稳妥表示。'],
+        mastery: '能解释规则发现、知识检索和引用绑定的关系，也能说出证据缺失时的漏报风险。'
+      },
+      '0820': {
+        why: '没有固定题目和期待结果，改一次 Prompt 或检索参数只能凭感觉说“变好了”。Eval Dataset 把目标写成可重复的输入、期望类别和期望引用。',
+        example: 'data/eval-dataset.jsonl 中一行表示一个 React/Vue/TS/性能/安全 Diff，写明 expected_categories 与 expected_citations。',
+        steps: [['定义样本','每行是独立 JSON 对象，包含 id、标题、Diff 和期望检查点。'],['覆盖场景','12 条样例涵盖不同主题及一条无问题对照。'],['校验格式','validate_dataset 检查字段与引用目标，避免评测脚本被坏数据带偏。'],['冻结对照','后续 baseline 与 tuned 使用同一批样本，才能比较改动效果。']],
+        code: [['data/eval-dataset.jsonl','逐行可读、可追踪的评测输入与预期。'],['src/validate_dataset.py / tests/test_dataset.py','数据集结构检查。']],
+        traps: [['样本多不等于代表真实流量','12 条覆盖的是教学范围，不能代表所有前端框架、跨文件逻辑和误报场景。'],['不要只写正例','必须有无问题与易误报的对照，否则系统可能靠多报问题刷命中率。']],
+        practice: ['读一条 JSONL 样本，分别指出输入、期待 Finding 与期待引用。','新增一条“看起来像问题但实际安全”的对照，并解释期待为空的理由。'],
+        mastery: '能自己写一条独立可判分的 Eval Case，而不是写模糊的“回答要好”。'
+      },
+      '0821': {
+        why: '“通过率”一个数字会掩盖问题来源。需要分开看规则有没有命中、引用是否对、JSON 能否解析、工具是否成功，以及用户等待多久。',
+        example: 'python -m src.evaluate 逐条运行数据集，输出 reports/eval-report.json 和五类指标。',
+        steps: [['加载样本','EvalCase 逐行校验 JSONL，再交给 ReviewAgent。'],['跑审查','每条记录耗时，收集 findings 和 tool_runs。'],['逐项计数','按 expected_categories 算命中，按 expected_citations 的 document_id 算引用正确率，另算 JSON 与 Tool 状态。'],['保存报告','输出 summary 和逐条 missing、unexpected、citation_failures，便于定位失败样本。']],
+        code: [['src/evaluate.py','指标分母分子、逐例判分和报告写入。'],['data/eval-dataset.jsonl / reports/eval-report.json','固定输入与评测产物。']],
+        traps: [['引用正确率在此只核对文档 ID 与非空 quote','它不自动验证 quote 的语义是否真正支持该 Finding。'],['JSON 合法率不等于模型稳定性','当前结果由 Pydantic 对象生成再序列化校验，不能代表自由输出的真实模型。']],
+        practice: ['找一条失败样本，手算命中率和引用正确率中各增加了哪个分子、分母。','按 missing、unexpected、citation_failures 将错误归类，再决定改规则还是改检索。'],
+        mastery: '能读懂每个指标的定义和局限，并用失败样本解释“为什么分数变化”。'
+      },
+      '0822': {
+        why: '把知识库、检索、引用、审查和 Eval 收成一个可调用应用。关键不是冲高总分，而是拿失败样本证明一次修改改善了什么、又增加了多少延迟。',
+        example: 'python -m app.evaluate --compare 固定 12 条数据，对比 baseline 与 tuned；再从 /review 看每条 Finding 的规范原文引用。',
+        steps: [['建立索引','Markdown 被解析、切块、哈希向量化并写入 SQLite。'],['审查与引用','规则匹配 Diff，检索候选并重排，每条 Finding 绑定可回查的 quote。'],['服务与输出','FastAPI 提供 /review、/knowledge/search、/eval，结果经 Pydantic 约束。'],['对照迭代','baseline/tuned 改规则覆盖、Top K 与重排；报告列出失败样本和指标。']],
+        code: [['app/service.py / app/agent.py / app/retrieval.py','索引、审查和可追溯引用。'],['app/evaluate.py / reports/iteration.md','对照评测与改动依据。']],
+        traps: [['12 条回归集满分不等于线上泛化','样本与规则可能相互适配；还需独立盲测、真实 Diff、误报率与多文件上下文。'],['默认不是语义大模型 RAG','HashEmbeddingProvider 是可替换的本地基线，不等于商业 Embedding 或真实 LLM 推理。']],
+        practice: ['运行 compare，挑一条 baseline 失败样本，指出 tuned 改的是规则、召回还是重排。','核对一条 quote 的源文件和 chunk_id，并说明报告里平均延迟的测试环境。'],
+        mastery: '能从“文档入库→审查引用→逐例评测→失败迭代”讲完闭环，同时说清数据集和模型边界。'
+      },
+      '0823': {
+        why: '生成 Patch 或模拟高风险操作之前，要把人的决策变成可验证的状态，而不是在前端弹一个确认框就算安全。状态机能阻止同一申请被重复决定或绕过拒绝。',
+        example: 'POST /patches/requests 创建 pending；POST /approvals/{id}/decision 批准后才允许 /patches/{id}/generate；拒绝则阻断。',
+        steps: [['提交申请','API 保存 action、payload、申请人和原因，ApprovalStore 写入 SQLite。'],['人工决策','只有 pending 能变 approved 或 rejected；数据库更新带状态条件，防止重复决策。'],['执行前核验','require_approved 同时检查申请动作与状态。'],['保存候选结果','批准后生成 Patch Artifact 并保存一次结果；不会直接改源代码仓库。']],
+        code: [['app/approval.py / app/main.py','持久状态机和申请、决策、生成接口。'],['app/patches.py / tests/test_app.py','候选 Patch 与拒绝/重复决策测试。']],
+        traps: [['审批通过不代表 Patch 正确','仍要检查上下文、可应用性、构建和回归测试。'],['接口开放不等于真实身份鉴权','这套本地演示记录申请人与审批人，但生产环境还需认证、授权和审计防篡改。']],
+        practice: ['分别走 pending→rejected 与 pending→approved→generate，记录 HTTP 状态与结果。','对同一个 ID 重复提交决策，解释数据库的状态条件为什么重要。'],
+        mastery: '能画出合法/非法状态转换，并说明审批保护的是授权边界，不是修改质量。'
+      },
+      '0824': {
+        why: '出错时仅知道“失败”不够；要知道哪个模型或规则版本、哪个工具、耗时多少、哪一步失败。Trace 是运行事实的索引，traceId 让前端提示能对应后台事件。',
+        example: '审查一次 Diff 后拿到 trace_id，GET /traces/{trace_id} 查看 run.started、工具事件、结果摘要和失败信息。',
+        steps: [['开启运行','TraceStore.start 生成独立 trace_id，写 provider/model 与 prompt_version。'],['记录阶段','各 Tool 只写必要的参数/结果摘要和耗时，错误留下 code 与上下文。'],['统计用量','估算 token 并按模型价格计算 cost；当前本地规则模型单价为 0。'],['定位问题','API 根据 traceId 取 JSONL 事件，按时间顺序还原一次运行。']],
+        code: [['app/trace.py','JSONL 追加、trace_id 生成与事件查询。'],['app/agent.py / app/main.py / tests/test_trace.py','事件发出位置、查询接口和测试。']],
+        traps: [['本地估算不是账单','token 用字符长度近似计算，cost 为 0；只有真实 Provider 的 usage 才能做真实成本归因。'],['多记不等于更可观测','不要无边界存 Diff、密钥和敏感工具返回；优先结构化摘要和错误类别。']],
+        practice: ['挑一条成功运行，按时间列出 run、工具与完成事件。','制造一条失败，凭 traceId 找出错误阶段与 prompt_version。'],
+        mastery: '能从页面错误提示追到一条 JSONL 运行轨迹，并解释用量字段的来源。'
+      },
+      '0825': {
+        why: '重复审查同一 Diff 很浪费；Redis 只缓存相同输入与相同规则/Prompt 版本的结果。它降低重复计算，但不能抹掉每次请求自己的审计记录。',
+        example: '同一 Diff 连续 POST /review 两次：第二次命中缓存；两次仍有不同的 trace_id。',
+        steps: [['计算键','将 prompt_version 与 Diff 组合后做 SHA-256，避免不同规则版本复用旧答案。'],['查缓存','优先 Redis；取到业务结果时保留 cache hit 信息。'],['缺失或故障','未命中时重新审查并设置 TTL；Redis 不可用则降级到进程内缓存。'],['写新 Trace','每个请求都创建 trace_id，并记录 backend、hit 与 degraded。']],
+        code: [['app/cache.py / app/review_service.py','TTL、Redis/内存切换和重复请求复用。'],['tests/test_cache.py / app/main.py','命中、降级和健康状态。']],
+        traps: [['缓存命中不等于复用运行身份','旧结果可复用，旧 traceId 不可复用；每次请求仍是独立审计事件。'],['降级内存缓存不是 Redis 等价物','它只在本进程有效，重启或多副本会丢失/不共享；health 应明确 degraded。']],
+        practice: ['相同 Diff 连续请求两次，比较缓存状态、延迟和 traceId。','停 Redis 后查看 /health，再请求审查，解释为什么仍能工作。'],
+        mastery: '能解释缓存键、TTL、版本失效、fail-open 降级和新 Trace 的必要性。'
+      },
+      '0826': {
+        why: '本地 python 命令能跑，不代表别人能启动完整系统。Compose 把前端、API、Postgres/pgvector、Redis 的网络、依赖与健康检查固定下来。',
+        example: '复制 .env.example、设置 POSTGRES_PASSWORD，再 docker compose up --build -d；访问 8080 页面、8000/docs 与 /health。',
+        steps: [['配置环境','把示例环境变量复制为本地 .env，不把密码提交到仓库。'],['启动四服务','Nginx 前端反代 API，FastAPI 连向量/审批数据库和 Redis。'],['验证依赖','docker compose ps 与 /health 检查启动和降级状态，不只看容器是不是 Running。'],['区分测试环境','本地 pytest 使用 SQLite 和内存缓存；Compose 使用 Postgres/pgvector 与 Redis。']],
+        code: [['docker-compose.yml / .env.example','服务、端口、依赖、数据卷与配置项。'],['app/store.py / app/approval.py / tests/test_deployment.py','不同环境的持久层与部署检查。']],
+        traps: [['单测通过不等于容器链路通过','数据库扩展、卷权限、服务发现和反向代理都要单独验证。'],['docker compose down -v 会删除数据卷','日常停止用 down；只有明确要清除 Postgres/Redis 数据才用 -v。']],
+        practice: ['启动后分别请求页面、API docs 和 health，记录每层结果。','停掉一个依赖，观察容器健康与页面反馈，写出恢复顺序。'],
+        mastery: '能在干净环境启动并解释四个服务为什么各自存在，也知道本地测试与容器环境的差异。'
+      },
+      '0827': {
+        why: '系统的完成度取决于失败时是否可理解、可定位、不会伪造结果。故障演练把“超时、工具异常、无检索、坏 JSON、审批拒绝”变成可重复测试的场景。',
+        example: '向故障演练接口提交 empty_retrieval，得到 degraded 和 KNOWLEDGE_NOT_FOUND；提交 approval_rejected，得到 blocked。',
+        steps: [['注入场景','FaultDrillService 按 scenario 进入对应分支，Trace 记录 drill.injected。'],['分类结果','model_timeout、tool_exception、invalid_json 抛带代码的错误；empty_retrieval 降级；审批拒绝阻断。'],['返回建议','API 给前端 message、suggestion、retryable 和 trace_id。'],['验证页面','前端按类型呈现解释，测试逐种断言 HTTP、状态和 Trace。']],
+        code: [['app/faults.py / app/main.py','五类演练与错误映射。'],['tests/test_fault_drills.py / app/static/app.js','后端断言和页面展示。']],
+        traps: [['演练注入不等于真实 Provider 已失败过','这些分支主要是可控故障模拟，用来测试反馈契约。'],['重试建议要按错误类型','审批拒绝不能简单重试原申请；检索为空不能编造引用；超时才可能安全重试。']],
+        practice: ['逐个运行五类场景，列出 code、status、retryable 和页面提示。','选一个失败 traceId，说明用户提示与内部错误记录为何不能完全一样。'],
+        mastery: '能从故障类型推导用户可读反馈和可追踪证据，不把降级结果当正常成功。'
+      },
+      '0828': {
+        why: '作品只有作者自己能跑，不算可交付。README、架构图、部署步骤、评测结果、失败处理与演示素材要让陌生人几分钟内判断它能做什么、怎么验证。',
+        example: '从 README 查看 Compose 启动、API、架构、12 条本地评测的指标和故障说明，再对照 docs/demo.gif 看真实操作路径。',
+        steps: [['压缩入口','README 先说用户问题、核心能力和运行方式，不用版本流水账代替产品说明。'],['给技术证据','架构图指向代码，评测报告链接到 baseline/tuned 与失败样本。'],['展示失败边界','说明缓存降级、审批拒绝、检索为空和 Docker 环境前提。'],['补演示素材','截图/GIF 与当前界面一致，读者可复现演示步骤。']],
+        code: [['README.md / ARCHITECTURE.md','对外说明与详细数据流。'],['docs/demo.png / docs/demo.gif / reports/*.json','操作证明与评测原始产物。']],
+        traps: [['文档不能替代功能验证','每条宣称都要能用 API、测试、Trace 或截图对照。'],['不要把本地确定性评测写成线上模型效果','注明样本数、Provider、检索实现和测试环境。']],
+        practice: ['假设第一次克隆项目，逐条执行 README 并记下遗漏的环境前提。','挑一条技术宣称，找到对应源码、测试和 Demo 画面。'],
+        mastery: '能让陌生人按文档启动、体验、验证主要能力，并正确理解限制。'
+      },
+      '0829': {
+        why: '最后一步是把作品讲清楚，而不是堆技术名词。面试官关心真实问题、你做的决策、证据、权衡和现在还没解决的事。',
+        example: '用 2 分钟演示：提交一个前端 Diff→看到 Finding 和规范引用→查看 Trace→拒绝一次高风险 Patch→展示 Eval 对照。',
+        steps: [['准备项目证据','README、ARCHITECTURE、演示图和 baseline/tuned 报告保持一致。'],['写简历表达','RESUME.md 分 AI 前端、AI 应用全栈、Agent 应用开发三种岗位讲法。'],['练追问','INTERVIEW.md 的 10 题覆盖 Tool、RAG、审批、Trace、缓存与失败处理。'],['开始投递','APPLICATION_TRACKER.md 用于岗位筛选、记录投递、复盘真实面试反馈。']],
+        code: [['RESUME.md / INTERVIEW.md / APPLICATION_TRACKER.md','岗位描述、回答框架和投递记录。'],['README.md / ARCHITECTURE.md / tests/','每个面试主张背后的实现与验证。']],
+        traps: [['“用了 Agent”不能代替技术说明','0829 默认是规则编排和本地 Hash Embedding；0815 可接 DeepSeek，但不是最终项目默认运行路径。'],['评测好看不等于真实场景已证明','要主动说明 12 条回归集的局限、误报与跨文件上下文的未覆盖。']],
+        practice: ['不看材料，口述“问题→架构→一次请求→一处失败→限制”，录音控制在 2 分钟。','请别人追问“模型在哪里决策”“Patch 是否自动执行”“引用怎么验证”，用源码和测试回答。'],
+        mastery: '能诚实地区分已实现、模拟和下一步计划，用可验证的证据讲出工程价值。'
+      }
+    };
     const ids = ['overview',...stages.map(s => s.id),...days.map(d => d.id)];
     const storeKey = 'agent-learning-advanced-v1';
     let completed;
@@ -153,9 +368,21 @@
       document.getElementById('bar').style.width = `${completed.size / days.length * 100}%`;
     }
     function flow(items) { return `<div class="flow">${items.map((x,i) => `${i ? '<i>→</i>' : ''}<span>${esc(x)}</span>`).join('')}</div>`; }
-    function overview() { return `<section class="section"><span class="eyebrow">ROADMAP / 22 STOPS</span><h1>从会写 Demo，到会交付 Agent 服务</h1><p class="lead">基础篇已经讲了 Tool Calling、RAG、Trace、审批等零件。这一篇沿着真实仓库，把零件放进同一个系统，回答“怎么连起来、怎么测、坏了怎么找、能否上线”。</p><div class="stage-grid">${stages.map(s => `<button class="stage" data-go="${s.id}"><small>${esc(s.range)}</small><b>${esc(s.title)}</b><p>${esc(s.goal)}</p></button>`).join('')}</div></section><section class="section"><h2>先建立一条主线</h2>${flow(['输入 Diff','API 校验','Agent 决策','Tool / RAG','结果校验','Trace + UI'])}<p>先能口述这条链，再回到每一天的源码。不要试图背下所有文件；把重点放在职责边界、失败分支与证据上。</p></section><section class="section cols"><div><h3>推荐读法</h3><ol><li>打开阶段目标，先回答“该阶段新增了什么边界”。</li><li>打开每日项目的 README / 源码，按动手题亲自跑一遍。</li><li>不看答案口述自测，再核对代码与运行结果。</li><li>到 0815、0822、0829 做里程碑验收。</li></ol></div><div><h3>不要混为一谈</h3><div class="callout">0815 可选接入真实 DeepSeek Provider；0829 的默认本地评测路径主要依赖规则引擎和 Hash Embedding。确定性样本成绩不等于真实模型线上效果，估算 token/cost 也不是真实账单。</div></div></section><section class="section"><h2>完成标准</h2><p>能独立画出数据流；能让一个新 Diff 走完审查、检索、引用、审批和 Trace；遇到故障能判断是 API、模型、工具、检索、校验还是前端展示，而不只会“再试一次”。</p><p class="muted">本页离线可用，打卡进度仅保存在当前浏览器的 localStorage。</p></section>`; }
+    function overview() { return `<section class="section"><span class="eyebrow">ROADMAP / 22 STOPS</span><h1>从会写 Demo，到会交付 Agent 服务</h1><p class="lead">基础篇已经讲了 Tool Calling、RAG、Trace、审批等零件。这一篇沿着真实仓库，把零件放进同一个系统，回答“怎么连起来、怎么测、坏了怎么找、能否上线”。</p><div class="stage-grid">${stages.map(s => `<button class="stage" data-go="${s.id}"><small>${esc(s.range)}</small><b>${esc(s.title)}</b><p>${esc(s.goal)}</p></button>`).join('')}</div></section><section class="section"><h2>先建立一条主线</h2>${flow(['输入 Diff','API 校验','Agent 决策','Tool / RAG','结果校验','Trace + UI'])}<p>先能口述这条链，再回到每一天的源码。不要试图背下所有文件；把重点放在职责边界、失败分支与证据上。</p><p class="muted">每个 agent-08xx 文件夹是一个可独立运行的阶段快照。读某一天时以该文件夹的源码为准，不要把后一天的能力自动算作前一天已有。</p></section><section class="section cols"><div><h3>推荐读法</h3><ol><li>打开阶段目标，先回答“该阶段新增了什么边界”。</li><li>打开每日项目的 README / 源码，按动手题亲自跑一遍。</li><li>不看答案口述自测，再核对代码与运行结果。</li><li>到 0815、0822、0829 做里程碑验收。</li></ol></div><div><h3>不要混为一谈</h3><div class="callout">0815 可选接入真实 DeepSeek Provider；0829 的默认本地评测路径主要依赖规则引擎和 Hash Embedding。确定性样本成绩不等于真实模型线上效果，估算 token/cost 也不是真实账单。</div></div></section><section class="section"><h2>完成标准</h2><p>能独立画出数据流；能让一个新 Diff 走完审查、检索、引用、审批和 Trace；遇到故障能判断是 API、模型、工具、检索、校验还是前端展示，而不只会“再试一次”。</p><p class="muted">本页离线可用，打卡进度仅保存在当前浏览器的 localStorage。</p></section>`; }
     function stagePage(s) { const related = days.filter(d => d.stage === s.id); return `<section class="section"><span class="eyebrow">${esc(s.label)} / ${esc(s.range)}</span><h1>${esc(s.title)}</h1><p class="lead">${esc(s.goal)}</p>${flow(s.flow)}</section><section class="section cols"><div><h3>这阶段要能做到</h3><p>${esc(s.check)}</p></div><div><h3>出错时怎么查</h3><p>${esc(s.trouble)}</p></div></section><section class="section"><h2>逐日路线</h2><ol>${related.map(d => `<li><a href="#${d.id}" data-go="${d.id}">${d.id} · ${esc(d.title)}</a>：${esc(d.summary)}</li>`).join('')}</ol></section><section class="section"><h3>进入下一阶段前</h3><p>关掉这页，自己画出上面的数据流，并给每个节点标出一处典型失败。随后打开对应项目跑一次真实请求，用结果验证你的图。</p></section>`; }
-    function dayPage(d) { const i = days.findIndex(x => x.id === d.id); const s = stages.find(x => x.id === d.stage); return `<section class="section"><span class="eyebrow">${esc(s.label)} / ${d.id}</span><div class="topic-head"><div><h1>${esc(d.title)}</h1><p>${esc(d.summary)}</p></div><button class="done ${completed.has(d.id) ? 'checked' : ''}" id="complete" aria-pressed="${completed.has(d.id)}">${completed.has(d.id) ? '✓ 已掌握' : '标记已掌握'}</button></div></section><section class="section cols"><div><h3>读哪些文件</h3><p class="code">${esc(d.files.replaceAll('；','\n'))}</p><p class="muted">路径相对于 agent-learning 仓库根目录；先从 README 找入口，再沿导入关系读关键代码。</p><a class="inline-link" href="../agent-${d.id}/README.md">打开本项目 README →</a></div><div><h3>今天动手</h3><p>${esc(d.task)}</p><div class="callout">验收时保留请求、响应、Trace 或评测报告。只看“页面成功”不足以证明链路正确。</div></div></section><section class="section"><h3>把它放回系统</h3>${flow(s.flow)}<p class="muted">当前关注：${esc(d.summary)}</p></section><div class="quiz"><h3>自测：先口述，再展开</h3><p>${esc(d.question)}</p><button id="reveal" aria-expanded="false">查看参考答案</button><p class="answer" id="answer">${esc(d.answer)}</p></div><div class="next"><button id="prev" ${i === 0 ? 'disabled' : ''}>← 上一个</button><button id="next" ${i === days.length - 1 ? 'disabled' : ''}>下一个 →</button></div>`; }
+    function dayPage(d) {
+      const i = days.findIndex(x => x.id === d.id);
+      const s = stages.find(x => x.id === d.stage);
+      const g = guides[d.id];
+      return `<section class="section"><span class="eyebrow">${esc(s.label)} / ${d.id}</span><div class="topic-head"><div><h1>${esc(d.title)}</h1><p>${esc(d.summary)}</p></div><button class="done ${completed.has(d.id) ? 'checked' : ''}" id="complete" aria-pressed="${completed.has(d.id)}">${completed.has(d.id) ? '✓ 已掌握' : '标记已掌握'}</button></div></section>
+      <section class="section"><h2>先用人话理解</h2><p>${esc(g.why)}</p><div class="lesson-example"><strong>跟读例子：</strong>${esc(g.example)}</div></section>
+      <section class="section"><h2>一步步看它如何工作</h2><div class="walkthrough">${g.steps.map((step, n) => `<div class="walkthrough-row"><small>0${n + 1}</small><strong>${esc(step[0])}</strong><p>${esc(step[1])}</p></div>`).join('')}</div></section>
+      <section class="section"><h2>回到项目：从哪里读起</h2><div class="walkthrough">${g.code.map((item, n) => `<div class="walkthrough-row"><small>0${n + 1}</small><strong>${esc(item[0])}</strong><p>${esc(item[1])}</p></div>`).join('')}</div><p class="muted" style="margin-top:14px">以上路径相对于 agent-${d.id}；项目说明与架构文档位于：</p><div class="code">${esc(d.files.replaceAll('；','\n'))}</div><a class="inline-link" href="../agent-${d.id}/README.md">打开本项目 README →</a></section>
+      <section class="section"><h2>最容易理解错的地方</h2><div class="learning-points">${g.traps.map(item => `<div><h3>${esc(item[0])}</h3><p>${esc(item[1])}</p></div>`).join('')}</div></section>
+      <section class="section"><h2>照着做，才算掌握</h2><ol><li>${esc(d.task)}</li>${g.practice.map(item => `<li>${esc(item)}</li>`).join('')}</ol><p style="margin-top:17px"><strong>本课达标：</strong>${esc(g.mastery)}</p><div class="callout">保留请求、响应、Trace 或评测报告；只看“页面成功”不足以证明整条链路正确。</div></section>
+      <section class="section"><h3>把它放回系统</h3>${flow(s.flow)}<p class="muted">当前关注：${esc(d.summary)}</p></section>
+      <div class="quiz"><h3>自测：先口述，再展开</h3><p>${esc(d.question)}</p><button id="reveal" aria-expanded="false">查看参考答案</button><p class="answer" id="answer">${esc(d.answer)}</p></div><div class="next"><button id="prev" ${i === 0 ? 'disabled' : ''}>← 上一个</button><button id="next" ${i === days.length - 1 ? 'disabled' : ''}>下一个 →</button></div>`;
+    }
     function render() {
       renderNav();
       content.innerHTML = current === 'overview' ? overview() : stages.some(s => s.id === current) ? stagePage(stages.find(s => s.id === current)) : dayPage(days.find(d => d.id === current));
