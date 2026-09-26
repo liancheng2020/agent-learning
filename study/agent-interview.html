@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 应用开发面试指南 · ReproLens / TraceBase / Sift</title>
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #19292d; background: #f6f8f7; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; letter-spacing: 0; }
+    button { font: inherit; cursor: pointer; }
+    a { color: #006f64; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    :focus-visible { outline: 2px solid #168b72; outline-offset: 2px; }
+    .shell { display: grid; grid-template-columns: 265px minmax(0, 1fr); min-height: 100vh; }
+    aside { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 22px 15px; background: #142429; color: #e6f3ed; }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 9px 21px; border-bottom: 1px solid #365057; }
+    .mark { width: 35px; height: 35px; display: grid; place-items: center; background: #75ddb0; color: #132328; font: 700 14px ui-monospace, monospace; flex: 0 0 auto; }
+    .brand strong { display: block; font-size: 15px; }
+    .brand small { display: block; font: 11px ui-monospace, monospace; color: #9bb3af; margin-top: 4px; }
+    .rail-label { color: #7fe1b7; font: 11px ui-monospace, monospace; margin: 20px 9px 8px; }
+    .related { display: grid; gap: 7px; margin: 15px 9px 23px; }
+    .related a { color: #95dfc0; font-size: 12px; }
+    .nav { display: grid; gap: 2px; }
+    .nav a { width: 100%; min-height: 38px; border-radius: 3px; color: #b7c9c8; padding: 8px 9px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .nav a:hover, .nav a.active { background: #27453f; color: #fff; text-decoration: none; }
+    .nav .id { color: #83ddba; font: 11px ui-monospace, monospace; min-width: 21px; }
+    main { min-width: 0; }
+    .topbar { min-height: 63px; padding: 12px clamp(20px, 4vw, 55px); background: #fff; border-bottom: 1px solid #d7e2dc; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .topbar strong { font-size: 13px; }
+    .topbar small { display: block; color: #007b6b; font: 10px ui-monospace, monospace; margin-bottom: 4px; }
+    .progress { display: flex; gap: 10px; align-items: center; font: 12px ui-monospace, monospace; color: #53686b; white-space: nowrap; }
+    .track { width: 105px; height: 6px; background: #e1ece7; border-radius: 6px; overflow: hidden; }
+    .track span { display: block; width: 0; height: 100%; background: #148770; transition: width .2s; }
+    .content { max-width: 1180px; padding: 37px clamp(20px, 4vw, 55px) 80px; }
+    h1 { margin: 6px 0 13px; font-size: clamp(27px, 3vw, 39px); line-height: 1.25; }
+    h2 { margin: 0 0 13px; font-size: 24px; }
+    h3 { margin: 0 0 10px; font-size: 17px; }
+    h4 { margin: 0 0 8px; font-size: 14px; }
+    p { margin: 0 0 12px; line-height: 1.75; }
+    ul, ol { margin: 0; padding-left: 21px; color: #364d50; font-size: 14px; line-height: 1.8; }
+    li { margin-bottom: 5px; }
+    .lead { color: #54696b; font-size: 16px; max-width: 800px; }
+    .eyebrow { color: #007c6d; font: 700 11px ui-monospace, monospace; }
+    .section { padding: 36px 0; border-bottom: 1px solid #d7e2dc; scroll-margin-top: 22px; }
+    .section:first-child { padding-top: 0; }
+    .muted { color: #5c7072; font-size: 13px; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid #ccdbd4; background: #fff; }
+    .grid3 > div { min-width: 0; padding: 17px; border-right: 1px solid #ccdbd4; }
+    .grid3 > div:last-child { border-right: 0; }
+    .grid3 p { font-size: 13px; margin: 0; }
+    .callout { border-left: 3px solid #cd8a43; background: #fff7e9; padding: 12px 16px; font-size: 13px; line-height: 1.7; }
+    .success { border-left-color: #168b72; background: #e9f4ec; }
+    .script { background: #e9f4ec; border-left: 3px solid #168b72; padding: 18px 20px; font-size: 14px; line-height: 1.8; }
+    .script p:last-child, .callout p:last-child { margin-bottom: 0; }
+    .kicker { font: 700 11px ui-monospace, monospace; color: #007c6d; margin: 25px 0 11px; }
+    .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; padding: 9px 0 18px; }
+    .flow span { padding: 8px 10px; background: #e2f2e9; border: 1px solid #b8d8c7; font: 12px ui-monospace, monospace; }
+    .flow i { font-style: normal; color: #008270; }
+    .step-table { border-top: 1px solid #ccdbd4; }
+    .step { display: grid; grid-template-columns: 36px minmax(150px, 1fr) minmax(0, 2fr); gap: 12px; padding: 13px 0; border-bottom: 1px solid #d7e2dc; }
+    .step small { color: #007c6d; font: 700 11px ui-monospace, monospace; padding-top: 4px; }
+    .step strong { font-size: 14px; }
+    .step p { font-size: 13px; margin: 0; }
+    .source { padding: 13px 15px; background: #172b2e; color: #d9eee5; border-left: 3px solid #72dcaf; font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    .source a { color: #8ae7c0; }
+    .source + .source { margin-top: 6px; }
+    .qa { border-top: 1px solid #d4e2da; }
+    .qa details { border-bottom: 1px solid #d4e2da; padding: 14px 3px; }
+    .qa summary { cursor: pointer; font-size: 14px; font-weight: 650; line-height: 1.6; }
+    .qa summary::marker { color: #168b72; }
+    .qa .answer { padding: 11px 0 1px 21px; font-size: 13px; line-height: 1.75; color: #344d4f; }
+    .qa .answer p { margin-bottom: 8px; }
+    .qa .answer p:last-child { margin-bottom: 0; }
+    .pill { display: inline-block; border: 1px solid #b8d8c7; padding: 3px 6px; color: #096a5d; font: 11px ui-monospace, monospace; margin: 0 5px 6px 0; }
+    .checkpoint { border-top: 1px solid #d4e2da; }
+    .checkpoint label { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; border-bottom: 1px solid #d4e2da; font-size: 13px; line-height: 1.55; cursor: pointer; }
+    .checkpoint input { accent-color: #168b72; margin-top: 2px; flex: 0 0 auto; }
+    .compact { margin-top: 18px; }
+    .footer { padding-top: 25px; font-size: 12px; color: #697c7e; line-height: 1.75; }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: minmax(0, 1fr); }
+      aside { position: static; height: auto; min-width: 0; padding: 14px 16px; }
+      .brand { padding: 0 2px 10px; border-bottom: 0; }
+      .related { display: flex; gap: 12px; margin: 4px 2px 10px; flex-wrap: wrap; }
+      .rail-label { display: none; }
+      .nav { display: flex; max-width: 100%; overflow-x: auto; gap: 4px; padding-bottom: 3px; }
+      .nav a { flex: 0 0 auto; width: auto; white-space: nowrap; }
+      .content { padding: 27px 20px 65px; overflow-wrap: anywhere; }
+    }
+    @media (max-width: 620px) {
+      .grid2, .grid3 { grid-template-columns: 1fr; gap: 18px; }
+      .grid3 { gap: 0; }
+      .grid3 > div { border-right: 0; border-bottom: 1px solid #ccdbd4; }
+      .grid3 > div:last-child { border-bottom: 0; }
+      .step { grid-template-columns: 27px minmax(0, 1fr); }
+      .step p { grid-column: 2; }
+      .topbar { padding: 11px 20px; flex-wrap: wrap; }
+      .track { width: 70px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand"><span class="mark">Q/A</span><div><strong>Agent 面试指南</strong><small>3 PROJECTS · 1 STORY</small></div></div>
+      <div class="related"><a href="agent-foundations.html">基础篇 0503–0517</a><a href="agent-advanced.html">进阶篇 0518–0829</a></div>
+      <div class="rail-label">INTERVIEW ROUTE</div>
+      <nav class="nav" aria-label="面试指南导航">
+        <a href="#position"><span class="id">01</span>定位与自我介绍</a>
+        <a href="#reprolens"><span class="id">02</span>ReproLens</a>
+        <a href="#tracebase"><span class="id">03</span>TraceBase</a>
+        <a href="#sift"><span class="id">04</span>Sift</a>
+        <a href="#cross"><span class="id">05</span>跨项目技术追问</a>
+        <a href="#practice"><span class="id">06</span>模拟面试与演示</a>
+      </nav>
+    </aside>
+    <main>
+      <div class="topbar"><div><small>INTERVIEW FIELD GUIDE</small><strong>讲得清、追得动、证据对得上</strong></div><div class="progress"><span id="count">0 / 12</span><div class="track" aria-label="准备进度"><span id="bar"></span></div></div></div>
+      <div class="content">
+        <section id="position" class="section">
+          <span class="eyebrow">01 / CANDIDATE POSITIONING</span>
+          <h1>从前端工程师，走向 AI 应用开发</h1>
+          <p class="lead">这份指南对应桌面的 4.0 排版版简历，以及三个公开项目。重点不是背术语，而是能沿着一次真实请求解释输入、决策、工具、证据、失败和边界。</p>
+          <div class="script"><h3>90 秒自我介绍，可按事实调整</h3><p>我有 7 年以上前端开发经验，做过中后台、H5 和小程序，也有 Node.js API 实践。最近把重点放在 AI 应用工程：ReproLens 用模型辅助生成受限的浏览器复现计划，人工确认后由 Playwright 执行和采证；TraceBase 解决项目资料的检索、引用与更新一致性；Sift 处理 YouTube、文件和长文本，输出可回查的结构化摘要。这三个项目分别让我实践了 Agent 的受控执行、RAG 的证据约束，以及多源内容的解析和模型输出校验。我目前更适合 AI 应用开发或 AI 全栈岗位，不会把个人项目包装成生产级多租户平台。</p></div>
+          <div class="kicker">面试官最可能先判断的三件事</div>
+          <div class="grid3"><div><h3>你真正做了什么</h3><p>说清模型、规则、工具、人工确认各自的职责；AI 辅助编码不是问题，无法解释实现才是问题。</p></div><div><h3>问题怎么验证</h3><p>拿出固定场景、自动测试、失败注入和可重复演示。不要把“页面能打开”说成“效果已验证”。</p></div><div><h3>边界在哪里</h3><p>明确本机运行、单用户、输入格式、权限和真实模型依赖；下一步改进要有原因和优先级。</p></div></div>
+          <p class="muted compact">简历事实基线：前端经验、Node.js 实践、三项目架构与技术栈来自桌面 4.0 排版版。页面不包含手机号、邮箱等个人联系方式。</p>
+        </section>
+
+        <section id="reprolens" class="section">
+          <span class="eyebrow">02 / CONTROLLED BROWSER AGENT</span>
+          <h2>ReproLens：如何让 Bug 复现有证据</h2>
+          <p class="lead">核心不是“让模型看一眼网页猜 Bug”，而是把自然语言问题变成经人确认的有限步骤，再用真实浏览器检查预期和实际是否一致。</p>
+          <div class="script"><h3>两分钟项目讲述</h3><p>前端或测试收到“购物车点了加购没反应”时，单靠描述很难复现。我做了 ReproLens：输入目标 URL、问题、预期和设备；可选观察页面结构，DeepSeek 给出候选计划；服务端用 Zod 校验动作和定位参数，用户编辑确认后，Playwright 在桌面或手机视口顺序执行。每一步保存状态、期望、实际值和截图，并通过 SSE 展示执行进度。修复后复用相同计划、设备和预期重跑，只有基线确实复现且本次核心检查全部通过，才给出范围内的修复通过。遇到定位歧义、前置条件失败、浏览器缺失，返回证据不足或执行受阻，而不把它们说成产品 Bug。</p></div>
+          <div class="kicker">一次请求的数据流</div>
+          <div class="flow"><span>问题 + URL + 预期</span><i>→</i><span>模型候选计划</span><i>→</i><span>Zod + 人工确认</span><i>→</i><span>Playwright 执行</span><i>→</i><span>证据 + SSE</span><i>→</i><span>同标准复测</span></div>
+          <div class="step-table">
+            <div class="step"><small>01</small><strong>规划</strong><p>模型只提出计划，不执行任意 JavaScript。页面观察只提取受限元素信息，不直接把整页 DOM 喂给模型。模型失败回待编辑模板，不能算规划成功。</p></div>
+            <div class="step"><small>02</small><strong>确认</strong><p>计划最多 15 步，动作限制为 click、input、assert、reload；目标可用 label、placeholder、text、role 或 CSS。用户检查定位、预期和风险后再执行。</p></div>
+            <div class="step"><small>03</small><strong>执行</strong><p>每设备隔离浏览器上下文，逐步定位并断言。输入失焦丢值靠真实键盘输入与失焦后读取；遮挡靠视口边界和中心命中检查。</p></div>
+            <div class="step"><small>04</small><strong>判定</strong><p>区分 reproduced、not_reproduced、inconclusive 与执行失败。修复验证核对完整计划、设备、问题和预期，再按步骤证据比较。</p></div>
+          </div>
+          <div class="grid2 compact"><div><h3>关键代码路径</h3><div class="source"><a href="https://github.com/liancheng2020/reprolens/blob/main/apps/api/src/repro-plan.ts">repro-plan.ts</a> / <a href="https://github.com/liancheng2020/reprolens/blob/main/apps/api/src/provider.ts">provider.ts</a><br>计划契约、模型输出校验与降级</div><div class="source"><a href="https://github.com/liancheng2020/reprolens/blob/main/apps/api/src/scanner.ts">scanner.ts</a> / <a href="https://github.com/liancheng2020/reprolens/blob/main/apps/api/src/business.ts">business.ts</a><br>浏览器动作、定位和业务断言</div><div class="source"><a href="https://github.com/liancheng2020/reprolens/blob/main/apps/api/src/business-verification.ts">business-verification.ts</a> / <a href="https://github.com/liancheng2020/reprolens/blob/main/apps/api/src/run-manager.ts">run-manager.ts</a><br>同标准复测、状态与事件</div></div><div><h3>可以现场演示的最小闭环</h3><ol><li>打开内置“购物车数量不变”的缺陷版本。</li><li>确认固定计划并运行，指出失败的核心断言及实际值。</li><li>切到修复版本，沿用同计划复测，查看步骤比较与修复结论。</li><li>故意让目标歧义或卸载浏览器，说明为何不能误报为 Bug。</li></ol><p class="muted">简历中“54 条单测、11 个本机浏览器任务”是当时的验证快照；面试前需重新运行并核对当前报告，不把数字当永久保证。</p></div></div>
+          <div class="kicker">面试官会追问</div>
+          <div class="qa">
+            <details><summary>这算 Agent 吗？模型是不是在自主调用工具？</summary><div class="answer"><p>属于受控的 Agent 应用工作流：模型参与计划生成，执行器按确认计划调用浏览器能力。但它不是多轮原生 Tool Calling 或自主探索 Agent；模型不直接控制 Playwright，也不在执行中自动重规划。这样设计是为了把风险和结果归因控制在可解释范围内。</p></div></details>
+            <details><summary>为什么已经有 JSON Schema，还需要 Zod 和人工确认？</summary><div class="answer"><p>三层解决不同问题：模型 JSON 模式提高格式稳定性；Zod 检查步骤类型、字段、长度等程序契约；人工确认检查业务语义，例如按钮是否找对、期望是否真实、点击是否有副作用。合法 JSON 不等于正确复现计划。</p></div></details>
+            <details><summary>如何避免“网页打不开/定位不到”被误判为 Bug？</summary><div class="answer"><p>先看浏览器是否可启动、页面和前置条件是否成立，再看核心断言。定位歧义、超时、页面不可访问归入执行受阻或证据不足；只有实际跑到目标断言且与预期不符，才判目标路径 reproduced。业务结论和执行状态分开存。</p></div></details>
+            <details><summary>为什么修复验证要用同一计划？只看截图变化不行吗？</summary><div class="answer"><p>截图变化只说明像素不同，不能说明业务恢复。复测必须保留计划、设备、问题和预期，并要求基线有核心失败、本次相关步骤完整通过；缺步骤或标准变化都不能判通过。视觉 Diff 是辅助信号，不能覆盖业务断言。</p></div></details>
+            <details><summary>遮挡检查与网络断言的可信度有多高？</summary><div class="answer"><p>中心命中和边界检查能发现有限的遮挡与出视口问题，不保证设计稿级像素一致。网络检查依赖操作后同源路径、方法及唯一匹配，时间关联不证明后端因果。对于复杂异步、跨域、动画和响应复用，需要更细的观察或人工核查。</p></div></details>
+            <details><summary>为什么不直接部署成公开 SaaS？</summary><div class="answer"><p>浏览器执行任意 URL 有 SSRF、内网访问、资源耗尽和证据泄露风险。当前定位是本机或可信测试站点；公开部署需要认证、URL/DNS/IP 约束、隔离 Worker、配额和证据权限保护。计划确认并不等于完整的安全边界。</p></div></details>
+          </div>
+          <div class="callout compact"><strong>不要夸大：</strong>不自动改源代码、不通用探索网站、不支持任意拖拽或验证码；手机测试是 Chromium 视口模拟，不是真机 Safari。生成 Playwright 测试文件也不等于它已被自动重跑。</div>
+        </section>
+
+        <section id="tracebase" class="section">
+          <span class="eyebrow">03 / EVIDENCE-BOUND RAG</span>
+          <h2>TraceBase：知识库为什么要可追溯</h2>
+          <p class="lead">项目文档会更新，答案却容易引用旧资料。TraceBase 的重点是从“检索得到片段”进一步做到“版本有效、原文可核查、证据不足时不编造”。</p>
+          <div class="script"><h3>两分钟项目讲述</h3><p>我做了一个本机运行的项目知识库，支持 Markdown、TXT、静态 HTML 和文字型 PDF。文档入库后按标题或页码切分，保存来源和版本；问题先做关键词检索，可选接入独立 Embedding 服务做向量检索，两个列表用 RRF 融合，最终取最多 6 段证据。DeepSeek 只基于候选证据生成回答，模型使用 S1–S6 这样的短编号选来源，服务端再映射到真实片段，并检查引用 ID 和逐字原文。没有候选就拒答；模型不可用或输出不合法时展示摘录并明确降级。资料更新时新片段准备好后事务切换 active_revision，失败保留旧版；回答保存前再次检查引用仍指向有效版本。这样用户可以定位原文，但我不把“引用字符串存在”说成“推理一定正确”。</p></div>
+          <div class="kicker">一次问答的数据流</div>
+          <div class="flow"><span>上传文档</span><i>→</i><span>提取 / 分块 / 版本</span><i>→</i><span>关键词 + 可选向量</span><i>→</i><span>RRF Top 6</span><i>→</i><span>模型回答</span><i>→</i><span>引用核验 / 保存</span></div>
+          <div class="step-table">
+            <div class="step"><small>01</small><strong>入库</strong><p>原文件和 revision 入库；索引任务提取正文并分块，保留标题、页码及抽取警告。向量模型有独立配置，DeepSeek 聊天接口不自动提供 Embedding。</p></div>
+            <div class="step"><small>02</small><strong>检索</strong><p>关键词和向量各取最多 18 条候选，用 1/(60+rank) 做 RRF 累加，取 Top 6。向量服务不可用时回到关键词；RRF 分数是排序用，不是正确率或置信度。</p></div>
+            <div class="step"><small>03</small><strong>生成与校验</strong><p>模型基于有限证据输出结构化段落；程序核对来源 ID、引用逐字包含于原片段。无证据时拒答；无 Key、超时或引用错误时回退为原文摘录并说明原因。</p></div>
+            <div class="step"><small>04</small><strong>版本一致性</strong><p>新版索引事务切换后才对外生效；失败保留旧版。回答入库前再验证证据属于当前 active_revision，防止生成期间资料更新造成悬空引用。</p></div>
+          </div>
+          <div class="grid2 compact"><div><h3>关键代码路径</h3><div class="source"><a href="https://github.com/liancheng2020/tracebase/blob/main/server/documents.ts">documents.ts</a> / <a href="https://github.com/liancheng2020/tracebase/blob/main/server/library.ts">library.ts</a><br>提取、分块、索引、版本切换</div><div class="source"><a href="https://github.com/liancheng2020/tracebase/blob/main/server/search.ts">search.ts</a><br>关键词 / 向量检索、RRF 和回答保存</div><div class="source"><a href="https://github.com/liancheng2020/tracebase/blob/main/server/models.ts">models.ts</a> / <a href="https://github.com/liancheng2020/tracebase/blob/main/server/answer-evidence.ts">answer-evidence.ts</a><br>模型调用、结构校验、引用核验</div></div><div><h3>可以现场演示的最小闭环</h3><ol><li>创建知识库并导入一份有章节的示例文档。</li><li>问一个文档里有答案的问题，打开引用定位原文。</li><li>问一个文档没有回答的问题，展示拒答或资料不足。</li><li>更新同名资料，观察有效版本和历史回答的提示。</li></ol><p class="muted">仓库演示视频使用无 Key 的关键词检索与摘录，不代表真实模型生成效果；面试时需要分开说明。</p></div></div>
+          <div class="kicker">面试官会追问</div>
+          <div class="qa">
+            <details><summary>为什么同时做关键词和向量？RRF 为什么合适？</summary><div class="answer"><p>关键词对专有名词、错误码和精确字段更稳定；向量对同义表达更有帮助。两路分数尺度不同，直接加权容易失真。RRF 只看各自名次，降低分数标定要求。但它不保证召回充分，也不能把排序分当答案置信度；效果需要固定数据集验证 Recall@k 和引用支持率。</p></div></details>
+            <details><summary>为什么版本切换要用事务？Embedding 调用为什么放事务外？</summary><div class="answer"><p>事务让“新片段写入 + active_revision 切换”要么一起完成，要么一起失败，避免用户检索到半成品。外部 Embedding 调用慢且可能失败，放进事务会长时间持锁；先准备新索引，再短事务提交，并在提交前确认 revision 未被后续上传覆盖。</p></div></details>
+            <details><summary>引用校验能解决幻觉吗？</summary><div class="answer"><p>只能保证引用 ID 存在、引文是该片段的连续原文，不能证明这句话支持了生成的结论，更不能保证资料本身真实。下一步应做独立的支持性标注集，统计引用支持率、无答案识别和人工纠错案例。</p></div></details>
+            <details><summary>索引时向量服务挂了会怎样？</summary><div class="answer"><p>词项索引仍可提交，用户看到警告，问答走关键词检索；已有向量的模型标识和维度必须与查询端匹配。更换 Embedding 模型后需要重建索引，不能直接混用不同向量空间。</p></div></details>
+            <details><summary>用户提问过程中，文档被更新或删除了怎么办？</summary><div class="answer"><p>检索时只查 active_revision；生成后保存回答前，在事务里再查一次证据仍属于有效版本。若失效，清除本次回答的证据与结论并提示重问。历史回答保留当时快照，打开旧引用时标明历史版本。</p></div></details>
+            <details><summary>PGlite + pgvector 与线上 PostgreSQL 有什么差别？</summary><div class="answer"><p>PGlite 在本机进程内提供真实 SQL、事务和向量距离能力，适合单机作品；不等于远程 PostgreSQL 服务，也没有多进程共享、HA 或大库 ANN 性能保证。当前检索是小规模精确扫描，团队版才需要权限、远程数据库、队列和独立解析沙箱。</p></div></details>
+          </div>
+          <div class="callout compact"><strong>不要夸大：</strong>知识库分组不是权限隔离；默认全局问答会检索全部库。没有 OCR、GitHub 增量同步或生产级多租户。上传文档可能外发给模型或 Embedding 服务，敏感资料必须先评估。</div>
+        </section>
+
+        <section id="sift" class="section">
+          <span class="eyebrow">04 / MULTI-SOURCE DIGEST</span>
+          <h2>Sift：从多源内容到可核查摘要</h2>
+          <p class="lead">真正难点不只是“调用模型总结”，而是每个来源怎样提取正文、长内容怎样控上下文、输出怎样结构化，以及线上环境失败时怎样让用户知道原因。</p>
+          <div class="script"><h3>两分钟项目讲述</h3><p>Sift 接收 YouTube 视频链接、PDF/Word 等文件或粘贴文本，把它们转为有段落或时间标记的正文，再用 DeepSeek 或可选 OpenAI 生成统一结构：结论、重点、数据、行动、风险与来源定位。长内容先按段落或时间标记切分，分段提炼，再合并去重；输出通过 JSON Schema 和运行时校验，DeepSeek 返回非法 JSON 时只定向修复一次，仍失败就明确报错。线上 YouTube 解析优先由 Supadata 获取公开字幕，无字幕时尝试转写；PDF 放在浏览器解析以适配 Serverless。服务端以 NDJSON 返回进度，同时对输入长度、文件大小、超时做约束。项目保留原文定位，提醒用户核查重要结论。</p></div>
+          <div class="kicker">一次摘要的数据流</div>
+          <div class="flow"><span>视频 / 文件 / 文本</span><i>→</i><span>解析 + 定位标记</span><i>→</i><span>分段摘要</span><i>→</i><span>合并去重</span><i>→</i><span>Schema 校验</span><i>→</i><span>结果 + 溯源</span></div>
+          <div class="step-table">
+            <div class="step"><small>01</small><strong>源解析</strong><p>文本直接进入流水线；PDF 浏览器侧解析；视频先取字幕或转写。浏览器安装的代理不会自动作用于服务端，Vercel 的 127.0.0.1 更不是用户本机代理。</p></div>
+            <div class="step"><small>02</small><strong>长内容</strong><p>保留段落编号或时间戳再切块，逐段提炼可举证信息，最后合并去重。分段能够控制上下文，但跨段关系可能损失，最终结论需要回查来源。</p></div>
+            <div class="step"><small>03</small><strong>结构输出</strong><p>模型提示约束 JSON Schema，程序仍需解析和字段校验。DeepSeek 非法输出只做一次有针对性的修复；失败不硬凑一个“看起来正常”的摘要。</p></div>
+            <div class="step"><small>04</small><strong>部署反馈</strong><p>NDJSON 展示解析、转写与摘要进度；区分超时、额度不足和内容缺失。实例内缓存、IP 限流不是分布式保护，多实例下不能宣称全局一致。</p></div>
+          </div>
+          <div class="grid2 compact"><div><h3>关键代码路径</h3><div class="source"><a href="https://github.com/liancheng2020/sift/blob/main/lib/youtube.js">youtube.js</a> / <a href="https://github.com/liancheng2020/sift/blob/main/lib/content.js">content.js</a><br>视频来源与内容切分</div><div class="source"><a href="https://github.com/liancheng2020/sift/blob/main/lib/summarize.js">summarize.js</a><br>模型调用、Schema、分段合并与错误</div><div class="source"><a href="https://github.com/liancheng2020/sift/blob/main/server.js">server.js</a> / <a href="https://github.com/liancheng2020/sift/blob/main/public/app.js">public/app.js</a><br>API、NDJSON 流与前端反馈</div></div><div><h3>可以现场演示的最小闭环</h3><ol><li>粘贴一段可控文本，切换摘要深度并核对关键数据。</li><li>上传文字型 PDF，查看段落定位与导出 Markdown。</li><li>用可访问视频展示时间轴；准备失败样本解释字幕/转写边界。</li><li>断开模型 Key 或模拟异常，展示明确错误而非空白页面。</li></ol><p class="muted">线上视频依赖第三方可访问性和额度；演示前准备已验证的公开视频，文本链路作稳定兜底。</p></div></div>
+          <div class="kicker">面试官会追问</div>
+          <div class="qa">
+            <details><summary>为什么不能把整个长文一次丢给模型？</summary><div class="answer"><p>上下文窗口、费用、延迟和截断风险都会增加。按段落或时间切分后分段提炼，再合并去重能把成本控制在可预测范围；代价是跨段推理容易遗漏，因此保留来源标记、限制单段结论并允许用户回查。</p></div></details>
+            <details><summary>模型已经开启 JSON Schema，为什么还要本地校验？</summary><div class="answer"><p>模型或兼容 API 仍可能返回截断、非 JSON、缺字段、类型错或语义不合格内容。服务端才是契约最终守门人：解析、限制列表数量与字段长度、验证结构；修复一次是受控补救，不是无限重试。</p></div></details>
+            <details><summary>为什么本机能解析 YouTube，Vercel 却不行？</summary><div class="answer"><p>浏览器、Node 服务端、云函数的网络路径不同。本机浏览器可访问不代表 Vercel 出站也可访问；把本机代理 URL 写到云环境会指向云函数自身。Sift 线上用字幕/转写服务，但仍受视频限制、第三方额度和响应超时影响。</p></div></details>
+            <details><summary>为何把 PDF 解析移到浏览器？有什么代价？</summary><div class="answer"><p>这是适配 Serverless 部署的工程权衡：减少函数端 PDF 依赖和环境兼容问题，上传前即可提取文字。代价是客户端资源消耗、复杂排版与扫描件识别不可靠；OCR 当前不支持，不能声称所有 PDF 都能解析。</p></div></details>
+            <details><summary>NDJSON 和 SSE 有何不同，为什么项目用 NDJSON？</summary><div class="answer"><p>两者都能增量传输；NDJSON 是每行一个 JSON 对象，适合 POST 摘要请求中顺序返回阶段和最终结果；SSE 使用 text/event-stream，有 event/id 等语义，适合单向事件订阅。关键在于前端增量解码、断线/异常处理和服务端及时 flush，而不是名称本身。</p></div></details>
+            <details><summary>能保证摘要“深入、准确”吗？</summary><div class="answer"><p>不能保证。Schema 保证形状，不保证观点正确；来源片段和时间戳方便核查，不证明推理充分。应建立多源评测集，分别看事实保真、关键点覆盖、引用正确、冗余和延迟，对高风险内容要求原文复核。</p></div></details>
+          </div>
+          <div class="callout compact"><strong>不要夸大：</strong>当前每次只处理一个来源、不保存历史；YouTube 频道订阅和邮箱自动抓取尚未实现。实例内缓存和限流不适合声称分布式生产可用。</div>
+        </section>
+
+        <section id="cross" class="section">
+          <span class="eyebrow">05 / ENGINEERING CROSS-EXAMINATION</span>
+          <h2>把三个项目串成技术判断</h2>
+          <p class="lead">这部分适合二面或架构追问。回答时先给结论，再说实现细节、失败路径与适用边界。</p>
+          <div class="qa">
+            <details><summary>三个项目中，哪里真正有 Agent，哪里只是 LLM 工作流？</summary><div class="answer"><p>ReproLens 有模型规划、人工确认、受限浏览器执行与反馈，接近受控 Agent；但没有模型多轮 Tool Call 自主重规划。TraceBase 是证据约束的 RAG 问答，Sift 是多源解析和摘要流水线。不能因为接了 LLM 就都叫自主 Agent。</p></div></details>
+            <details><summary>如果模型回答错，先查哪里？</summary><div class="answer"><p>按链路拆：输入是否解析正确；检索/页面观察是否漏掉关键上下文；Prompt 与模型返回什么；Schema 是否通过；引用和业务断言是否匹配；前端是否显示了正确状态。TraceBase 先看候选证据，Sift 先看原文与分段，ReproLens 先看确认计划及步骤证据。</p></div></details>
+            <details><summary>为什么三项目都要“证据”和“拒绝冒进”？</summary><div class="answer"><p>模型可以流畅地输出错误结论。ReproLens 没有完整核心检查就不判修复；TraceBase 没有资料就拒答、引用异常就降级；Sift 解析或 Schema 失败就报错。边界约束使系统的失败可解释、可追溯，而不是静默地生成好看的结果。</p></div></details>
+            <details><summary>如果要做成团队可用产品，下一步优先补什么？</summary><div class="answer"><p>先按风险补基础设施：ReproLens 是浏览器沙箱、认证、配额和证据权限；TraceBase 是文档访问权限必须在检索前过滤、持久任务队列与真实语料评测；Sift 是分布式限流/缓存、第三方服务配额与上传安全。不是先堆更多框架。</p></div></details>
+            <details><summary>如何设计一套小而可信的评测？</summary><div class="answer"><p>每项目固定输入、期望与失败分类，保留未见样本：ReproLens 看计划可执行率、核心断言覆盖、误报/漏报；TraceBase 看 Recall@k、引用支持率、无答案识别；Sift 看事实保真、关键点覆盖、JSON 合法率与延迟。规则/Mock 测试和真实模型对照要分开报告，并标注样本规模。</p></div></details>
+            <details><summary>使用 Codex/Kimi 辅助开发，怎么证明你不是只会“vibe coding”？</summary><div class="answer"><p>现场解释一个模块的输入输出和不变量，展示失败用例与测试，说明某个具体设计取舍及其代价；面对未知追问能定位源码和证据。可以诚实承认 AI 辅助编码，但核心架构、边界、验收由自己负责。面试前至少能脱离 AI 写出一条小型工具调用、校验或检索闭环。</p></div></details>
+          </div>
+          <div class="grid2 compact"><div class="callout success"><strong>一句话区分：</strong>ReproLens 的关键正确性是“执行是否真的覆盖了目标 Bug”；TraceBase 是“回答是否可由有效版本的原文支持”；Sift 是“多源内容是否正确解析并被忠实压缩”。</div><div class="callout"><strong>常见失误：</strong>把结构校验当事实校验、把检索命中当答案正确、把模型给出的计划当已经执行、把视觉变化当修复成功。</div></div>
+        </section>
+
+        <section id="practice" class="section">
+          <span class="eyebrow">06 / REHEARSAL</span>
+          <h2>面试前的可执行检查</h2>
+          <p class="lead">建议按“30 秒定位 → 2 分钟讲一个项目 → 追问到代码 → 现场演示失败路径”的顺序练。能独立讲清，不必背每一行代码。</p>
+          <div class="grid2"><div><h3>第一轮：口头回答</h3><div class="checkpoint">
+            <label><input type="checkbox" data-check="intro"><span>90 秒说明转型定位，明确个人项目与工作经历的区别。</span></label>
+            <label><input type="checkbox" data-check="r-story"><span>两分钟讲完 ReproLens 的规划、确认、执行、证据和修复复测。</span></label>
+            <label><input type="checkbox" data-check="t-story"><span>两分钟讲完 TraceBase 的分块、混合检索、引用校验和版本一致性。</span></label>
+            <label><input type="checkbox" data-check="s-story"><span>两分钟讲完 Sift 的源解析、长文切分、Schema 校验和线上容错。</span></label>
+            <label><input type="checkbox" data-check="agent"><span>能解释“受控工作流”和“自主 Agent”差别，不夸大 Tool Calling。</span></label>
+            <label><input type="checkbox" data-check="rag"><span>能手算 RRF 的直觉，并解释排序分不等于正确率。</span></label>
+          </div></div><div><h3>第二轮：证据与现场</h3><div class="checkpoint">
+            <label><input type="checkbox" data-check="r-demo"><span>本机重跑 ReproLens 缺陷/修复双版本，并指出核心证据。</span></label>
+            <label><input type="checkbox" data-check="t-demo"><span>TraceBase 演示有答案、无答案和旧版本引用三种情况。</span></label>
+            <label><input type="checkbox" data-check="s-demo"><span>Sift 准备文本与视频样本，同时演示至少一种错误反馈。</span></label>
+            <label><input type="checkbox" data-check="tests"><span>核对当前测试数、命令和结果，更新口头表述，不背过期数字。</span></label>
+            <label><input type="checkbox" data-check="limits"><span>每个项目说出两个真实限制，以及为什么暂时没有实现。</span></label>
+            <label><input type="checkbox" data-check="code"><span>脱离 AI，现场画出一条请求链路，并能定位相关源文件。</span></label>
+          </div></div></div>
+          <div class="callout success compact"><strong>练习方法：</strong>先不展开上面的答案，自己说 60 秒；再对照补遗漏。重点训练“为什么这样设计”和“失败会怎样”，而不是逐字背诵。</div>
+          <div class="footer">资料基于桌面《黄诚鑫_AI应用开发简历_4.0排版版.docx》及三个仓库当前可读取的 README、设计文档和关键源码整理。仓库可能继续变化；面试前重新核对测试结果、演示地址和代码行为。<br><a href="https://github.com/liancheng2020/reprolens">ReproLens</a> · <a href="https://github.com/liancheng2020/tracebase">TraceBase</a> · <a href="https://github.com/liancheng2020/sift">Sift</a></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    const checks = [...document.querySelectorAll('[data-check]')];
+    const storageKey = 'agent-interview-prep-v1';
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}') || {}; } catch { saved = {}; }
+    function updateProgress() {
+      const done = checks.filter(item => item.checked).length;
+      document.getElementById('count').textContent = `${done} / ${checks.length}`;
+      document.getElementById('bar').style.width = `${done / checks.length * 100}%`;
+    }
+    checks.forEach(item => {
+      item.checked = Boolean(saved[item.dataset.check]);
+      item.addEventListener('change', () => {
+        saved[item.dataset.check] = item.checked;
+        try { localStorage.setItem(storageKey, JSON.stringify(saved)); } catch { /* Progress remains usable for this session. */ }
+        updateProgress();
+      });
+    });
+    updateProgress();
+    const nav = [...document.querySelectorAll('.nav a')];
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) nav.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${visible.target.id}`));
+      }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
+      document.querySelectorAll('.section').forEach(section => observer.observe(section));
+    }
+  </script>
+</body>
+</html>
