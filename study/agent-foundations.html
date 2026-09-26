@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent 工程学习地图 · 0503–0517</title>
+  <style>
+    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #182428; background: #f7f9f7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; letter-spacing: 0; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: #006c63; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { min-height: 100vh; display: grid; grid-template-columns: 278px minmax(0,1fr); }
+    aside { background: #102024; color: #e6f4ee; padding: 25px 16px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 21px; border-bottom: 1px solid #314449; }
+    .mark { display: grid; place-items: center; width: 33px; height: 33px; background: #7be5b9; color: #102024; font: 700 16px ui-monospace, SFMono-Regular, monospace; }
+    .brand strong { font-size: 15px; }
+    .brand small { display: block; margin-top: 2px; color: #8ca5a6; font: 11px ui-monospace, SFMono-Regular, monospace; }
+    .rail-title { color: #7be5b9; font: 11px ui-monospace, SFMono-Regular, monospace; margin: 24px 10px 8px; }
+    .nav { display: grid; gap: 3px; }
+    .nav button { width: 100%; border: 0; background: transparent; color: #abc0be; text-align: left; display: grid; grid-template-columns: 45px 1fr 17px; align-items: center; gap: 8px; padding: 10px; border-radius: 4px; font-size: 13px; }
+    .nav button:hover, .nav button.active { background: #24403e; color: #fff; text-decoration: none; }
+    .nav .num { color: #7be5b9; font: 11px ui-monospace, SFMono-Regular, monospace; }
+    .nav .done { color: #7be5b9; text-align: right; }
+    .rail-foot { color: #8ba19e; font-size: 12px; line-height: 1.7; margin: 22px 10px; }
+    main { min-width: 0; }
+    .topbar { padding: 14px clamp(22px,4vw,58px); border-bottom: 1px solid #d9e2dd; display: flex; justify-content: space-between; align-items: center; gap: 20px; background: #fff; }
+    .eyebrow { color: #007969; font: 700 11px ui-monospace, SFMono-Regular, monospace; text-transform: uppercase; }
+    .topbar strong { font-size: 13px; }
+    .progress { display: flex; align-items: center; gap: 12px; font: 12px ui-monospace, SFMono-Regular, monospace; color: #45595b; }
+    .bar { width: 130px; height: 6px; background: #dbe8e2; overflow: hidden; border-radius: 3px; }
+    .bar span { display: block; height: 100%; width: 0; background: #138c72; transition: width .2s; }
+    .content { width: min(1130px,100%); padding: 38px clamp(22px,4vw,58px) 70px; }
+    h1 { font-size: clamp(29px,3vw,41px); line-height: 1.22; margin: 10px 0 15px; }
+    h2 { font-size: 22px; line-height: 1.35; margin: 0 0 15px; }
+    h3 { font-size: 14px; margin: 0 0 10px; }
+    p { line-height: 1.75; margin: 0 0 12px; }
+    .lead { font-size: 16px; color: #536669; max-width: 780px; }
+    .section { padding: 30px 0; border-bottom: 1px solid #d9e2dd; }
+    .section:first-child { padding-top: 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 15px; }
+    .muted { color: #5b7070; font-size: 13px; }
+    .stages { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border: 1px solid #cad9d2; }
+    .stage { padding: 17px; min-height: 138px; border-right: 1px solid #cad9d2; background: #fff; }
+    .stage:last-child { border-right: 0; }
+    .stage b { display: block; font-size: 14px; margin: 7px 0; }
+    .stage p { color: #586d6f; font-size: 12px; line-height: 1.55; }
+    .stage .tag { font: 11px ui-monospace, SFMono-Regular, monospace; color: #007969; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0; }
+    .flow span { background: #e4f3ed; border: 1px solid #b7d8c8; padding: 7px 10px; font: 12px ui-monospace, SFMono-Regular, monospace; }
+    .flow i { font-style: normal; color: #007969; }
+    .topic-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+    .topic-header .number { display: block; color: #007969; font: 12px ui-monospace, SFMono-Regular, monospace; margin-bottom: 8px; }
+    .topic-header h2 { font-size: 27px; margin-bottom: 8px; }
+    .topic-summary { color: #526467; font-size: 16px; max-width: 750px; }
+    .topic-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 15px 0 0; }
+    .chip { border: 1px solid #ccdcd5; padding: 4px 7px; color: #53696a; font: 11px ui-monospace, SFMono-Regular, monospace; }
+    .complete { white-space: nowrap; border: 1px solid #20876f; border-radius: 4px; background: #fff; color: #006b5a; padding: 9px 11px; font-size: 12px; }
+    .complete:hover, .complete.is-done { background: #097b65; color: #fff; }
+    .detail-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 26px; margin-top: 28px; }
+    .detail-grid > div { min-width: 0; }
+    .detail-grid p { font-size: 14px; }
+    .detail-grid ul, .practice-list { margin: 0; padding-left: 19px; color: #35494c; font-size: 14px; line-height: 1.75; }
+    .detail-grid li, .practice-list li { margin-bottom: 5px; }
+    .codepath { background: #13272a; color: #d9ebe5; padding: 15px 17px; font: 12px/1.75 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; white-space: pre-wrap; border-left: 3px solid #69d6a8; }
+    .note { border-left: 3px solid #d9954d; background: #fff8ee; padding: 11px 14px; font-size: 13px; line-height: 1.65; }
+    .study-box { margin-top: 26px; border: 1px solid #cbdad3; background: #fff; padding: 19px 21px; border-radius: 4px; }
+    .study-box h3 { color: #006c5e; }
+    .study-box p { font-size: 14px; }
+    .reveal { border: 1px solid #b4c9c0; background: #f7faf8; color: #17413d; padding: 7px 11px; border-radius: 3px; font-size: 12px; }
+    .answer { margin-top: 12px; padding: 12px; background: #eaf7ef; font-size: 14px; line-height: 1.7; display: none; }
+    .answer.show { display: block; }
+    .term-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; border: 1px solid #cad9d2; background: #fff; }
+    .term { padding: 17px; border-right: 1px solid #cad9d2; border-bottom: 1px solid #cad9d2; }
+    .term:nth-child(3n) { border-right: 0; }
+    .term:nth-last-child(-n+3) { border-bottom: 0; }
+    .term b { color: #006c5e; font-size: 14px; }
+    .term p { font-size: 13px; color: #53686a; margin: 7px 0 0; }
+    .callout { margin-top: 18px; background: #192d2d; color: #ddf4e8; padding: 18px 20px; line-height: 1.75; border-left: 4px solid #d9925b; }
+    .path { overflow-wrap: anywhere; font: 12px ui-monospace, SFMono-Regular, monospace; }
+    .footer { color: #6b7d7b; font-size: 12px; margin-top: 28px; }
+    @media (max-width: 900px) { .shell { grid-template-columns: 1fr; } aside { position: static; height: auto; padding: 15px; } .brand { padding-bottom: 12px; } .rail-title, .rail-foot { display: none; } .nav { display: flex; overflow-x: auto; gap: 4px; margin-top: 12px; } .nav button { flex: 0 0 auto; min-width: unset; width: auto; display: block; white-space: nowrap; padding: 9px; } .nav button .num { margin-right: 5px; } .nav .done { display: none; } .topbar { padding: 13px 20px; } .content { padding: 28px 20px 60px; } }
+    @media (max-width: 650px) { .stages, .term-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .stage:nth-child(2) { border-right: 0; } .stage:nth-child(-n+2) { border-bottom: 1px solid #cad9d2; } .term:nth-child(3n) { border-right: 1px solid #cad9d2; } .term:nth-child(2n) { border-right: 0; } .term:nth-last-child(-n+3) { border-bottom: 1px solid #cad9d2; } .term:nth-last-child(-n+2) { border-bottom: 0; } .detail-grid { grid-template-columns: 1fr; gap: 16px; } .topic-header { display: block; } .complete { margin-top: 10px; } .progress .bar { width: 70px; } }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand"><div class="mark">A/</div><div><strong>Agent 工程学习地图</strong><small>0503 — 0517 / CODE FIRST</small></div></div>
+    <div class="rail-title">学习路径 / 15 个项目</div>
+    <nav class="nav" id="nav" aria-label="项目导航"></nav>
+    <div class="rail-foot">建议每次只看一个项目：先口述调用链，再打开代码核对，最后完成动手题。进度只存当前浏览器。<br><br><a href="agent-advanced.html" style="color:#7be5b9">继续学习 0518–0829 →</a></div>
+  </aside>
+  <main>
+    <div class="topbar"><div><span class="eyebrow">FIELD GUIDE</span><br><strong>从 Demo 到可交付的 Agent 系统</strong></div><div class="progress"><a href="agent-advanced.html">进阶篇 →</a><span id="progressText">0 / 15</span><div class="bar" aria-label="学习进度"><span id="progressBar"></span></div></div></div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+<script>
+  const root = '/Users/lianchengwuyou/Downloads/codex-project/agent-learning';
+  const lessons = [
+    {id:'0503',title:'工具调用的最小闭环',stage:'基础执行',one:'用户问题如何变成一次真正的函数调用？',flow:['输入','选择工具','执行','工具结果','回答'],path:'src/agent.js → src/tools/index.js → src/tools/{calculator,getCurrentTime,searchNotes}.js',logic:'runAgent 先让 planToolCall 用正则选择工具，executeToolCall 从 registry 找实现并 try/catch，synthesizeAnswer 根据结果组装文本。messages 里分别记录 user、assistant toolCall、tool、assistant answer。',boundary:'这是规则路由，不是模型自主 Tool Calling；目前只执行一次工具，不是多轮 ReAct。',task:'新增一个查询天气的 mock 工具：写 schema、注册到 tools、加入路由和最终回答，然后为成功与失败各写一例。',question:'模型输出一个 toolCall 后，真正执行工具的是模型还是程序？',answer:'是程序 / Harness。模型或规则只提出工具名和参数，程序查找工具、校验和执行，再将结果交回。',files:['src/agent.js','src/tools/index.js']},
+    {id:'0504',title:'结构化输出与契约',stage:'基础执行',one:'怎样把回答变成可被程序消费的数据？',flow:['输入条件','生成 plan 对象','schema 校验','JSON / Markdown'],path:'src/plannerAgent.js → src/schema.js → src/index.js',logic:'createLearningPlan 构造固定对象；validateLearningPlan 检查必填字段、类型和条目；同一份 plan 可输出 JSON，也可渲染成 Markdown。UI 只消费通过校验的对象。',boundary:'当前计划由确定性 JS 生成，不是模型生成“稳定 JSON”。schema 校验只能发现结构错误，不保证计划内容正确。',task:'删掉 plan.schedule 的一个必要字段并运行 npm test；再新增一个 durationMinutes 字段，同步改生成、校验与测试。',question:'JSON.parse 成功，是否表示 Agent 的结构化输出可靠？',answer:'不是。还需校验必填字段、类型、取值范围及业务约束；合法 JSON 也可能给出错误计划。',files:['src/plannerAgent.js','src/schema.js']},
+    {id:'0505',title:'Trace 与 Eval',stage:'基础执行',one:'一次运行为什么失败，改动后有没有变好？',flow:['run.started','tool.selected','tool.completed','answer.completed','run.completed'],path:'src/agent.js → src/traceLogger.js → src/evalRunner.js → data/eval-trace.jsonl',logic:'TraceLogger 把事件逐行写入 JSONL；每个事件带 runId，能复原一次执行。evalRunner 用固定输入比较 expected tool 与 actual tool、回答内容，再统计通过数。',boundary:'Trace 是观察事实；Eval 是带预期的判分。3 条样例不能证明泛化能力；日志还需要脱敏、耗时及错误分类。',task:'故意让一个工具抛错，检查同一 runId 的事件顺序；给 eval 增加一条“工具失败应返回可理解提示”的用例。',question:'为什么只有 console.log("失败了") 不足以定位 Agent 故障？',answer:'它缺少运行关联、输入、工具参数、阶段和结果。结构化 Trace 才能判断错误发生在哪一步。',files:['src/agent.js','src/traceLogger.js','src/evalRunner.js']},
+    {id:'0506',title:'关键词版 RAG',stage:'知识与状态',one:'回答知识问题时，资料从哪里来？',flow:['问题','分词','文档打分','Top K','引用 / 拒答'],path:'data/docs.json → src/ragAgent.js',logic:'retrieve 对问题分词并对标题和正文做关键词匹配，选得分最高的文档；answerWithRag 用命中文档构造回答并附来源；没有命中则拒答。',boundary:'这是本地关键词检索，不是真正的向量 RAG；“带引用”不自动等于引用正确，更不等于回答已被验证。',task:'添加一篇与现有文档关键词相似、但结论相反的短文；观察误检并设计一条 eval case。',question:'RAG 和微调最大的流程差别是什么？',answer:'RAG 在推理时检索外部资料并放入上下文；微调是在训练时更新模型参数。',files:['src/ragAgent.js','data/docs.json']},
+    {id:'0507',title:'记忆与会话状态',stage:'知识与状态',one:'用户信息如何跨轮保留，却不污染上下文？',flow:['提取 key/value','写入 JSON','相关性搜索','注入回答'],path:'src/memoryAgent.js → src/memoryStore.js → data/memory.json',logic:'MemoryStore 提供 remember、all、search；memoryAgent 解析“记住”指令后写入键值，之后可按问题读取。存储与使用是两步，不能把所有记忆无条件塞进 Prompt。',boundary:'本例是单机键值记忆，未实现身份隔离、权限、冲突处理、来源时间、删除审计或敏感信息保护。',task:'同一个 key 连续写两个值，说明目前结果；再设计“旧值历史 + 当前值 + 来源时间”的数据结构。',question:'用户先说住 A，后来又说住 B，直接覆盖可以吗？',answer:'不能默认覆盖。先确认是否同一属性、用途和时间；明确搬家时更新当前值，含糊时保留冲突并询问。',files:['src/memoryAgent.js','src/memoryStore.js']},
+    {id:'0508',title:'可控工作流',stage:'编排与接口',one:'哪些步骤交给模型，哪些必须由代码固定？',flow:['Planner','Executor','Reviewer','通过 / 失败'],path:'data/workflowSteps.json → src/workflow.js',logic:'runWorkflow 从模板规划四步，executeStep 执行每步，reviewResult 判断是否完成。它展示“规划—执行—检查”的边界。',boundary:'当前 executeStep 直接返回 done，Reviewer 只看状态和长度；这不是具备真实任务执行与质量验证的系统。',task:'把一个步骤改成真实可失败的函数；让 Reviewer 检查输出内容而非只检查 status=done。',question:'为什么“所有步骤都标记 done”不等于任务成功？',answer:'状态是执行记录，不是业务结果。必须用可验证的输出或断言检查目标是否达成。',files:['src/workflow.js','data/workflowSteps.json']},
+    {id:'0509',title:'MCP 的三种能力',stage:'编排与接口',one:'Tool、Resource、Prompt 分别暴露什么？',flow:['能力发现','读取 Resource / Prompt','调用 Tool'],path:'src/miniMcpServer.js → data/{resources,prompts,fileListings}.json',logic:'listCapabilities 列出三种能力；readResource 读取静态内容，getPrompt 返回模板，callTool 执行 listFiles 或 summarize。这是接口边界练习。',boundary:'这里是 MCP 风格的本地对象调用，不是标准 MCP 服务；listFiles 读的是预置 JSON，不是实际文件系统。',task:'增加一个只读 resource 和一个带参数校验的 tool；解释客户端如何先发现、再调用。',question:'“读取项目规范文档”该放 Tool 还是 Resource？',answer:'若是暴露可读取的静态上下文，优先 Resource；若要执行动作或带参数查询，才是 Tool。',files:['src/miniMcpServer.js','data/resources.json']},
+    {id:'0510',title:'Trace 可视化工作台',stage:'编排与接口',one:'如何让人看懂一次 Agent 运行？',flow:['JSONL Trace','HTTP /api/trace','前端时间线'],path:'src/buildSampleTrace.js → src/server.js → public/app.js',logic:'server 提供 /api/trace，读取 data/trace.jsonl 并解析；前端 app.js 将事件显示为时间线。运行前可先 npm run demo 生成样例。',boundary:'界面展示的是已有事件，不会替 Agent 自动生成可观测性；样例 Trace 不应当成真实模型运行证据。',task:'增加 runId 筛选和 tool.failed 状态，检查前端能否分辨模型失败、工具失败与最终回答失败。',question:'Trace Dashboard 与 Eval Dashboard 有何不同？',answer:'Trace 帮你看“这一次发生了什么”；Eval 对照预期回答“多次运行质量有没有改善”。',files:['src/server.js','public/app.js']},
+    {id:'0511',title:'前端 Diff 审查',stage:'业务闭环',one:'把非结构化 Diff 转成可定位的审查发现。',flow:['Diff','新增行规则扫描','Finding[]','审查报告'],path:'src/sampleDiff.js → src/reviewAgent.js → data/review-report.json',logic:'reviewDiff 逐行扫描 + 行，匹配错误处理、img alt、localStorage 等规则，输出 severity/category/file/line/message/suggestion；若有问题且未见测试，再补测试提醒。',boundary:'是规则型 analyzer，不是 LLM 审查；line 当前是 diff 文本行号，不一定是文件真实行号；“没看到测试”不等于项目没有测试。',task:'给同一个 diff 加 try/catch，但放在规则扫描窗口之外；观察误报并说明需要真正的 diff hunk 解析或 AST。',question:'审查结果为什么要结构化 Finding，而不只给一段话？',answer:'便于排序、去重、定位、筛选、生成补丁和评测；也能区分严重程度与证据。',files:['src/reviewAgent.js','src/sampleDiff.js']},
+    {id:'0512',title:'Patch 计划与可审查改动',stage:'业务闭环',one:'从 Finding 到修复建议，如何避免直接乱改？',flow:['Finding[]','Patch Plan','Unified Diff','基本校验'],path:'src/patchAgent.js → data/login-button.patch → data/patch-report.json',logic:'createPatchPlan 将问题转成动作并标记 requires-review；generatePatch 根据类别修改示例代码、生成 unified diff；validatePatch 检查头、hunk 和新增行。',boundary:'生成逻辑针对固定样例；校验只检查格式片段，不保证补丁能应用、能编译或修复问题。真正应用前需审批、git apply --check 和测试。',task:'故意生成一个“格式完整但修改了错误函数”的 patch，说明格式校验为何不够；补一条单测保护业务行为。',question:'为什么“模型给了 diff”不能立即应用？',answer:'还需检查目标文件、上下文、权限、可应用性、测试以及风险；生成与执行必须分开。',files:['src/patchAgent.js','data/login-button.patch']},
+    {id:'0513',title:'Provider 与模型工具选择',stage:'生产化边界',one:'模型负责选工具，程序负责安全执行。',flow:['toolSchemas','provider.selectTool','getTool.execute','provider.finalAnswer'],path:'src/providers.js → src/agent.js → src/tools.js',logic:'runAgent 将 tool schema 交给 provider，取回 name/arguments，在本地查找并执行工具，然后把结果传给 finalAnswer。Mock Provider 可用于可重复测试。',boundary:'文件名虽然叫 Real LLM Tool Calling，但 createOpenAIProvider 在有 key 时明确抛出“integration exercise”；没有 key 时退回 mock。真实 API 调用尚未实现。',task:'先给未知工具、非法参数和工具超时加失败路径测试；再设计真实 provider 的请求/响应映射，不要把 API key 放前端。',question:'真实 LLM 返回工具名，是否就能直接执行？',answer:'不能。必须在服务器端做 allowlist、参数校验、权限检查、超时与错误处理。',files:['src/providers.js','src/agent.js','src/tools.js']},
+    {id:'0514',title:'“向量”RAG 的最小模型',stage:'生产化边界',one:'Chunk、Embedding、相似度、引用怎样串起来？',flow:['切片','embed','cosine','topK','来源 / eval'],path:'src/rag.js → data/rag-report.json',logic:'chunkDocs 按字符长度切分；embed 将词 hash 到 16 维计数向量；search 用余弦相似度排序；answer 拼接命中片段；evaluateRetrieval 检查预期 docId 是否进入 Top K。',boundary:'16 维 hash 向量不是语义 Embedding 模型，也没有向量数据库；切片会截断语义，回答基本是拼接原文，评测集仅为教学样例。',task:'造两个语义相同但词不同的问句，观察检索是否失败；增加一条“无命中不回答”的测试。',question:'相似度高，是否代表检索片段能支持回答？',answer:'不一定。要检查相关性、具体证据和引用一致性；命中率与答案正确率是不同指标。',files:['src/rag.js','data/rag-report.json']},
+    {id:'0515',title:'JSON-RPC 与 MCP 形状',stage:'生产化边界',one:'客户端如何发现并调用服务端能力？',flow:['请求 method','handleRpc','工具 / 资源','JSON-RPC 响应'],path:'src/index.js → src/serverCore.js → data/mcp-transcript.json',logic:'handleRpc 依据 method 分派 tools/list、tools/call、resources/list、resources/read，成功返回 result，异常返回 error；demo 将请求响应写入 transcript。',boundary:'这是教学用 JSON-RPC 形状模拟，不等于完整 MCP 协议实现；缺少标准 SDK、正式传输、初始化协商和完备 schema。',task:'用官方 MCP SDK 实现同名 echo 工具，再用真实 MCP 客户端连接，比较 transcript 与本例的差异。',question:'有 tools/list 和 tools/call 就是完整 MCP Server 吗？',answer:'不是。还需遵守 MCP 的协议结构、能力协商、传输与错误语义等要求。',files:['src/serverCore.js','data/mcp-transcript.json']},
+    {id:'0516',title:'人工审批边界',stage:'生产化边界',one:'高风险动作怎么先停下，再由人决定？',flow:['计划动作','风险分类','待审批','批准 / 拒绝','执行'],path:'src/approvalAgent.js → data/approval-log.json',logic:'classify 按 action.name 判断风险；runWithApproval 对高风险且无批准的动作返回 needs_approval，否则返回 executed。审批应是执行前的控制点。',boundary:'当前按名字正则分类，只模拟执行；approvals 只是传入对象，没有真实用户身份、审批记录、过期机制或防重放。',task:'把“已批准 deleteFile”改成绑定具体 path 和 requestId；确保同一批准不能用于另一文件。',question:'批准了 deleteFile 工具，是否等于批准删除所有文件？',answer:'不等于。审批应绑定动作、参数、申请者、有效期和具体执行请求。',files:['src/approvalAgent.js','data/approval-log.json']},
+    {id:'0517',title:'成本与延迟监控',stage:'生产化边界',one:'一次 Agent 运行到底花了多少、慢在哪？',flow:['记录 run','tokens / latency','估算成本','聚合指标'],path:'src/monitor.js → data/metrics-report.json',logic:'recordRun 构造输入输出与耗时；estimateCost 按 token 单价估算；summarize 汇总运行数、成功率、总费用与平均延迟。',boundary:'roughTokens 用字符数 / 4 估算，不是模型真实 usage；示例并未调用模型，latencyMs 也不是实际 API 时延，价格只是演示常量。',task:'改成从 provider usage 读取真实 token，分别记录模型、检索和工具耗时；给空 records 增加安全处理。',question:'为什么不能把本项目打印的 costUsd 写成真实调用成本？',answer:'没有真实模型调用和 usage；token 与单价都是演示估算。',files:['src/monitor.js','data/metrics-report.json']}
+  ];
+
+  const stages = [
+    ['基础执行','0503–0505','让一次 Agent 运行可调用、可校验、可追踪。'],
+    ['知识与状态','0506–0507','把外部资料与用户状态按需送进上下文。'],
+    ['编排与接口','0508–0510','用工作流组织步骤，并让能力与轨迹可见。'],
+    ['业务闭环与生产化','0511–0517','从审查到补丁，再补模型、检索、协议、审批和成本边界。']
+  ];
+  const terms = [
+    ['Model','生成工具请求、解释结果；不是执行器。'],
+    ['Agent','围绕目标做决策并使用工具的系统行为。'],
+    ['Harness','管理循环、工具、状态、权限、失败和 Trace。'],
+    ['Tool','执行动作或查询；有输入契约和错误语义。'],
+    ['RAG','推理时检索外部资料并给出来源。'],
+    ['MCP','把工具、资源、提示等能力标准化暴露的协议。']
+  ];
+  const storageKey = 'agent-learning-0503-0517-v1';
+  let completed;
+  try { completed = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]')); } catch { completed = new Set(); }
+  const nav = document.getElementById('nav');
+  const content = document.getElementById('content');
+  let current = location.hash.replace('#','') || 'overview';
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function updateProgress() {
+    document.getElementById('progressText').textContent = `${completed.size} / ${lessons.length}`;
+    document.getElementById('progressBar').style.width = `${100 * completed.size / lessons.length}%`;
+  }
+  function renderNav() {
+    nav.innerHTML = `<button data-id="overview" class="${current === 'overview' ? 'active' : ''}"><span class="num">00</span>总览与学习法</button>` + lessons.map(x => `<button data-id="${x.id}" class="${current === x.id ? 'active' : ''}"><span class="num">${x.id}</span>${esc(x.title)}<span class="done">${completed.has(x.id) ? '✓' : ''}</span></button>`).join('');
+    nav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { current = b.dataset.id; location.hash = current; render(); window.scrollTo(0,0); }));
+  }
+  function overview() {
+    return `<section class="section"><span class="eyebrow">START HERE / 项目不是知识点清单</span><h1>先看清一条运行链路，<br>再掌握 15 个组件。</h1><p class="lead">你不用背住每行代码。真正要掌握的是：输入从哪里来，经过哪些决策与校验，哪一步可能失败，输出凭什么可信。以下内容依据本机 agent-learning/agent-0503 至 agent-0517 的实际源码梳理。</p><div class="flow"><span>用户目标</span><i>→</i><span>上下文 / 检索</span><i>→</i><span>模型或规则决策</span><i>→</i><span>工具执行</span><i>→</i><span>结果校验</span><i>→</i><span>Trace / Eval</span></div></section>
+    <section class="section"><div class="section-head"><h2>四段学习路线</h2><span class="muted">顺序体现能力依赖，不是技术热度</span></div><div class="stages">${stages.map((s,i)=>`<div class="stage"><span class="tag">0${i+1} / ${s[1]}</span><b>${s[0]}</b><p>${s[2]}</p></div>`).join('')}</div><div class="callout"><strong>先纠正一个误解：</strong>0503、0504、0505、0506、0508、0511、0512 等主要是教学用确定性实现；0513 的真实 LLM Provider 仍是待接入练习；0514 用 hash 向量模拟 Embedding；0515 模拟 MCP 形状。能解释这些边界，比声称“全部都是生产级 Agent”更有技术含量。</div></section>
+    <section class="section"><h2>六个概念的边界</h2><div class="term-grid">${terms.map(t=>`<div class="term"><b>${t[0]}</b><p>${t[1]}</p></div>`).join('')}</div></section>
+    <section class="section"><h2>每个项目用同一套五问复盘</h2><ol class="practice-list"><li>输入是什么？来自用户、文件还是上一工具？</li><li>谁做决策？规则、模型，还是人？</li><li>动作由谁执行？参数如何校验，失败如何返回？</li><li>结果写到哪里？能否追踪、重放、评测？</li><li>如果把教学 mock 换成真实线上能力，还缺什么？</li></ol><p style="margin-top:16px">建议每次 35 分钟：10 分钟看本页并口述，15 分钟只读两处关键代码，10 分钟做动手题。不要以“记住函数名”为目标，而要能空白纸画出数据流。</p></section>
+    <section class="section"><h2>最终串联题</h2><p>假设你要把一段前端 Diff 审查成可执行补丁：0503 的工具闭环负责调用审查/检索工具；0504 保证 Finding 和 Patch Plan 结构稳定；0505/0510 记录并展示过程；0506/0514 查询规范；0508 控制审查→计划→验证流程；0509/0515 暴露外部能力；0511/0512 生成 Finding 和补丁；0513 接真实模型；0516 高风险审批；0517 观测成本与延迟。</p><p class="muted">能独立讲清这条链路，并指出每一环的失败模式，就已经不是“只会跟着敲代码”。</p></section>`;
+  }
+  function lessonView(x) {
+    return `<section class="section"><div class="topic-header"><div><span class="number">AGENT-${x.id} · ${esc(x.stage)}</span><h2>${esc(x.title)}</h2><p class="topic-summary">${esc(x.one)}</p><div class="topic-meta"><span class="chip">npm run demo</span><span class="chip">npm test</span><span class="chip">npm start</span></div></div><button class="complete ${completed.has(x.id)?'is-done':''}" id="completeBtn" aria-pressed="${completed.has(x.id)}">${completed.has(x.id)?'✓ 已掌握':'标记已掌握'}</button></div><div class="flow">${x.flow.map((step,i)=>`${i?'<i>→</i>':''}<span>${esc(step)}</span>`).join('')}</div></section>
+    <section class="section"><div class="detail-grid"><div><h3>代码实际在做什么</h3><p>${esc(x.logic)}</p><h3 style="margin-top:19px">关键调用路径</h3><div class="codepath">${esc(x.path)}</div><p class="muted" style="margin-top:9px">项目目录：<span class="path">${esc(root + '/agent-' + x.id)}</span></p></div><div><h3>理解边界</h3><div class="note">${esc(x.boundary)}</div><h3 style="margin-top:19px">动手验证</h3><p>${esc(x.task)}</p><p class="muted">先预测结果，再运行 demo / test，最后用实际输出修正自己的解释。</p></div></div></section>
+    <section class="section"><h2>不看代码，先回答</h2><div class="study-box"><h3>${esc(x.question)}</h3><p class="muted">尝试用自己的话解释 30 秒，再揭晓参考答案。</p><button class="reveal" id="revealBtn">查看参考答案</button><div class="answer" id="answer">${esc(x.answer)}</div></div></section>
+    <section class="section"><h2>阅读入口</h2><p>从 <span class="path">${esc(x.files.join(' → '))}</span> 读起。先找导出函数及其返回值，再看 index.js 如何调用，最后看测试与 data/ 产物。不要从第一行读到最后一行。</p><button class="reveal" id="nextBtn">进入下一项目 →</button></section>`;
+  }
+  function render() {
+    const item = lessons.find(x=>x.id===current);
+    if (!item && current !== 'overview') current='overview';
+    content.innerHTML = current === 'overview' ? overview() : lessonView(item);
+    renderNav(); updateProgress();
+    if (item) {
+      document.getElementById('completeBtn').addEventListener('click', () => { completed.has(item.id) ? completed.delete(item.id) : completed.add(item.id); try { localStorage.setItem(storageKey, JSON.stringify([...completed])); } catch {} render(); });
+      document.getElementById('revealBtn').addEventListener('click', () => { const a=document.getElementById('answer'); a.classList.toggle('show'); document.getElementById('revealBtn').textContent=a.classList.contains('show')?'收起参考答案':'查看参考答案'; });
+      document.getElementById('nextBtn').addEventListener('click', () => { const n=lessons[lessons.indexOf(item)+1]; current=n?.id || 'overview'; location.hash=current; render(); window.scrollTo(0,0); });
+    }
+  }
+  window.addEventListener('hashchange', () => { current=location.hash.replace('#','') || 'overview'; render(); });
+  render();
+</script>
+</body>
+</html>

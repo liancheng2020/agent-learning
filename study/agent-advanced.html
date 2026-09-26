@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent 工程进阶地图 · 0518–0829</title>
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; color: #19292d; background: #f6f8f7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; letter-spacing: 0; }
+    button { font: inherit; cursor: pointer; }
+    a { color: #006f64; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { display: grid; grid-template-columns: 265px minmax(0,1fr); min-height: 100vh; }
+    aside { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 22px 15px; background: #142429; color: #e6f3ed; }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 9px 21px; border-bottom: 1px solid #365057; }
+    .mark { width: 35px; height: 35px; display: grid; place-items: center; background: #75ddb0; color: #132328; font: 700 16px ui-monospace, monospace; }
+    .brand strong { display: block; font-size: 15px; }
+    .brand small { display: block; font: 11px ui-monospace, monospace; color: #9bb3af; margin-top: 4px; }
+    .back { display: block; margin: 16px 9px 22px; color: #95dfc0; font-size: 12px; }
+    .rail-label { color: #7fe1b7; font: 11px ui-monospace, monospace; margin: 20px 9px 8px; }
+    .nav { display: grid; gap: 2px; }
+    .nav button { width: 100%; min-height: 37px; text-align: left; border: 0; border-radius: 3px; color: #b7c9c8; background: transparent; padding: 7px 9px; display: flex; align-items: center; gap: 9px; font-size: 12px; }
+    .nav button:hover, .nav button.active { background: #27453f; color: #fff; }
+    .nav .id { color: #83ddba; font: 11px ui-monospace, monospace; min-width: 28px; }
+    .nav .check { margin-left: auto; color: #83ddba; }
+    main { min-width: 0; }
+    .topbar { min-height: 63px; padding: 12px clamp(20px,4vw,55px); background: #fff; border-bottom: 1px solid #d7e2dc; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .topbar strong { font-size: 13px; }
+    .topbar small { display: block; color: #007b6b; font: 10px ui-monospace, monospace; margin-bottom: 4px; }
+    .progress { display: flex; gap: 10px; align-items: center; font: 12px ui-monospace, monospace; color: #53686b; }
+    .track { width: 105px; height: 6px; background: #e1ece7; border-radius: 6px; overflow: hidden; }
+    .track span { display: block; width: 0; height: 100%; background: #148770; transition: width .2s; }
+    .content { max-width: 1130px; padding: 37px clamp(20px,4vw,55px) 80px; }
+    h1 { margin: 6px 0 13px; font-size: clamp(28px,3vw,40px); line-height: 1.25; }
+    h2 { margin: 0 0 12px; font-size: 23px; }
+    h3 { margin: 0 0 11px; font-size: 15px; }
+    p { margin: 0 0 12px; line-height: 1.75; }
+    .lead { color: #54696b; font-size: 16px; max-width: 780px; }
+    .eyebrow { color: #007c6d; font: 700 11px ui-monospace, monospace; }
+    .section { padding: 28px 0; border-bottom: 1px solid #d7e2dc; }
+    .section:first-child { padding-top: 0; }
+    .muted { color: #5c7072; font-size: 13px; }
+    .stage-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border: 1px solid #ccdbd4; margin-top: 22px; }
+    .stage { text-align: left; padding: 18px; min-height: 145px; border: 0; border-right: 1px solid #ccdbd4; background: #fff; color: inherit; }
+    .stage:last-child { border-right: 0; }
+    .stage:hover { background: #edf8f1; }
+    .stage b { display: block; font-size: 15px; margin: 10px 0 7px; }
+    .stage p { font-size: 12px; color: #53696b; line-height: 1.55; }
+    .stage small { color: #007c6d; font: 11px ui-monospace, monospace; }
+    .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 16px 0 3px; }
+    .flow span { padding: 8px 10px; background: #e2f2e9; border: 1px solid #b8d8c7; font: 12px ui-monospace, monospace; }
+    .flow i { font-style: normal; color: #008270; }
+    .cols { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 30px; }
+    .cols > div { min-width: 0; }
+    ul, ol { padding-left: 21px; margin: 0; line-height: 1.8; color: #364d50; font-size: 14px; }
+    li { margin-bottom: 5px; }
+    .callout { border-left: 3px solid #cd8a43; background: #fff7e9; padding: 12px 16px; font-size: 13px; line-height: 1.7; }
+    .code { background: #172b2e; color: #d9eee5; border-left: 3px solid #72dcaf; padding: 15px 17px; overflow-wrap: anywhere; white-space: pre-wrap; font: 12px/1.75 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .topic-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .topic-head p { max-width: 760px; color: #52696c; font-size: 15px; }
+    .done { border: 1px solid #1a8b72; border-radius: 4px; background: #fff; color: #006c5b; padding: 9px 11px; font-size: 12px; white-space: nowrap; }
+    .done:hover, .done.checked { background: #087b67; color: #fff; }
+    .inline-link { display: inline-block; margin-top: 9px; font-size: 13px; }
+    .quiz { margin-top: 27px; padding: 20px; border: 1px solid #cbdad3; border-radius: 4px; background: #fff; }
+    .quiz p { font-size: 14px; }
+    .quiz button { padding: 7px 10px; border: 1px solid #abc8ba; border-radius: 3px; color: #16453b; background: #f5faf7; font-size: 12px; }
+    .quiz .answer { display: none; margin: 12px 0 0; padding: 11px 13px; background: #ebf6ed; }
+    .quiz .answer.visible { display: block; }
+    .next { display: flex; justify-content: space-between; gap: 12px; padding-top: 24px; }
+    .next button { border: 1px solid #b9ccc3; border-radius: 3px; background: #fff; color: #0c6758; padding: 9px 12px; font-size: 13px; }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; padding: 14px 16px; }
+      .brand { padding: 0 2px 10px; border-bottom: 0; }
+      .back { display: inline-block; margin: 3px 2px 9px; }
+      .rail-label { display: none; }
+      .nav { display: flex; overflow-x: auto; gap: 4px; padding-bottom: 3px; }
+      .nav button { flex: 0 0 auto; width: auto; white-space: nowrap; }
+      .nav .check { display: none; }
+      .content { padding: 27px 20px 65px; }
+      .stage-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .stage:nth-child(2) { border-right: 0; }
+      .stage:nth-child(-n+2) { border-bottom: 1px solid #ccdbd4; }
+    }
+    @media (max-width: 620px) {
+      .cols { grid-template-columns: 1fr; gap: 22px; }
+      .topic-head { flex-direction: column; }
+      .topbar { padding: 11px 20px; }
+      .track { width: 65px; }
+      .stage { padding: 12px; min-height: 145px; }
+      .stage b { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand"><span class="mark">A+</span><div><strong>Agent 工程进阶</strong><small>0518 → 0829 · 22 STOPS</small></div></div>
+      <a class="back" href="agent-foundations.html">← 返回基础篇 0503–0517</a>
+      <nav id="nav" class="nav" aria-label="学习导航"></nav>
+    </aside>
+    <main>
+      <div class="topbar"><div><small>ENGINEERING FIELD GUIDE</small><strong>从本地作品到可解释、可评测、可部署的服务</strong></div><div class="progress"><span id="count">0 / 22</span><div class="track" aria-label="学习进度"><span id="bar"></span></div></div></div>
+      <div class="content" id="content"></div>
+    </main>
+  </div>
+  <script>
+    const stages = [
+      { id: 'bridge', label: '作品桥梁', range: '0518', title: '把散点串成闭环', goal: '看清前端、审查规则、工具、审批和 Trace 如何协作。', flow: ['Diff / 代码','Review Agent','知识检索 + Patch 计划','人工审批','结果 + Trace'], check: '能从一次审查请求讲清输入、决策、工具、证据和输出；知道哪些环节是本地规则。', trouble: '检查 trace 中审查结果与工具调用记录，区分“没有发现问题”和“调用根本没发生”。' },
+      { id: 'service', label: '服务化', range: '0809–0815', title: '让 Agent 成为 API 服务', goal: '用 FastAPI、Provider、ToolExecutor、SSE 和端到端测试组成可调用的边界。', flow: ['前端请求','FastAPI /review','Provider 决策','ToolExecutor 执行','Pydantic 校验','SSE / JSON + Trace'], check: '可以解释 /review 和 /review/stream 如何返回同一业务结果、如何定位失败的 tool 和 traceId。', trouble: '按 API 状态码 → traceId → Provider / ToolExecutor → 前端 SSE 事件逐层排查。' },
+      { id: 'rag', label: '知识与评测', range: '0816–0822', title: '让答案有来源、质量可量化', goal: '把前端规范做成可检索知识库，要求引用具体片段，用固定样本评价迭代。', flow: ['文档','Chunk + Metadata','Embedding + SQLite','召回 + 重排','引用片段','Review + Eval'], check: '能把“召回到了”与“引用正确了”分开说明；能读懂 baseline / tuned 对照。', trouble: '依次检查索引、召回、重排、引用映射和最终 JSON，不能只改 Prompt。' },
+      { id: 'engineering', label: '工程交付', range: '0823–0829', title: '安全、可观测、可部署', goal: '用审批、Trace、缓存、Compose、故障演练和面试材料收束项目。', flow: ['待审批请求','批准 / 拒绝','候选 Patch','Trace + 缓存','Compose 服务','故障回归'], check: '能演示拒绝审批不会生成 Patch、缓存命中仍有新 traceId、服务故障有用户可读反馈。', trouble: '先核对运行模式：本地测试为 SQLite / 内存，Compose 使用 Postgres / Redis；模型为规则引擎时不要宣称真实推理费用。' }
+    ];
+    const days = [
+      ['0518','作品闭环','bridge','把审查、知识检索、Patch 计划、审批与 Trace 串成完整工作流。','agent-0518/README.md；agent-0518/agent-0518-ARCHITECTURE.zh-CN.md','沿 README 跑一次 demo，画出输入到结果的五段流向，并标出不自动应用 Patch 的边界。','为什么“生成 Patch 计划”和“执行 Patch”必须分开？','计划是候选建议；高风险修改需要审批，当前作品不静默改文件或执行命令。'],
+      ['0809','架构说明','service','从本地 Demo 抽象出前端、API、Agent、Tool、Trace 的职责。','agent-0809/ARCHITECTURE.md','对照架构图，标注一条 /review 请求在每层的输入输出。','API 与 Agent 谁决定工具调用？','API 做协议和校验；Agent 维护调用循环并决策；工具执行器负责受控执行。'],
+      ['0810','FastAPI 契约','service','建立 /health、/review 和 pytest，固定请求与响应边界。','agent-0810/README.md','启动服务并用测试客户端提交一条合法与一条非法请求。','为什么不能只测前端按钮？','前端无法覆盖 API 参数校验、状态码、异常映射和服务契约。'],
+      ['0811','Provider + JSON','service','区分 Mock / DeepSeek Provider，用 Pydantic 校验模型输出。','agent-0811/README.md','用 Mock 跑通稳定 JSON；再给 Provider 返回缺字段的结果，观察验证错误。','Pydantic 能保证模型真的理解 Diff 吗？','不能。它能限制结构，语义正确性还需规则、证据与评测。'],
+      ['0812','工具调用','service','把 read_diff、search_knowledge、generate_patch_plan 暴露给 Agent。','agent-0812/README.md','记录一次工具选择、参数、执行结果与 Agent 最终回答。','注册 Tool 和真正完成 Tool Calling 有何区别？','注册只描述能力；完整链路还要模型发起调用、参数验证、执行、回传和终止条件。'],
+      ['0813','失败处理','service','ToolExecutor 处理参数错误、超时、有限重试、降级和错误码。','agent-0813/README.md','分别制造超时与错误参数，确认前端得到不同错误且 traceId 可追踪。','所有 Tool 失败都该重试吗？','不该。参数错误不靠重试恢复；幂等、暂态错误才考虑有上限重试。'],
+      ['0814','SSE 流式状态','service','用 SSE 向前端发送阶段、工具状态和最终结果。','agent-0814/README.md','在浏览器 Network 里观察事件顺序，断网后检查页面状态是否结束。','SSE 的阶段事件等于暴露模型私有思考吗？','不是。它应展示产品级运行状态，不输出私有推理内容。'],
+      ['0815','服务化里程碑','service','把 FastAPI、Provider、ToolExecutor、SSE、Trace 和 5 条端到端测试合并。','agent-0815/README.md；agent-0815/ARCHITECTURE.md','运行 pytest 和 5 条 E2E；演示正常、工具失败各一次，并用 traceId 回溯。','线上 DeepSeek 与本地 Mock 的测试结论能互换吗？','不能。Mock 验证协议与流程；真实模型还需独立验证响应质量、延迟、成本和稳定性。'],
+      ['0816','规范知识库','rag','准备 React、Vue、TypeScript、性能、安全等短规范。','agent-0816/README.md','为每篇文档写清主题和适用场景，找一条故意冲突的规范观察检索结果。','知识库为什么不能只是一个大文本？','检索需要可定位、可过滤、可引用的分块和元数据。'],
+      ['0817','索引与向量检索','rag','文档解析、Chunk、Metadata、Embedding 与 SQLite 向量存储。','agent-0817/README.md','索引一篇新规范，查询命中片段并核对来源 ID。','Hash Embedding 与真实语义 Embedding 有什么差别？','前者是轻量本地可复现基线，不代表通用语义理解能力。'],
+      ['0818','重排与引用','rag','召回后按文本和主题信号重排，并把规范片段作为证据返回。','agent-0818/README.md','对相近主题问题比较初始召回与重排后的前 3 个结果，逐条核对原文。','相关文档命中就等于引用正确吗？','不等于；还要看引用是否真支持当前 finding、片段是否对应原文。'],
+      ['0819','审查自动检索','rag','Review Agent 审查 Diff 时自动调用知识库。','agent-0819/README.md','提交一个 React 或 Vue Diff，观察 knowledge tool 的调用和引用落点。','什么时候不该强行引用？','检索为空或片段不支持结论时，应明确证据不足，不编造规范来源。'],
+      ['0820','评测样本','rag','建立至少 10 条前端问题及预期检查点的 JSONL 数据集。','agent-0820/README.md','新增一条失败样本，写输入、期待 finding 和可接受证据。','为什么 eval case 要有期望检查点？','否则只能主观判断“看起来不错”，无法稳定对比修改前后。'],
+      ['0821','评测指标','rag','统计命中率、引用正确率、JSON 合法率、工具成功率、平均延迟。','agent-0821/README.md','运行评测并手算一条失败样本属于哪个指标的分子或分母。','单个总分为什么不够？','它会掩盖“答对但引用错”“结构合法但工具失败”等不同缺陷。'],
+      ['0822','对照迭代','rag','固定样本，对比 baseline 与 tuned 的检索/Prompt/工具参数。','agent-0822/README.md；agent-0822/ARCHITECTURE.md','运行 compare，挑一条失败样本定位是召回、重排还是生成问题。','12 条本地样本满分说明可用于生产吗？','不能。这是窄范围、确定性样本的回归信号，需要独立样本与真实模型验证泛化。'],
+      ['0823','人工审批','engineering','候选 Patch 请求进入 pending，批准或拒绝后才生成可下载候选 Diff。','agent-0823/README.md','走通 pending → rejected 和 pending → approved 两条路径，检查状态不可逆越权。','审批节点保护的是什么？','保护高风险动作的授权边界；它不保证 Patch 本身正确。'],
+      ['0824','可观测 Trace','engineering','记录 Provider、模型/Prompt 版本、工具参数与摘要、耗时、估计 token/cost、错误。','agent-0824/README.md','给一次失败执行定位到具体阶段和错误，并解释 token/cost 的数据来源。','为什么 Trace 不能只留最终回答？','没有阶段、参数和结果就无法知道失败发生在模型、工具、校验还是展示。'],
+      ['0825','Redis 缓存','engineering','按 Diff 与 Prompt 版本缓存审查结果，TTL 有界；每次请求保留独立 traceId。','agent-0825/README.md','同一 Diff 连续运行两次，比较是否命中缓存、traceId 是否不同。','缓存命中为什么仍要新 traceId？','每次请求是独立运行事件；复用结果不应复用审计身份。'],
+      ['0826','Compose 部署','engineering','Nginx 前端、FastAPI、Postgres/pgvector、Redis 组合部署。','agent-0826/README.md','用 docker compose 启动后访问前端与 /health，再停掉 Redis 观察反馈。','本地 pytest 通过意味着 Compose 部署通过吗？','不意味着；两者依赖不同，端口、网络、数据卷和启动顺序仍需检查。'],
+      ['0827','故障演练','engineering','覆盖模型超时、工具异常、检索为空、JSON 解析失败、审批拒绝。','agent-0827/README.md','逐个注入故障，检查 API 错误码、Trace 和前端可理解提示。','错误堆栈应直接展示给用户吗？','不应；用户需要可操作提示，内部堆栈保留在受控日志/Trace 中。'],
+      ['0828','交付文档','engineering','收束架构图、运行步骤、评测结果、失败处理与 Demo 材料。','agent-0828/README.md','按 README 从零启动，记下每个未写明的前提并补成可复现步骤。','README 为什么要写失败处理？','作品不只展示成功路径，维护者需要知道依赖故障和边界如何诊断。'],
+      ['0829','面试表达','engineering','把工程选择、限制、证据与改进方向整理成可演示故事。','agent-0829/README.md；agent-0829/ARCHITECTURE.md','用 2 分钟讲：问题 → 架构 → 一次调用 → 失败/评测 → 边界；准备追问。','最容易被面试官追问的真实性问题是什么？','哪些是规则/Mock、哪些可接 DeepSeek、评测是否覆盖真实分布、Patch 是否自动执行。']
+    ].map(([id,title,stage,summary,files,task,question,answer]) => ({id,title,stage,summary,files,task,question,answer}));
+    const ids = ['overview',...stages.map(s => s.id),...days.map(d => d.id)];
+    const storeKey = 'agent-learning-advanced-v1';
+    let completed;
+    try { completed = new Set(JSON.parse(localStorage.getItem(storeKey) || '[]')); } catch { completed = new Set(); }
+    const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const nav = document.getElementById('nav');
+    const content = document.getElementById('content');
+    let current = decodeURIComponent(location.hash.slice(1));
+    if (!ids.includes(current)) current = 'overview';
+    function link(id) { current = id; location.hash = id; render(); window.scrollTo(0,0); }
+    function renderNav() {
+      nav.innerHTML = `<button data-id="overview" class="${current === 'overview' ? 'active' : ''}"><span class="id">00</span>总览与学习路线</button>` + stages.map(s => `<div class="rail-label">${esc(s.label)} · ${esc(s.range)}</div><button data-id="${s.id}" class="${current === s.id ? 'active' : ''}"><span class="id">↳</span>阶段目标</button>` + days.filter(d => d.stage === s.id).map(d => `<button data-id="${d.id}" class="${current === d.id ? 'active' : ''}"><span class="id">${d.id}</span>${esc(d.title)}<span class="check">${completed.has(d.id) ? '✓' : ''}</span></button>`).join('')).join('');
+      nav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => link(b.dataset.id)));
+      document.getElementById('count').textContent = `${completed.size} / ${days.length}`;
+      document.getElementById('bar').style.width = `${completed.size / days.length * 100}%`;
+    }
+    function flow(items) { return `<div class="flow">${items.map((x,i) => `${i ? '<i>→</i>' : ''}<span>${esc(x)}</span>`).join('')}</div>`; }
+    function overview() { return `<section class="section"><span class="eyebrow">ROADMAP / 22 STOPS</span><h1>从会写 Demo，到会交付 Agent 服务</h1><p class="lead">基础篇已经讲了 Tool Calling、RAG、Trace、审批等零件。这一篇沿着真实仓库，把零件放进同一个系统，回答“怎么连起来、怎么测、坏了怎么找、能否上线”。</p><div class="stage-grid">${stages.map(s => `<button class="stage" data-go="${s.id}"><small>${esc(s.range)}</small><b>${esc(s.title)}</b><p>${esc(s.goal)}</p></button>`).join('')}</div></section><section class="section"><h2>先建立一条主线</h2>${flow(['输入 Diff','API 校验','Agent 决策','Tool / RAG','结果校验','Trace + UI'])}<p>先能口述这条链，再回到每一天的源码。不要试图背下所有文件；把重点放在职责边界、失败分支与证据上。</p></section><section class="section cols"><div><h3>推荐读法</h3><ol><li>打开阶段目标，先回答“该阶段新增了什么边界”。</li><li>打开每日项目的 README / 源码，按动手题亲自跑一遍。</li><li>不看答案口述自测，再核对代码与运行结果。</li><li>到 0815、0822、0829 做里程碑验收。</li></ol></div><div><h3>不要混为一谈</h3><div class="callout">0815 可选接入真实 DeepSeek Provider；0829 的默认本地评测路径主要依赖规则引擎和 Hash Embedding。确定性样本成绩不等于真实模型线上效果，估算 token/cost 也不是真实账单。</div></div></section><section class="section"><h2>完成标准</h2><p>能独立画出数据流；能让一个新 Diff 走完审查、检索、引用、审批和 Trace；遇到故障能判断是 API、模型、工具、检索、校验还是前端展示，而不只会“再试一次”。</p><p class="muted">本页离线可用，打卡进度仅保存在当前浏览器的 localStorage。</p></section>`; }
+    function stagePage(s) { const related = days.filter(d => d.stage === s.id); return `<section class="section"><span class="eyebrow">${esc(s.label)} / ${esc(s.range)}</span><h1>${esc(s.title)}</h1><p class="lead">${esc(s.goal)}</p>${flow(s.flow)}</section><section class="section cols"><div><h3>这阶段要能做到</h3><p>${esc(s.check)}</p></div><div><h3>出错时怎么查</h3><p>${esc(s.trouble)}</p></div></section><section class="section"><h2>逐日路线</h2><ol>${related.map(d => `<li><a href="#${d.id}" data-go="${d.id}">${d.id} · ${esc(d.title)}</a>：${esc(d.summary)}</li>`).join('')}</ol></section><section class="section"><h3>进入下一阶段前</h3><p>关掉这页，自己画出上面的数据流，并给每个节点标出一处典型失败。随后打开对应项目跑一次真实请求，用结果验证你的图。</p></section>`; }
+    function dayPage(d) { const i = days.findIndex(x => x.id === d.id); const s = stages.find(x => x.id === d.stage); return `<section class="section"><span class="eyebrow">${esc(s.label)} / ${d.id}</span><div class="topic-head"><div><h1>${esc(d.title)}</h1><p>${esc(d.summary)}</p></div><button class="done ${completed.has(d.id) ? 'checked' : ''}" id="complete" aria-pressed="${completed.has(d.id)}">${completed.has(d.id) ? '✓ 已掌握' : '标记已掌握'}</button></div></section><section class="section cols"><div><h3>读哪些文件</h3><p class="code">${esc(d.files.replaceAll('；','\n'))}</p><p class="muted">路径相对于 agent-learning 仓库根目录；先从 README 找入口，再沿导入关系读关键代码。</p><a class="inline-link" href="../agent-${d.id}/README.md">打开本项目 README →</a></div><div><h3>今天动手</h3><p>${esc(d.task)}</p><div class="callout">验收时保留请求、响应、Trace 或评测报告。只看“页面成功”不足以证明链路正确。</div></div></section><section class="section"><h3>把它放回系统</h3>${flow(s.flow)}<p class="muted">当前关注：${esc(d.summary)}</p></section><div class="quiz"><h3>自测：先口述，再展开</h3><p>${esc(d.question)}</p><button id="reveal" aria-expanded="false">查看参考答案</button><p class="answer" id="answer">${esc(d.answer)}</p></div><div class="next"><button id="prev" ${i === 0 ? 'disabled' : ''}>← 上一个</button><button id="next" ${i === days.length - 1 ? 'disabled' : ''}>下一个 →</button></div>`; }
+    function render() {
+      renderNav();
+      content.innerHTML = current === 'overview' ? overview() : stages.some(s => s.id === current) ? stagePage(stages.find(s => s.id === current)) : dayPage(days.find(d => d.id === current));
+      content.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); link(el.dataset.go); }));
+      const complete = document.getElementById('complete');
+      if (complete) complete.addEventListener('click', () => { completed.has(current) ? completed.delete(current) : completed.add(current); try { localStorage.setItem(storeKey, JSON.stringify([...completed])); } catch {} render(); });
+      const reveal = document.getElementById('reveal');
+      if (reveal) reveal.addEventListener('click', () => { const answer = document.getElementById('answer'); const visible = answer.classList.toggle('visible'); reveal.setAttribute('aria-expanded', visible); reveal.textContent = visible ? '收起参考答案' : '查看参考答案'; });
+      const index = days.findIndex(d => d.id === current);
+      if (index >= 0) { document.getElementById('prev').addEventListener('click', () => link(days[index-1].id)); document.getElementById('next').addEventListener('click', () => link(days[index+1].id)); }
+    }
+    window.addEventListener('hashchange', () => { const id = decodeURIComponent(location.hash.slice(1)); if (ids.includes(id) && id !== current) { current = id; render(); } });
+    render();
+  </script>
+</body>
+</html>
