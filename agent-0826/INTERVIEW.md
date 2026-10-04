@@ -1,48 +1,48 @@
-# Agent 0825 面试材料
+# Agent 0826 面试材料（Day 18：Docker Compose 全栈部署）
 
 ## 30 秒介绍
 
-> 我把一个前端 Diff Review Demo 演进成 FastAPI Agent 服务：它用 RAG 返回可核验规范引用，用 Pydantic 保证结构化输出；Patch 和部署等高风险动作必须经过 SQLite 持久化人工审批；每次运行记录模型、Prompt、工具、耗时、token/cost 和错误栈；重复 Diff 使用 Redis TTL 缓存，Redis 断连时降级到内存。23 条分层测试覆盖审批、Trace、缓存和故障场景。
+> 我把上一版的单进程 Agent 拆成了 4 个健康检查完备的 Compose 服务：Nginx 托管前端并反代 `/api`、FastAPI 运行 Agent 与业务接口、PostgreSQL 16 + pgvector 同时保存审批记录和 256 维知识向量、Redis 做 TTL 缓存。`depends_on: service_healthy` 保证启动顺序，数据用命名卷持久化，全部外部配置收敛到 `.env`。为了不拖慢测试，本地 pytest 默认回退 SQLite 向量库/审批库和内存缓存，不依赖任何外部服务。14 条测试覆盖 API、缓存、Trace 和部署契约。
 
 ## 2 分钟演示
 
-1. 打开 `/docs`，调用 `/review`，展示 finding、citation、`trace_id` 和 `cache_hit=false`。
-2. 再次提交相同 Diff，展示 `cache_hit=true`、工具状态 `cached`，并证明 `trace_id` 不同。
-3. 查询 `/traces/{trace_id}`，展示 Prompt 版本、缓存事件、工具参数/结果和 token/cost。
-4. 创建 Patch 请求，证明状态为 `pending` 时生成接口返回 409。
-5. 审批为 `approved` 后生成 unified diff；创建 `rejected` 样本证明始终不可执行。
-6. 停止 Redis 后查看 `/health`，展示 `degraded=true` 且审查仍可用。
+1. `cp .env.example .env`，`docker compose up --build -d`，`docker compose ps` 展示 4 个服务全部 `Up (healthy)`。
+2. 打开前端 `http://127.0.0.1:8080`，提交 Diff，浏览器只请求同源 `/api/*`，由 Nginx 反代到 `api:8000`。
+3. 查 `/health`，展示 `approval_store=postgres`、`vector_store=postgres`、`cache.backend=redis`，证明后端确实切到了容器化存储。
+4. 相同 Diff 调两次 `/review`，展示 `cache_hit=false -> true`。
+5. `docker compose down`（保留卷）再 `up -d`，说明审批记录和向量仍在。
+6. `docker compose down -v` 清理数据卷。
 
 ## 关键取舍
 
-- **为什么 SQLite 存审批**：审批必须跨请求持久化，并用条件更新保证状态转换原子性。
-- **为什么不自动应用 Patch**：模型输出只是候选方案，高风险副作用必须与推理阶段隔离。
-- **为什么 Trace 记录 Prompt 版本**：同一输入在 Prompt 升级后可能行为变化，需要可回溯。
-- **为什么缓存 key 包含 Prompt 版本**：避免新逻辑错误复用旧审查结果。
-- **为什么只用 Redis 缓存**：重复审查是当前真实问题；会话和限流没有需求，暂不堆组件。
-- **为什么 Redis 断连可降级**：缓存不是正确性依赖，故障不应该阻断核心审查。
+- **为什么拆成 4 个服务**：前端、API、数据库、缓存的故障域和扩缩容节奏不同，拆开后每个组件都能独立健康检查、重启和替换，边界可写进测试。
+- **为什么 PostgreSQL 同时存审批和向量**：pgvector 扩展让一套库同时承载事务性审批数据和向量检索，少一个组件就少一份一致性负担。
+- **为什么用 Nginx 反代 `/api`**：前端与 API 同源，避免跨域配置并隐藏后端端口；Nginx 只做静态资源和代理，不掺业务逻辑。
+- **为什么要健康检查 + `depends_on` 条件**：api 必须在 Postgres、Redis 都 healthy 之后才启动，否则会出现“启动即崩溃”的竞态。
+- **为什么本地默认回退 SQLite/内存**：测试要快、要确定，不能依赖 Docker；后端由 `VECTOR_STORE_BACKEND`、`APP_DATABASE_BACKEND`、`CACHE_BACKEND` 三个环境变量切换，代码路径同构。
 
 ## 高频追问
 
-### 如何避免重复执行高风险操作？
+### 四个服务分别做什么？
 
-审批决策只能从 `pending` 转换一次；执行结果通过 `status='approved' AND result_json IS NULL` 条件更新，第二次执行返回 409。
+Nginx 提供前端静态资源和 `/api` 反向代理；FastAPI 运行 Agent、审批状态机、Trace 和结构化 API；PostgreSQL 16 + pgvector 保存审批记录和知识向量；Redis 只缓存“相同 Diff + Prompt 版本”的审查结果。
 
-### Trace 会不会泄露敏感数据？
+### 后端如何在 Postgres 和 SQLite 之间切换？
 
-当前工具结果只保存 citation 数量和 document id 等摘要。生产环境还应增加字段级脱敏、保留周期、访问控制和采样率。
+`app/service.py` 按 `VECTOR_STORE_BACKEND` 选择 `PostgresVectorStore` 或 `SQLiteVectorStore`；审批库按 `APP_DATABASE_BACKEND` 选择 `PostgresApprovalStore` 或 SQLite；缓存按 `CACHE_BACKEND` 选择 Redis 或内存。默认值都是本地友好的 SQLite/内存。
 
-### 当前 token/cost 准确吗？
+### 启动顺序怎么保证？
 
-本地规则模型的 token 是字符近似值、cost 为 0。接真实 Provider 后应优先采用响应中的 usage，并按模型版本配置价格。
+compose 里 `api.depends_on.postgres/redis` 都写成 `condition: service_healthy`，并且三个后端服务各自定义了 healthcheck；不健康就不会被判定为就绪。
 
-### Redis 缓存会不会造成脏数据？
+### 数据会随容器删除而丢失吗？
 
-key 包含 Prompt 版本和完整 Diff 哈希，TTL 默认为 300 秒。规则、知识库或模型版本变化时，还应把对应版本加入 key 或主动失效。
+不会。`postgres_data`、`redis_data`、`api_runtime` 三个命名卷持久化，`docker compose down` 保留数据，只有 `down -v` 才清空。
 
-### 还缺哪些生产能力？
+### 部署阶段踩过什么坑？
 
-- 审批身份认证、RBAC 和审计导出。
-- PostgreSQL/pgvector、真实 Embedding 和真实模型 usage。
-- 分布式 Trace/OpenTelemetry、指标告警和日志脱敏。
-- 幂等键、任务队列和真正的 Patch sandbox。
+切到 Postgres 后端时 api 容器启动即崩溃，报 `'Connection' object has no attribute 'executemany'`。原因是 psycopg3 的 `Connection` 只有 `execute`，没有 `executemany`（SQLite 的 Connection 恰好有，所以本地模式一直掩盖了它）。修法是显式开 cursor：`with connection.cursor() as cursor: cursor.executemany(...)`。这类问题正说明“本地能跑”不等于“部署能跑”，多后端同构是必须的。
+
+## 复习标准
+
+能讲清 4 个服务的职责边界、环境变量如何驱动后端切换、启动顺序与数据持久化机制，并举出至少一个只在容器/Postgres 下才暴露的真实排障案例。每题先给结论，再落到本项目的具体文件和配置。

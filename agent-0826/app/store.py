@@ -116,10 +116,11 @@ class PostgresVectorStore:
         ]
         with self._connect() as connection:
             connection.execute("DELETE FROM chunks")
-            connection.executemany(
-                "INSERT INTO chunks VALUES (%s, %s, %s, %s::jsonb, %s::vector)",
-                rows,
-            )
+            with connection.cursor() as cursor:
+                cursor.executemany(
+                    "INSERT INTO chunks VALUES (%s, %s, %s, %s::jsonb, %s::vector)",
+                    rows,
+                )
 
     def count(self) -> int:
         with self._connect() as connection:
